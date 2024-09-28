@@ -1,0 +1,79 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider     = "postgresql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}
+
+model Student {
+  id         String       @id @unique @default(cuid())
+  clerkId    String       @unique
+  fname      String
+  mname      String?
+  lname      String
+  email      String
+  password   String
+  course     String
+  section    String
+  yearLevel  String
+  profile    String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  Evaluation Evaluation[]
+}
+
+model Faculty {
+  id         String       @id @unique @default(cuid())
+  clerkId    String       @unique
+  fname      String
+  mname      String?
+  lname      String
+  email      String
+  password   String
+  profile    String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  Evaluation Evaluation[]
+}
+
+model Evaluation {
+  id            String   @id @unique @default(cuid())
+  studentId     String
+  ratingPeriod  String
+  schoolYear    String
+  evaluatee     String
+  academicRank  String
+  evaluator     String
+  demonstrate   String
+  integrate     String
+  available     String
+  regularly     String
+  accurate      String
+  mastery       String
+  draws         String
+  practical     String
+  relevance     String
+  awareness     String
+  teaching      String
+  enhance       String
+  objectives    String
+  independent   String
+  encourage     String
+  opportunity   String
+  roles         String
+  experience    String
+  structures    String
+  instructional String
+  comments      String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  student Student @relation(fields: [studentId], references: [id])
+  faculty Faculty @relation(fields: [evaluatee], references: [id])
+
+  @@index([studentId])
+  @@index([evaluatee])
+}
