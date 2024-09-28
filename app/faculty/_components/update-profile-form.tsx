@@ -26,13 +26,16 @@ const UpdateProfileForm = ({ faculty }: { faculty: Faculty }) => {
       firstName: faculty.fname ?? "",
       lastName: faculty.lname ?? "",
       middleInitial: faculty.mname ?? "",
+      suffix: faculty.suffix ?? "",
       email: faculty.email ?? "",
-      category: "",
-      status: "",
+      category: faculty.category ?? "",
+      status: "Teaching",
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof ProfileUpdateFacultySchema>) => {
+  const onSubmit = async (
+    values: z.infer<typeof ProfileUpdateFacultySchema>
+  ) => {
     try {
       setIsPending(true);
       const response = await updateProfileInfo(values);
@@ -79,34 +82,51 @@ const UpdateProfileForm = ({ faculty }: { faculty: Faculty }) => {
       />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="field-group-col3 mb-2">
-            <CustomFormField
-              control={form.control}
-              label="First Name"
-              placeholder="Juan"
-              isRequired
-              disabled={isPending}
-              fieldType={FormFieldType.INPUT}
-              name="firstName"
-            />
-            <CustomFormField
-              control={form.control}
-              label="Middle Name"
-              placeholder="Reyes"
-              isRequired={false}
-              disabled={isPending}
-              fieldType={FormFieldType.INPUT}
-              name="middleInitial"
-            />
-            <CustomFormField
-              control={form.control}
-              label="Last Name"
-              placeholder="Dela Cruz"
-              isRequired
-              disabled={isPending}
-              fieldType={FormFieldType.INPUT}
-              name="lastName"
-            />
+          <div className="grid grid-cols-7 mb-2 gap-3">
+            <div className="col-span-2">
+              <CustomFormField
+                control={form.control}
+                name="firstName"
+                placeholder="Juan"
+                disabled={isPending}
+                isRequired
+                label="First Name"
+                fieldType={FormFieldType.INPUT}
+              />
+            </div>
+            <div className="col-span-2">
+              <CustomFormField
+                control={form.control}
+                name="middleInitial"
+                placeholder="Reyes"
+                disabled={isPending}
+                isRequired={false}
+                label="Middle Name"
+                fieldType={FormFieldType.INPUT}
+              />
+            </div>
+            <div className="col-span-2">
+              <CustomFormField
+                control={form.control}
+                name="lastName"
+                placeholder="Dela Cruz"
+                disabled={isPending}
+                isRequired
+                label="Last Name"
+                fieldType={FormFieldType.INPUT}
+              />
+            </div>
+            <div className="col-span-1">
+              <CustomFormField
+                control={form.control}
+                name="suffix"
+                placeholder="JR."
+                disabled={isPending}
+                isRequired={false}
+                label="Suffix"
+                fieldType={FormFieldType.INPUT}
+              />
+            </div>
           </div>
           <CustomFormField
             control={form.control}
@@ -132,11 +152,10 @@ const UpdateProfileForm = ({ faculty }: { faculty: Faculty }) => {
             <CustomFormField
               control={form.control}
               label="Status"
-              placeholder="Select Your Status"
+              placeholder="Enter Your Status"
               isRequired
-              options={["Teaching", "Non-Teaching"]}
-              disabled={isPending}
-              fieldType={FormFieldType.SELECT}
+              disabled
+              fieldType={FormFieldType.INPUT}
               name="status"
             />
           </div>

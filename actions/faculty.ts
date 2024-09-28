@@ -17,7 +17,7 @@ export const createUser = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { firstName, middleInitial, lastName, email, password } =
+  const { firstName, middleInitial, lastName, suffix, email, password } =
     validatedField.data;
 
   const hashedPassword = await bcryptjs.hash(password, 10);
@@ -29,6 +29,7 @@ export const createUser = async (
         clerkId,
         mname: middleInitial,
         lname: lastName,
+        suffix,
         email,
         password: hashedPassword,
       },
@@ -126,6 +127,7 @@ export const updateProfileInfo = async (
     middleInitial,
     lastName,
     email,
+    suffix,
     category,
     status,
   } = validatedField.data;
@@ -147,7 +149,10 @@ export const updateProfileInfo = async (
         fname: firstName,
         mname: middleInitial,
         lname: lastName,
+        suffix,
         email,
+        category,
+        status
       },
     });
     return { success: "User updated successfully" };

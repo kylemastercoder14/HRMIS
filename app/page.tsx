@@ -36,7 +36,10 @@ export default async function Hero() {
         <Link href={!user ? "/auth/faculty/signup" : "/faculty"} className="bg-black text-white py-2 px-4 rounded-full">
           Faculty
         </Link>
-        <Link href={"/"} className="bg-black text-white py-2 px-4 rounded-full">
+        <Link href={!user ? "/auth/non-teaching/signup" : "/non-teaching"} className="bg-black text-white py-2 px-4 rounded-full">
+          Non-Teaching
+        </Link>
+        <Link href={"/auth/supervisor/signup"} className="bg-black text-white py-2 px-4 rounded-full">
           Supervisor
         </Link>
       </div>

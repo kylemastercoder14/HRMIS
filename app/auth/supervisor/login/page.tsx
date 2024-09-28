@@ -42,7 +42,7 @@ const Signin = () => {
       // If sign-in process is complete, set the created session as active and redirect the user
       if (signInAttempt.status === "complete") {
         await setActive({ session: signInAttempt.createdSessionId });
-        router.push("/faculty");
+        router.push("/supervisor");
       } else {
         console.error(JSON.stringify(signInAttempt, null, 2));
       }
@@ -95,7 +95,7 @@ const Signin = () => {
       <p className="text-center mt-3 text-muted-foreground">
         Don&apos;t have an account?{" "}
         <Link
-          href="/auth/faculty/signup"
+          href="/auth/supervisor/signup"
           className="font-semibold underline text-black"
         >
           Sign Up

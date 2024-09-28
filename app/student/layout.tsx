@@ -12,7 +12,7 @@ const StudentLayout = async ({ children }: { children: React.ReactNode }) => {
     },
   });
   if (!user || !student) redirect("/");
-  const fullName = `${student.fname} ${student.mname} ${student.lname}`;
+  const fullName = `${student.fname} ${student.mname} ${student.lname} ${student.suffix}`;
   return (
     <div className="flex min-h-screen w-full flex-col">
       <StudentNavbar

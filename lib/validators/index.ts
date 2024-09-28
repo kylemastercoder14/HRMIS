@@ -8,9 +8,15 @@ export const UserRegistrationSchema = z.object({
   lastName: z.string().min(1, {
     message: "Last name is required.",
   }),
-  email: z.string().min(1, {
-    message: "Email address is required.",
-  }),
+  suffix: z.string().optional(),
+  email: z
+    .string()
+    .min(1, {
+      message: "Email address is required.",
+    })
+    .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
+      message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
+    }),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters long." })
@@ -48,6 +54,52 @@ export const FacultyRegistrationSchema = z.object({
   email: z.string().min(1, {
     message: "Email address is required.",
   }),
+  // email: z
+  //   .string()
+  //   .min(1, {
+  //     message: "Email address is required.",
+  //   })
+  //   .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
+  //     message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
+  //   }),
+  suffix: z.string().optional(),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters long." })
+    .regex(/[A-Z]/, {
+      message: "Password must contain at least one uppercase letter.",
+    })
+    .regex(/[a-z]/, {
+      message: "Password must contain at least one lowercase letter.",
+    })
+    .regex(/[!@#$%^&*(),.?":{}|<>]/, {
+      message: "Password must contain at least one special character.",
+    }),
+  terms: z.boolean().refine((val) => val === true, {
+    message: "Terms of agreement must be accepted.",
+  }),
+});
+
+export const SupervisorRegistrationSchema = z.object({
+  firstName: z.string().min(1, {
+    message: "First name is required.",
+  }),
+  middleInitial: z.string().optional(),
+  lastName: z.string().min(1, {
+    message: "Last name is required.",
+  }),
+  email: z.string().min(1, {
+    message: "Email address is required.",
+  }),
+  // email: z
+  //   .string()
+  //   .min(1, {
+  //     message: "Email address is required.",
+  //   })
+  //   .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
+  //     message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
+  //   }),
+  suffix: z.string().optional(),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters long." })
@@ -75,6 +127,14 @@ export const UserLoginSchema = z.object({
   email: z.string().min(1, {
     message: "Email address is required.",
   }),
+  // email: z
+  //   .string()
+  //   .min(1, {
+  //     message: "Email address is required.",
+  //   })
+  //   .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
+  //     message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
+  //   }),
   password: z.string().min(1, {
     message: "Password is required.",
   }),
@@ -182,6 +242,7 @@ export const ProfileUpdateSchema = z.object({
   lastName: z.string().min(1, {
     message: "Last name is required.",
   }),
+  suffix: z.string().optional(),
   email: z.string().min(1, {
     message: "Email address is required.",
   }),
@@ -201,6 +262,7 @@ export const ProfileUpdateFacultySchema = z.object({
     message: "First name is required.",
   }),
   middleInitial: z.string().optional(),
+  suffix: z.string().optional(),
   lastName: z.string().min(1, {
     message: "Last name is required.",
   }),
@@ -212,6 +274,20 @@ export const ProfileUpdateFacultySchema = z.object({
   }),
   status: z.string().min(1, {
     message: "Status is required.",
+  }),
+});
+
+export const ProfileUpdateSupervisorSchema = z.object({
+  firstName: z.string().min(1, {
+    message: "First name is required.",
+  }),
+  middleInitial: z.string().optional(),
+  suffix: z.string().optional(),
+  lastName: z.string().min(1, {
+    message: "Last name is required.",
+  }),
+  email: z.string().min(1, {
+    message: "Email address is required.",
   }),
 });
 

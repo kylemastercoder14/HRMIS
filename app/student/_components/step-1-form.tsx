@@ -74,6 +74,23 @@ const Step1Form = ({ nextStep }: { nextStep: () => void }) => {
     }
   };
 
+  const facultyRanks = [
+    "Associate Professor I",
+    "Associate Professor II",
+    "Associate Professor III",
+    "Associate Professor IV",
+    "Associate Professor V",
+    "Assistant Professor I",
+    "Assistant Professor II",
+    "Assistant Professor III",
+    "Assistant Professor IV",
+    "Assistant Professor V",
+    "COS Faculty",
+    "Instructor I",
+    "Instructor II",
+    "Instructor III",
+  ];
+
   return (
     <Form {...form}>
       <form
@@ -125,7 +142,7 @@ const Step1Form = ({ nextStep }: { nextStep: () => void }) => {
             name="academicRank"
             isRequired
             fieldType={FormFieldType.SELECT}
-            options={["Instructor I", "Professor II"]}
+            options={facultyRanks}
             label="Academic Rank of Faculty"
             placeholder="Select Academic Rank"
             disabled={isPending}

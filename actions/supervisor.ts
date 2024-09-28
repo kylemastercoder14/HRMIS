@@ -1,38 +1,29 @@
 "use server";
 
-import { ProfileUpdateSchema, UserRegistrationSchema } from "@/lib/validators";
-import { z } from "zod";
-import bcryptjs from "bcryptjs";
 import db from "@/lib/db";
+import { ProfileUpdateSupervisorSchema, SupervisorRegistrationSchema } from "@/lib/validators";
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
+import bcryptjs from "bcryptjs";
+import { z } from "zod";
 
 export const createUser = async (
-  values: z.infer<typeof UserRegistrationSchema>,
+  values: z.infer<typeof SupervisorRegistrationSchema>,
   clerkId: string
 ) => {
-  const validatedField = UserRegistrationSchema.safeParse(values);
+  const validatedField = SupervisorRegistrationSchema.safeParse(values);
 
   if (!validatedField.success) {
     const errors = validatedField.error.errors.map((err) => err.message);
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const {
-    firstName,
-    middleInitial,
-    lastName,
-    suffix,
-    email,
-    password,
-    section,
-    yearLevel,
-    course,
-  } = validatedField.data;
+  const { firstName, middleInitial, lastName, suffix, email, password } =
+    validatedField.data;
 
   const hashedPassword = await bcryptjs.hash(password, 10);
 
   try {
-    await db.student.create({
+    await db.supervisor.create({
       data: {
         fname: firstName,
         clerkId,
@@ -41,9 +32,6 @@ export const createUser = async (
         suffix,
         email,
         password: hashedPassword,
-        section,
-        yearLevel,
-        course,
       },
     });
     return { success: "User created successfully" };
@@ -62,7 +50,7 @@ export const createProfile = async (profile: string) => {
 
   try {
     // await clerkClient.users.updateUser(user.id, { profileImageID: profile });
-    await db.student.update({
+    await db.supervisor.update({
       where: {
         clerkId: user.id,
       },
@@ -86,7 +74,7 @@ export const removeProfile = async () => {
   if (!user) return { error: "User not found" };
 
   try {
-    await db.student.update({
+    await db.supervisor.update({
       where: {
         clerkId: user.id,
       },
@@ -105,9 +93,9 @@ export const removeProfile = async () => {
 };
 
 export const updateProfileInfo = async (
-  values: z.infer<typeof ProfileUpdateSchema>
+  values: z.infer<typeof ProfileUpdateSupervisorSchema>
 ) => {
-  const validatedField = ProfileUpdateSchema.safeParse(values);
+  const validatedField = ProfileUpdateSupervisorSchema.safeParse(values);
 
   if (!validatedField.success) {
     const errors = validatedField.error.errors.map((err) => err.message);
@@ -119,9 +107,7 @@ export const updateProfileInfo = async (
     middleInitial,
     lastName,
     email,
-    section,
-    yearLevel,
-    course,
+    suffix,
   } = validatedField.data;
 
   const user = await currentUser();
@@ -133,7 +119,7 @@ export const updateProfileInfo = async (
       lastName,
       signOutOfOtherSessions: true,
     });
-    await db.student.update({
+    await db.supervisor.update({
       where: {
         clerkId: user.id,
       },
@@ -141,10 +127,8 @@ export const updateProfileInfo = async (
         fname: firstName,
         mname: middleInitial,
         lname: lastName,
+        suffix,
         email,
-        section,
-        yearLevel,
-        course,
       },
     });
     return { success: "User updated successfully" };
@@ -162,7 +146,7 @@ export const deleteProfile = async () => {
 
   try {
     await clerkClient.users.deleteUser(user.id);
-    await db.student.delete({
+    await db.supervisor.delete({
       where: {
         clerkId: user.id,
       },
@@ -176,3 +160,4 @@ export const deleteProfile = async () => {
     };
   }
 };
+

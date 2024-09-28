@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,19 +11,12 @@ import SubmitButton from "@/components/submit-button";
 import { useRouter } from "next/navigation";
 import {
   EmailVerificationSchema,
-  UserRegistrationSchema,
+  SupervisorRegistrationSchema,
 } from "@/lib/validators";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import CustomFormField from "@/components/custom-formfield";
 import { FormFieldType, OPT_LENGTH } from "@/lib/constants";
 import { useSignUp } from "@clerk/nextjs";
-import { createUser } from "@/actions/users";
+import { createUser } from "@/actions/supervisor";
 import { maskEmail } from "@/lib/utils";
 import { InputOTP, InputOTPSlot } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
@@ -37,8 +29,8 @@ const Signup = () => {
   const router = useRouter();
 
   // User registration form
-  const form = useForm<z.infer<typeof UserRegistrationSchema>>({
-    resolver: zodResolver(UserRegistrationSchema),
+  const form = useForm<z.infer<typeof SupervisorRegistrationSchema>>({
+    resolver: zodResolver(SupervisorRegistrationSchema),
     defaultValues: {
       firstName: "",
       middleInitial: "",
@@ -46,9 +38,6 @@ const Signup = () => {
       suffix: "",
       email: "",
       password: "",
-      course: "",
-      section: "",
-      yearLevel: "",
       terms: false,
     },
   });
@@ -62,7 +51,9 @@ const Signup = () => {
   });
 
   // Submit registration data
-  const onSubmit = async (values: z.infer<typeof UserRegistrationSchema>) => {
+  const onSubmit = async (
+    values: z.infer<typeof SupervisorRegistrationSchema>
+  ) => {
     if (!isLoaded) return;
 
     try {
@@ -105,7 +96,7 @@ const Signup = () => {
         await setActive({ session: completeSignUp.createdSessionId });
 
         // Capture form data and insert into the database
-        const registrationData = form.getValues(); // Get values from the first form
+        const registrationData = form.getValues();
         await createUser(
           registrationData,
           completeSignUp.createdUserId ?? ""
@@ -114,7 +105,7 @@ const Signup = () => {
             toast.error(data.error);
           } else {
             toast.success(data.success);
-            router.push("/student");
+            router.push("/supervisor");
           }
         });
       } else {
@@ -127,20 +118,6 @@ const Signup = () => {
       setIsPending(false);
     }
   };
-
-  const alphabetOptions = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
-  const courseOptions = [
-    "Bachelor of Science in Criminology",
-    "Bachelor of Elementary Education",
-    "Bachelor of Secondary Education",
-    "Bachelor of Technology and Livelihood Education",
-    "Bachelor of Science in Agroforestry",
-    "Bachelor of Science in Environmental Science",
-    "Bachelor of Science in Industrial Technology",
-    "Bachelor of Science in Information Technology",
-    "Bachelor of Engineering Technology",
-  ];
-  
 
   // Display the verification form to capture the OTP code
   if (verifying) {
@@ -261,38 +238,6 @@ const Signup = () => {
               fieldType={FormFieldType.INPUT}
             />
           </div>
-          <div className="field-group-col3">
-            <CustomFormField
-              control={form.control}
-              name="yearLevel"
-              placeholder="Select your year level"
-              disabled={isPending}
-              options={["1", "2", "3", "4"]}
-              isRequired
-              label="Year Level"
-              fieldType={FormFieldType.SELECT}
-            />
-            <CustomFormField
-              control={form.control}
-              name="course"
-              placeholder="Select your course"
-              disabled={isPending}
-              options={courseOptions}
-              isRequired
-              label="Course"
-              fieldType={FormFieldType.SELECT}
-            />
-            <CustomFormField
-              control={form.control}
-              name="section"
-              placeholder="Select your section"
-              disabled={isPending}
-              options={alphabetOptions}
-              isRequired
-              label="Section"
-              fieldType={FormFieldType.SELECT}
-            />
-          </div>
           <CustomFormField
             control={form.control}
             name="terms"
@@ -304,10 +249,11 @@ const Signup = () => {
           <SubmitButton isLoading={isPending}>Register</SubmitButton>
         </form>
       </Form>
-      <p className="text-center text-muted-foreground">
+
+      <p className="text-center mt-3 text-muted-foreground">
         Already have an account?{" "}
         <Link
-          href="/auth/student/login"
+          href="/auth/supervisor/login"
           className="font-semibold underline text-black"
         >
           Sign In

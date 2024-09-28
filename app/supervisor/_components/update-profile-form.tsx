@@ -2,39 +2,38 @@
 
 import CustomFormField from "@/components/custom-formfield";
 import { Form } from "@/components/ui/form";
-import { Student } from "@prisma/client";
+import { Supervisor } from "@prisma/client";
 import React, { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { ProfileUpdateSchema } from "@/lib/validators";
+import { ProfileUpdateSupervisorSchema } from "@/lib/validators";
 import { FormFieldType } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import SubmitButton from "@/components/submit-button";
 import { useRouter } from "next/navigation";
-import { deleteProfile, updateProfileInfo } from "@/actions/users";
+import { deleteProfile, updateProfileInfo } from "@/actions/supervisor";
 import { toast } from "sonner";
 import AlertModal from "@/components/ui/alert-modal";
 
-const UpdateProfileForm = ({ student }: { student: Student }) => {
+const UpdateProfileForm = ({ supervisor }: { supervisor: Supervisor }) => {
   const [isPending, setIsPending] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const form = useForm<z.infer<typeof ProfileUpdateSchema>>({
-    resolver: zodResolver(ProfileUpdateSchema),
+  const form = useForm<z.infer<typeof ProfileUpdateSupervisorSchema>>({
+    resolver: zodResolver(ProfileUpdateSupervisorSchema),
     defaultValues: {
-      firstName: student.fname ?? "",
-      lastName: student.lname ?? "",
-      middleInitial: student.mname ?? "",
-      suffix: student.suffix ?? "",
-      email: student.email ?? "",
-      course: student.course ?? "",
-      section: student.section ?? "",
-      yearLevel: student.yearLevel ?? "",
+      firstName: supervisor.fname ?? "",
+      lastName: supervisor.lname ?? "",
+      middleInitial: supervisor.mname ?? "",
+      suffix: supervisor.suffix ?? "",
+      email: supervisor.email ?? "",
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof ProfileUpdateSchema>) => {
+  const onSubmit = async (
+    values: z.infer<typeof ProfileUpdateSupervisorSchema>
+  ) => {
     try {
       setIsPending(true);
       const response = await updateProfileInfo(values);
@@ -70,21 +69,6 @@ const UpdateProfileForm = ({ student }: { student: Student }) => {
       setOpen(false);
     }
   };
-
-  const alphabetOptions = Array.from({ length: 26 }, (_, i) =>
-    String.fromCharCode(65 + i)
-  );
-  const courseOptions = [
-    "Bachelor of Science in Criminology",
-    "Bachelor of Elementary Education",
-    "Bachelor of Secondary Education",
-    "Bachelor of Technology and Livelihood Education",
-    "Bachelor of Science in Agroforestry",
-    "Bachelor of Science in Environmental Science",
-    "Bachelor of Science in Industrial Technology",
-    "Bachelor of Science in Information Technology",
-    "Bachelor of Engineering Technology",
-  ];
 
   return (
     <>
@@ -152,38 +136,6 @@ const UpdateProfileForm = ({ student }: { student: Student }) => {
             fieldType={FormFieldType.INPUT}
             name="email"
           />
-          <div className="field-group-col3 mt-2">
-            <CustomFormField
-              control={form.control}
-              name="course"
-              placeholder="Select your course"
-              disabled={isPending}
-              options={courseOptions}
-              isRequired
-              label="Course"
-              fieldType={FormFieldType.SELECT}
-            />
-            <CustomFormField
-              control={form.control}
-              name="yearLevel"
-              placeholder="Select your year level"
-              disabled={isPending}
-              options={["1", "2", "3", "4"]}
-              isRequired
-              label="Year Level"
-              fieldType={FormFieldType.SELECT}
-            />
-            <CustomFormField
-              control={form.control}
-              name="section"
-              placeholder="Select your section"
-              disabled={isPending}
-              options={alphabetOptions}
-              isRequired
-              label="Section"
-              fieldType={FormFieldType.SELECT}
-            />
-          </div>
           <div className="flex mt-4 items-center justify-between">
             <div className="flex items-center gap-3">
               <SubmitButton isLoading={isPending}>Save Changes</SubmitButton>

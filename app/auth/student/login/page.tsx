@@ -55,61 +55,59 @@ const Signin = () => {
       }
     } catch (error: any) {
       console.error(JSON.stringify(error, null, 2));
-      toast.error(error.message || "No user found with the provided credentials.");
+      toast.error(
+        error.message || "No user found with the provided credentials."
+      );
     } finally {
       setIsPending(false);
     }
   };
 
   return (
-    <div className="absolute top-[50%] left-[50%] -translate-y-[50%] -translate-x-[50%]">
-      <Card className="m-auto shadow-xl">
-        <CardHeader>
-          <CardTitle className="text-2xl">Welcome Back</CardTitle>
-          <CardDescription>
-            Enter your informations below to login your account.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-3">
-              <div className="grid gap-2">
-                <CustomFormField
-                  control={form.control}
-                  name="email"
-                  placeholder="juandelacruz@gmail.com"
-                  disabled={isPending}
-                  isRequired
-                  label="Email Address"
-                  fieldType={FormFieldType.INPUT}
-                />
-              </div>
-              <div className="grid gap-2">
-                <CustomFormField
-                  control={form.control}
-                  name="password"
-                  placeholder="********"
-                  disabled={isPending}
-                  isRequired
-                  type="password"
-                  label="Password"
-                  fieldType={FormFieldType.INPUT}
-                />
-              </div>
-              <SubmitButton isLoading={isPending}>Continue</SubmitButton>
-            </form>
-          </Form>
-          <p className="text-center mt-3 text-muted-foreground">
-            Don&apos;t have an account?{" "}
-            <Link
-              href="/auth/student/signup"
-              className="font-semibold underline text-black"
-            >
-              Sign Up
-            </Link>
-          </p>
-        </CardContent>
-      </Card>
+    <div className="mx-auto grid gap-6">
+      <div className="grid gap-2">
+        <h1 className="text-3xl font-bold">Welcome Back</h1>
+        <p className="text-balance text-muted-foreground">
+          Enter your informations below to login your account
+        </p>
+      </div>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-3">
+          <div className="grid gap-2">
+            <CustomFormField
+              control={form.control}
+              name="email"
+              placeholder="juan.delacruz@cbsua.edu.ph"
+              disabled={isPending}
+              isRequired
+              label="Email Address"
+              fieldType={FormFieldType.INPUT}
+            />
+          </div>
+          <div className="grid gap-2">
+            <CustomFormField
+              control={form.control}
+              name="password"
+              placeholder="********"
+              disabled={isPending}
+              isRequired
+              type="password"
+              label="Password"
+              fieldType={FormFieldType.INPUT}
+            />
+          </div>
+          <SubmitButton isLoading={isPending}>Continue</SubmitButton>
+        </form>
+      </Form>
+      <p className="text-center mt-3 text-muted-foreground">
+        Don&apos;t have an account?{" "}
+        <Link
+          href="/auth/student/signup"
+          className="font-semibold underline text-black"
+        >
+          Sign Up
+        </Link>
+      </p>
     </div>
   );
 };

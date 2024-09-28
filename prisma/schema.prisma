@@ -3,9 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider     = "postgresql"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model Student {
@@ -14,6 +13,7 @@ model Student {
   fname      String
   mname      String?
   lname      String
+  suffix     String?
   email      String
   password   String
   course     String
@@ -31,6 +31,27 @@ model Faculty {
   fname      String
   mname      String?
   lname      String
+  suffix     String?
+  category   String?
+  status     String?
+  email      String
+  password   String
+  profile    String?
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @updatedAt
+  Evaluation Evaluation[]
+  course     String[]
+  section    String[]
+  yearLevel  String[]
+}
+
+model Supervisor {
+  id         String       @id @unique @default(cuid())
+  clerkId    String       @unique
+  fname      String
+  mname      String?
+  lname      String
+  suffix     String?
   email      String
   password   String
   profile    String?
@@ -38,6 +59,7 @@ model Faculty {
   updatedAt  DateTime     @updatedAt
   Evaluation Evaluation[]
 }
+
 
 model Evaluation {
   id            String   @id @unique @default(cuid())
@@ -76,4 +98,5 @@ model Evaluation {
 
   @@index([studentId])
   @@index([evaluatee])
+  Supervisor Supervisor[]
 }

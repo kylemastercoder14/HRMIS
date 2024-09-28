@@ -38,6 +38,7 @@ interface CustomProps {
   options?: Array<string>;
   label?: string;
   type?: string | number;
+  readOnly?: boolean;
   placeholder?: string;
   description?: string | React.ReactNode;
   icon?: React.ReactNode;
@@ -63,6 +64,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
     disabled,
     description,
     type,
+    readOnly,
     options,
     label,
     uploaderVar,
@@ -85,6 +87,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
             <FormControl>
               <div className="shad-input-outer">
                 <Input
+                readOnly={readOnly}
                   type={
                     type === "password" && !showPassword ? "password" : "text"
                   }
