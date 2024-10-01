@@ -1,18 +1,56 @@
-"use client";
-
 import React from "react";
-import Lottie from "lottie-react";
-import underMaintenance from "@/public/under-maintenance.json";
+import db from "@/lib/db";
+import Heading from "@/components/heading";
+import { format } from "date-fns";
+import { InvitationColumn } from "./_components/column";
+import InvitationClient from "./_components/client";
+import InvitationForm from "./_components/invitation-form";
+import { auth } from "@clerk/nextjs/server";
 
-const TrainingInvitation = () => {
+const Invitation = async () => {
+  const { userId } = auth();
+  const facultyId = userId;
+
+  // Fetching invitations with supervisors
+  const invitations = await db.invitation.findMany({
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  const faculty = await db.faculty.findUnique({
+    where: {
+      clerkId: facultyId as string,
+    },
+  });
+
+  const formattedInvitation: InvitationColumn[] = invitations.map((item) => {
+    const facultyName = faculty
+      ? `${faculty.fname} ${faculty.mname} ${faculty.lname}`
+      : "No Faculty"; // Handle case where faculty is null
+
+    return {
+      id: item.id,
+      title: item.name,
+      platform: item.platform,
+      file: item.file,
+      createdAt: format(item.createdAt, "MMMM dd, yyyy"),
+      time: format(item.createdAt, "hh:mm a"),
+      name: facultyName,
+    };
+  });
+
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className="text-center mt-20 text-4xl font-black">
-        This page is on-going development!!
+    <div className="flex-1 space-y-4 p-8 pt-6">
+      <div className="flex items-center justify-between space-y-2">
+        <Heading
+          title={`Invitation Record`}
+          description="Welcome to the Invitation Record page, where you can manage and track invitations sent to faculty members for training programs."
+        />
       </div>
-      <Lottie animationData={underMaintenance} className="w-[50%] mt-10" loop />
+      <InvitationClient data={formattedInvitation} />
     </div>
   );
 };
 
-export default TrainingInvitation;
+export default Invitation;

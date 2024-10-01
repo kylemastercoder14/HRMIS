@@ -131,7 +131,7 @@ const Step1Form = ({ nextStep }: { nextStep: () => void }) => {
             fieldType={FormFieldType.SELECT}
             options={faculties.map(
               (faculty) =>
-                faculty.fname + " " + faculty.mname + " " + faculty.lname
+                faculty.lname + ", " + faculty.fname + " " + faculty.mname
             )}
             label="Name of Faculty to be Evaluated"
             placeholder="Select Faculty"

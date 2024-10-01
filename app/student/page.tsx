@@ -15,10 +15,27 @@ import Step3Form from "./_components/step-3-form";
 import Step4Form from "./_components/step-4-form";
 import Step5Form from "./_components/step-5-form";
 import Step6Form from "./_components/step-6-form";
+import { Student } from "@prisma/client";
 
 const Home = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [isMounted, setIsMounted] = useState(false);
+  const [studentData, setStudentData] = useState<Student | null>(null);
+
+  useEffect(() => {
+    const fetchStudentData = async () => {
+      try {
+        const response = await fetch("/api/student");
+        const { student } = await response.json();
+        setStudentData(student);
+      } catch (err: any) {
+        console.log(err.message || "Something went wrong");
+      }
+    };
+
+    fetchStudentData();
+  }, []);
+
   useEffect(() => {
     setIsMounted(true);
   }, []);
@@ -116,11 +133,21 @@ const Home = () => {
         </CardHeader>
         <Separator />
         <CardContent>
-          {currentStep === 1 && <Step1Form nextStep={nextStep} />}
-          {currentStep === 2 && <Step2Form nextStep={nextStep} prevStep={prevStep} />}
-          {currentStep === 3 && <Step3Form nextStep={nextStep} prevStep={prevStep} />}
-          {currentStep === 4 && <Step4Form nextStep={nextStep} prevStep={prevStep} />}
-          {currentStep === 5 && <Step5Form nextStep={nextStep} prevStep={prevStep} />}
+          {currentStep === 1 && (
+            <Step1Form nextStep={nextStep} studentData={studentData} />
+          )}
+          {currentStep === 2 && (
+            <Step2Form nextStep={nextStep} prevStep={prevStep} />
+          )}
+          {currentStep === 3 && (
+            <Step3Form nextStep={nextStep} prevStep={prevStep} />
+          )}
+          {currentStep === 4 && (
+            <Step4Form nextStep={nextStep} prevStep={prevStep} />
+          )}
+          {currentStep === 5 && (
+            <Step5Form nextStep={nextStep} prevStep={prevStep} />
+          )}
           {currentStep === 6 && <Step6Form prevStep={prevStep} />}
         </CardContent>
       </Card>

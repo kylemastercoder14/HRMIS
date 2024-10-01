@@ -1,3 +1,4 @@
+
 import { z } from "zod";
 
 export const UserRegistrationSchema = z.object({
@@ -9,14 +10,17 @@ export const UserRegistrationSchema = z.object({
     message: "Last name is required.",
   }),
   suffix: z.string().optional(),
-  email: z
-    .string()
-    .min(1, {
-      message: "Email address is required.",
-    })
-    .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
-      message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
-    }),
+  email: z.string().min(1, {
+    message: "Last name is required.",
+  }),
+  // email: z
+  //   .string()
+  //   .min(1, {
+  //     message: "Email address is required.",
+  //   })
+  //   .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
+  //     message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
+  //   }),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters long." })
@@ -309,5 +313,32 @@ export const ChangePasswordSchema = z.object({
     }),
   confirmPassword: z.string().min(1, {
     message: "Confirm Password is required.",
+  }),
+});
+
+export const AssignFormSchema = z.object({
+  faculty: z.string().min(1, {
+    message: "Faculty is required.",
+  }),
+  yearLevel: z.array(z.string()).min(1, {
+    message: "At least one year level is required.",
+  }),
+  course: z.array(z.string()).min(1, {
+    message: "At least one course is required.",
+  }),
+  section: z.array(z.string()).min(1, {
+    message: "At least one section is required.",
+  }),
+});
+
+export const InvitationFormSchema = z.object({
+  name: z.string().min(1, {
+    message: "Title is required.",
+  }),
+  platform: z.string().min(1, {
+    message: "Platform is required.",
+  }),
+  file: z.string().min(1, {
+    message: "File attachment is required.",
   }),
 });

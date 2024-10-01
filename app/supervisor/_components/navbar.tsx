@@ -41,6 +41,12 @@ const SupervisorNavbar = ({
           <span>HRMIS - CBSUA</span>
         </Link>
         <Link
+          href="/supervisor/dashboard"
+          className={pathname === "/supervisor/dashboard" ? "text-black" : "text-muted-foreground hover:text-black"}
+        >
+          <span>Dashboard</span>
+        </Link>
+        <Link
           href="/supervisor/history"
           className={pathname === "/supervisor/history" ? "text-black" : "text-muted-foreground hover:text-black"}
         >

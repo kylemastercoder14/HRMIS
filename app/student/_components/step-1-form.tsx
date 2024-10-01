@@ -1,17 +1,24 @@
 "use client";
 
-import { fetchFaculties } from "@/actions/faculty";
+import { fetchFacultiesByFeatures } from "@/actions/faculty";
 import CustomFormField from "@/components/custom-formfield";
 import SubmitButton from "@/components/submit-button";
 import { Form } from "@/components/ui/form";
 import { FormFieldType } from "@/lib/constants";
 import { Step1Schema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Student } from "@prisma/client";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-const Step1Form = ({ nextStep }: { nextStep: () => void }) => {
+const Step1Form = ({
+  nextStep,
+  studentData,
+}: {
+  nextStep: () => void;
+  studentData: Student | null;
+}) => {
   const [isPending, setIsPending] = useState(false);
   const [faculties, setFaculties] = useState<
     { fname: string; mname: string | null; lname: string }[]
@@ -19,14 +26,27 @@ const Step1Form = ({ nextStep }: { nextStep: () => void }) => {
 
   useEffect(() => {
     const getFaculties = async () => {
-      const response = await fetchFaculties();
-      if (response.faculties) {
-        setFaculties(response?.faculties || []);
+      if (
+        studentData?.course &&
+        studentData?.yearLevel &&
+        studentData?.section
+      ) {
+        const response = await fetchFacultiesByFeatures(
+          studentData.course,
+          studentData.yearLevel,
+          studentData.section
+        );
+
+        if (response?.faculties) {
+          setFaculties(response.faculties);
+        } else if (response?.error) {
+          console.error(response.error);
+        }
       }
     };
 
     getFaculties();
-  }, []);
+  }, [studentData?.course, studentData?.yearLevel, studentData?.section]);
 
   // Check for localStorage data initially
   const savedData =
@@ -129,7 +149,7 @@ const Step1Form = ({ nextStep }: { nextStep: () => void }) => {
             fieldType={FormFieldType.SELECT}
             options={faculties.map(
               (faculty) =>
-                faculty.fname + " " + faculty.mname + " " + faculty.lname
+                faculty.lname + ", " + faculty.fname + " " + faculty.mname
             )}
             label="Name of Faculty to be Evaluated"
             placeholder="Select Faculty"

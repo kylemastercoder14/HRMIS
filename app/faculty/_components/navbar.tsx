@@ -61,12 +61,6 @@ const FacultyNavbar = ({
         >
           <span>Training Invitation</span>
         </Link>
-        <Link
-          href="/faculty/non-teaching"
-          className={pathname === "/faculty/non-teaching" ? "text-black" : "text-muted-foreground hover:text-black"}
-        >
-          <span>Non-Teaching Evaluation</span>
-        </Link>
       </nav>
       <div className="ml-auto flex-1 sm:flex-initial">
         <DropdownMenu>

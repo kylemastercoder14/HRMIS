@@ -25,3 +25,20 @@ export const maskEmail = (email: string) => {
       : localPart;
   return `${maskedLocalPart}@${domain}`;
 };
+
+export function getInitials(name: string) {
+  return name
+    .split(" ") // Split the name by spaces
+    .map((word) => word[0]) // Take the first letter of each word
+    .join("") // Join them to form the initials
+    .toUpperCase(); // Convert to uppercase
+}
+
+export function getAcronym(phrase: string): string {
+  const excludeWords = ['of', 'in', 'and']; // Add common words to exclude from acronym
+  return phrase
+    .split(' ') // Split phrase into words
+    .filter(word => !excludeWords.includes(word.toLowerCase())) // Exclude common words
+    .map(word => word[0].toUpperCase()) // Get the first letter of each word
+    .join(''); // Join the letters into the acronym
+}

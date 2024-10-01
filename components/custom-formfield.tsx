@@ -87,7 +87,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
             <FormControl>
               <div className="shad-input-outer">
                 <Input
-                readOnly={readOnly}
+                  readOnly={readOnly}
                   type={
                     type === "password" && !showPassword ? "password" : "text"
                   }

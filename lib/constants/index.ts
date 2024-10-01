@@ -46,3 +46,35 @@ export const AcceptedFileTypes = {
     "image/*": [".jpg", ".jpeg", ".png", ".heic", ".heif"],
   },
 };
+
+export const YEAR_LEVEL = [
+  {
+    id: "1",
+    label: "1",
+  },
+  {
+    id: "2",
+    label: "2",
+  },
+  {
+    id: "3",
+    label: "3",
+  },
+  {
+    id: "4",
+    label: "4",
+  },
+] as const;
+
+export const SECTIONS = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
+export const COURSES = [
+  "Bachelor of Science in Criminology",
+  "Bachelor of Elementary Education",
+  "Bachelor of Secondary Education",
+  "Bachelor of Technology and Livelihood Education",
+  "Bachelor of Science in Agroforestry",
+  "Bachelor of Science in Environmental Science",
+  "Bachelor of Science in Industrial Technology",
+  "Bachelor of Science in Information Technology",
+  "Bachelor of Engineering Technology",
+];

@@ -1,7 +1,11 @@
 "use server";
 
 import db from "@/lib/db";
-import { FacultyRegistrationSchema, ProfileUpdateFacultySchema } from "@/lib/validators";
+import {
+  AssignFormSchema,
+  FacultyRegistrationSchema,
+  ProfileUpdateFacultySchema,
+} from "@/lib/validators";
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import bcryptjs from "bcryptjs";
 import { z } from "zod";
@@ -52,6 +56,55 @@ export const fetchFaculties = async () => {
         lname: true,
       },
     });
+    return { faculties: result };
+  } catch (error: any) {
+    return {
+      error: `Failed to fetch faculties. Please try again. ${
+        error.message || ""
+      }`,
+    };
+  }
+};
+
+export const fetchFacultiesByFeatures = async (
+  course: string,
+  yearLevel: string,
+  section: string
+) => {
+  if (!course && !yearLevel && !section)
+    return {
+      error: "At least one of course, year level, or section is required",
+    };
+
+  try {
+    const result = await db.faculty.findMany({
+      where: {
+        OR: [
+          {
+            course: {
+              has: course, // Checks if the course array contains the specified course
+            },
+          },
+          {
+            yearLevel: {
+              has: yearLevel, // Checks if the yearLevel array contains the specified yearLevel
+            },
+          },
+          {
+            section: {
+              has: section, // Checks if the section array contains the specified section
+            },
+          },
+        ],
+      },
+      select: {
+        id: true,
+        fname: true,
+        mname: true,
+        lname: true,
+      },
+    });
+
     return { faculties: result };
   } catch (error: any) {
     return {
@@ -152,7 +205,7 @@ export const updateProfileInfo = async (
         suffix,
         email,
         category,
-        status
+        status,
       },
     });
     return { success: "User updated successfully" };
@@ -185,3 +238,36 @@ export const deleteProfile = async () => {
   }
 };
 
+export const assignFaculty = async (
+  facultyId: string,
+  values: z.infer<typeof AssignFormSchema>
+) => {
+  const validatedField = AssignFormSchema.safeParse(values);
+
+  if (!validatedField.success) {
+    const errors = validatedField.error.errors.map((err) => err.message);
+    return { error: `Validation Error: ${errors.join(", ")}` };
+  }
+
+  const { faculty, yearLevel, course, section } = validatedField.data;
+
+  try {
+    await db.faculty.update({
+      where: {
+        id: facultyId,
+      },
+      data: {
+        yearLevel,
+        course,
+        section,
+      },
+    });
+    return { success: "Faculty assigned successfully" };
+  } catch (error: any) {
+    return {
+      error: `Failed to assign faculty. Please try again. ${
+        error.message || ""
+      }`,
+    };
+  }
+};

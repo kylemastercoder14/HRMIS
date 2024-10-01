@@ -176,3 +176,24 @@ export const deleteProfile = async () => {
     };
   }
 };
+
+export const getStudentById = async (id: string) => {
+  try {
+    const student = await db.student.findFirst({
+      where: {
+        clerkId: id,
+      },
+    });
+
+    if (!student) {
+      return { error: "Student not found" };
+    }
+
+    return { student };
+  } catch (error: any) {
+    return {
+      error: `Failed to fetch student. Please try again. ${error.message || ""}`,
+    };
+  }
+};
+
