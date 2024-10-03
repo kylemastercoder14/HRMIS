@@ -42,6 +42,9 @@ export default async function Hero() {
         <Link href={"/auth/supervisor/signup"} className="bg-black text-white py-2 px-4 rounded-full">
           Supervisor
         </Link>
+        <Link href={"/auth/coordinator/signup"} className="bg-black text-white py-2 px-4 rounded-full">
+          Coordinator
+        </Link>
       </div>
       <div className="relative shadow-xl w-[1200px] ring-4 ring-[#777] bg-[#222222] h-[500px] overflow-hidden border-[15px] rounded-lg border-[#222222] mt-8 flex items-center justify-center mx-auto">
         <Image

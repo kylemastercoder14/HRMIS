@@ -17,7 +17,7 @@ import {
 import { usePathname } from "next/navigation";
 import { useClerk } from "@clerk/nextjs";
 
-const SupervisorNavbar = ({
+const CoordinatorNavbar = ({
   image,
   name,
   fallback,
@@ -31,44 +31,26 @@ const SupervisorNavbar = ({
   const { signOut } = useClerk();
   const pathname = usePathname();
   return (
-    <header className="sticky top-0 flex z-50 h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+    <header className="sticky top-0 flex h-16 z-50 items-center gap-4 border-b bg-background px-4 md:px-6">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
         <Link
-          href="/supervisor"
+          href="/coordinator/profile"
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
           <School className="h-6 w-6" />
           <span>HRMIS - CBSUA</span>
         </Link>
         <Link
-          href="/supervisor/dashboard"
-          className={pathname === "/supervisor/dashboard" ? "text-black" : "text-muted-foreground hover:text-black"}
-        >
-          <span>Dashboard</span>
-        </Link>
-        <Link
-          href="/supervisor/history"
-          className={pathname === "/supervisor/history" ? "text-black" : "text-muted-foreground hover:text-black"}
+          href="/coordinator/history"
+          className={pathname === "/coordinator/history" ? "text-black" : "text-muted-foreground hover:text-black"}
         >
           <span>Evalution History</span>
         </Link>
         <Link
-          href="/supervisor/student-record"
-          className={pathname === "/supervisor/student-record" ? "text-black" : "text-muted-foreground hover:text-black"}
+          href="/coordinator/student-record"
+          className={pathname === "/coordinator/student-record" ? "text-black" : "text-muted-foreground hover:text-black"}
         >
           <span>Student Record</span>
-        </Link>
-        <Link
-          href="/supervisor/invitation"
-          className={pathname === "/supervisor/invitation" ? "text-black" : "text-muted-foreground hover:text-black"}
-        >
-          <span>Training Invitation</span>
-        </Link>
-        <Link
-          href="/supervisor/assign"
-          className={pathname === "/supervisor/assign" ? "text-black" : "text-muted-foreground hover:text-black"}
-        >
-          <span>Assign Rater to Ratee</span>
         </Link>
       </nav>
       <div className="ml-auto flex-1 sm:flex-initial">
@@ -91,7 +73,7 @@ const SupervisorNavbar = ({
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
               <DropdownMenuItem className="cursor-pointer" asChild>
-                <Link href="/supervisor/profile">Profile</Link>
+                <Link href="/coordinator/profile">Profile</Link>
               </DropdownMenuItem>
               <DropdownMenuItem
                 onClick={() => signOut({ redirectUrl: "/" })}
@@ -108,4 +90,4 @@ const SupervisorNavbar = ({
   );
 };
 
-export default SupervisorNavbar;
+export default CoordinatorNavbar;

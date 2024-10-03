@@ -21,7 +21,7 @@ export type StudentColumn = {
 export const columns: ColumnDef<StudentColumn>[] = [
   {
     accessorKey: "name",
-    header: "Student",
+    header: "Faculty",
     cell: ({ row }) => (
       <div className="flex items-center gap-x-2">
         {row.original.imageUrl ? (

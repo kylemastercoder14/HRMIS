@@ -11,12 +11,12 @@ import SubmitButton from "@/components/submit-button";
 import { useRouter } from "next/navigation";
 import {
   EmailVerificationSchema,
-  SupervisorRegistrationSchema,
+  CoordinatorRegistrationSchema,
 } from "@/lib/validators";
 import CustomFormField from "@/components/custom-formfield";
 import { FormFieldType, OPT_LENGTH } from "@/lib/constants";
 import { useSignUp } from "@clerk/nextjs";
-import { createUser } from "@/actions/supervisor";
+import { createUser } from "@/actions/coordinator";
 import { maskEmail } from "@/lib/utils";
 import { InputOTP, InputOTPSlot } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
@@ -29,8 +29,8 @@ const Signup = () => {
   const router = useRouter();
 
   // User registration form
-  const form = useForm<z.infer<typeof SupervisorRegistrationSchema>>({
-    resolver: zodResolver(SupervisorRegistrationSchema),
+  const form = useForm<z.infer<typeof CoordinatorRegistrationSchema>>({
+    resolver: zodResolver(CoordinatorRegistrationSchema),
     defaultValues: {
       firstName: "",
       middleInitial: "",
@@ -52,7 +52,7 @@ const Signup = () => {
 
   // Submit registration data
   const onSubmit = async (
-    values: z.infer<typeof SupervisorRegistrationSchema>
+    values: z.infer<typeof CoordinatorRegistrationSchema>
   ) => {
     if (!isLoaded) return;
 
@@ -105,7 +105,7 @@ const Signup = () => {
             toast.error(data.error);
           } else {
             toast.success(data.success);
-            router.push("/supervisor");
+            router.push("/coordinator/profile");
           }
         });
       } else {
@@ -253,7 +253,7 @@ const Signup = () => {
       <p className="text-center mt-3 text-muted-foreground">
         Already have an account?{" "}
         <Link
-          href="/auth/supervisor/login"
+          href="/auth/coordinator/login"
           className="font-semibold underline text-black"
         >
           Sign In

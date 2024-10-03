@@ -176,7 +176,7 @@ const Signup = () => {
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-3">
-          <div className="grid grid-cols-7 gap-3">
+          <div className="grid grid-cols-1 gap-3">
             <div className="col-span-2">
               <CustomFormField
                 control={form.control}
