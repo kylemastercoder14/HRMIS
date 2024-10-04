@@ -1,7 +1,7 @@
 "use server";
 
 import db from "@/lib/db";
-import { ProfileUpdateSupervisorSchema, CoordinatorRegistrationSchema } from "@/lib/validators";
+import { ProfileUpdateCoordinatorSchema, CoordinatorRegistrationSchema } from "@/lib/validators";
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
 import bcryptjs from "bcryptjs";
 import { z } from "zod";
@@ -93,9 +93,9 @@ export const removeProfile = async () => {
 };
 
 export const updateProfileInfo = async (
-  values: z.infer<typeof ProfileUpdateSupervisorSchema>
+  values: z.infer<typeof ProfileUpdateCoordinatorSchema>
 ) => {
-  const validatedField = ProfileUpdateSupervisorSchema.safeParse(values);
+  const validatedField = ProfileUpdateCoordinatorSchema.safeParse(values);
 
   if (!validatedField.success) {
     const errors = validatedField.error.errors.map((err) => err.message);

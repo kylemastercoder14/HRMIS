@@ -11,7 +11,7 @@ const SupervisorLayout = async ({ children }: { children: React.ReactNode }) => 
       clerkId: user?.id,
     },
   });
-  if (!user || !supervisor) redirect("/");
+  if (!user || !supervisor) throw new Error("User not found");
   const fullName = `${supervisor.fname} ${supervisor.mname} ${supervisor.lname} ${supervisor.suffix}`;
   return (
     <div className="flex min-h-screen w-full flex-col">

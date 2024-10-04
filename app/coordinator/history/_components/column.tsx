@@ -1,10 +1,7 @@
 
 "use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { getInitials } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
-import Image from "next/image";
 
 export type EvaluationColumn = {
   id: string;

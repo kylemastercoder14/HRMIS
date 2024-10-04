@@ -66,6 +66,29 @@ export const fetchFaculties = async () => {
   }
 };
 
+export const fetchFacultyById = async (facultyId: string) => {
+  try {
+    const result = await db.faculty.findFirst({
+      where: {
+        clerkId: facultyId,
+      },
+      select: {
+        clerkId: true,
+        fname: true,
+        mname: true,
+        lname: true,
+      },
+    });
+    return { faculty: result };
+  } catch (error: any) {
+    return {
+      error: `Failed to fetch faculty. Please try again. ${
+        error.message || ""
+      }`,
+    };
+  }
+};
+
 export const fetchFacultiesByFeatures = async (
   course: string,
   yearLevel: string,

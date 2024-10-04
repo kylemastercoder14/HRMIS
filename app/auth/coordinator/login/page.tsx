@@ -42,7 +42,7 @@ const Signin = () => {
       // If sign-in process is complete, set the created session as active and redirect the user
       if (signInAttempt.status === "complete") {
         await setActive({ session: signInAttempt.createdSessionId });
-        router.push("/coordinator/profile");
+        router.push("/coordinator/dashboard");
       } else {
         console.error(JSON.stringify(signInAttempt, null, 2));
       }

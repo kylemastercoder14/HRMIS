@@ -105,7 +105,7 @@ const Signup = () => {
             toast.error(data.error);
           } else {
             toast.success(data.success);
-            router.push("/coordinator/profile");
+            router.push("/coordinator/dashboard");
           }
         });
       } else {
@@ -122,7 +122,7 @@ const Signup = () => {
   // Display the verification form to capture the OTP code
   if (verifying) {
     return (
-      <div className="mx-auto px-20 grid gap-6">
+      <div className="mx-auto md:px-20 px-5 grid gap-6">
         <div className="grid gap-2">
           <h1 className="text-3xl font-bold">Enter The OTP Code</h1>
           <p className="text-balance text-muted-foreground">
@@ -160,7 +160,7 @@ const Signup = () => {
   }
 
   return (
-    <div className="mx-auto px-20 grid gap-6">
+    <div className="mx-auto md:px-20 px-5 grid gap-6">
       <div className="grid gap-2">
         <h1 className="text-3xl font-bold">Create Account</h1>
         <p className="text-balance text-muted-foreground">

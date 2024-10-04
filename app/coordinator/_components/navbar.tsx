@@ -34,17 +34,29 @@ const CoordinatorNavbar = ({
     <header className="sticky top-0 flex h-16 z-50 items-center gap-4 border-b bg-background px-4 md:px-6">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
         <Link
-          href="/coordinator/profile"
+          href="/coordinator/dashboard"
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
           <School className="h-6 w-6" />
           <span>HRMIS - CBSUA</span>
         </Link>
         <Link
+          href="/coordinator/dashboard"
+          className={pathname === "/coordinator/dashboard" ? "text-black" : "text-muted-foreground hover:text-black"}
+        >
+          <span>Dashboard</span>
+        </Link>
+        <Link
           href="/coordinator/history"
           className={pathname === "/coordinator/history" ? "text-black" : "text-muted-foreground hover:text-black"}
         >
           <span>Evalution History</span>
+        </Link>
+        <Link
+          href="/coordinator/faculty-record"
+          className={pathname === "/coordinator/faculty-record" ? "text-black" : "text-muted-foreground hover:text-black"}
+        >
+          <span>Faculty Record</span>
         </Link>
         <Link
           href="/coordinator/student-record"

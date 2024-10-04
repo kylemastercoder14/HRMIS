@@ -1,20 +1,24 @@
 "use client";
 
-import { fetchFaculties } from "@/actions/faculty";
+import { fetchFaculties, fetchFacultyById } from "@/actions/faculty";
 import CustomFormField from "@/components/custom-formfield";
 import SubmitButton from "@/components/submit-button";
 import { Form } from "@/components/ui/form";
 import { FormFieldType } from "@/lib/constants";
-import db from "@/lib/db";
 import { Step1Schema } from "@/lib/validators";
+import { useUser } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Faculty } from "@prisma/client";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 const Step1Form = ({ nextStep }: { nextStep: () => void }) => {
+  const { user } = useUser();
   const [isPending, setIsPending] = useState(false);
+  const [userData, setUserData] = useState<{
+    clerkId: string;
+  } | null>(null);
   const [faculties, setFaculties] = useState<
     { fname: string; mname: string | null; lname: string }[]
   >([]);
@@ -30,6 +34,18 @@ const Step1Form = ({ nextStep }: { nextStep: () => void }) => {
     getFaculties();
   }, []);
 
+  useEffect(() => {
+    const getUserData = async () => {
+      const response = await fetchFacultyById(user?.id as string);
+      if (response.faculty) {
+        setUserData(response?.faculty || "");
+      }
+    };
+
+    getUserData();
+  }, [user?.id]);
+
+  console.log("userId" + user?.id + "and " + userData?.clerkId);
   // Check for localStorage data initially
   const savedData =
     typeof window !== "undefined" ? localStorage.getItem("step1Data") : null;
@@ -41,7 +57,8 @@ const Step1Form = ({ nextStep }: { nextStep: () => void }) => {
         schoolYear: "",
         evaluatee: "",
         academicRank: "",
-        evaluator: "Faculty",
+        evaluator:
+          user && userData && user.id === userData.clerkId ? "Self" : "Faculty",
       };
 
   // Initialize the form with data from localStorage if available
@@ -50,6 +67,13 @@ const Step1Form = ({ nextStep }: { nextStep: () => void }) => {
     defaultValues,
     mode: "onChange",
   });
+
+  useEffect(() => {
+    if (user && userData) {
+      const evaluatorValue = user.id === userData.clerkId ? "Self" : "Faculty";
+      form.setValue("evaluator", evaluatorValue); // Update the evaluator value in the form
+    }
+  }, [user, userData, form]);
 
   const { isValid } = form.formState;
 

@@ -8,25 +8,25 @@ import ChangePasswordForm from "../_components/change-password-form";
 
 const Profile = async () => {
   const user = await currentUser();
-  const faculty = await db.faculty.findUnique({
+  const coordinator = await db.coordinator.findUnique({
     where: {
       clerkId: user?.id,
     },
   });
-  if (!user || !faculty) return null;
+  if (!user || !coordinator) return null;
   return (
     <div className="flex flex-col gap-5 px-10 py-10">
       <Card className="shadow-md">
         <CardContent className="p-5">
           <ProfileUpdate
-            image={faculty?.profile as string}
-            fallback={faculty?.fname.charAt(0) as string}
+            image={coordinator?.profile as string}
+            fallback={coordinator?.fname.charAt(0) as string}
           />
         </CardContent>
       </Card>
       <Card className="shadow-md">
         <CardContent className="p-5">
-          <UpdateProfileForm faculty={faculty} />
+          <UpdateProfileForm coordinator={coordinator} />
         </CardContent>
       </Card>
       <Card className="shadow-md">

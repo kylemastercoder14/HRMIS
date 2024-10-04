@@ -318,6 +318,23 @@ export const ProfileUpdateFacultySchema = z.object({
   }),
 });
 
+export const ProfileUpdateCoordinatorSchema = z.object({
+  firstName: z.string().min(1, {
+    message: "First name is required.",
+  }),
+  middleInitial: z.string().optional(),
+  suffix: z.string().optional(),
+  lastName: z.string().min(1, {
+    message: "Last name is required.",
+  }),
+  email: z.string().min(1, {
+    message: "Email address is required.",
+  }),
+  status: z.string().min(1, {
+    message: "Status is required.",
+  }),
+});
+
 export const ProfileUpdateSupervisorSchema = z.object({
   firstName: z.string().min(1, {
     message: "First name is required.",

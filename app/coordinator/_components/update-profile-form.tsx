@@ -2,12 +2,12 @@
 
 import CustomFormField from "@/components/custom-formfield";
 import { Form } from "@/components/ui/form";
-import { Faculty, Student } from "@prisma/client";
+import { Coordinator, Faculty, Student } from "@prisma/client";
 import React, { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { ProfileUpdateFacultySchema } from "@/lib/validators";
+import { ProfileUpdateCoordinatorSchema } from "@/lib/validators";
 import { FormFieldType } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import SubmitButton from "@/components/submit-button";
@@ -16,25 +16,24 @@ import { deleteProfile, updateProfileInfo } from "@/actions/coordinator";
 import { toast } from "sonner";
 import AlertModal from "@/components/ui/alert-modal";
 
-const UpdateProfileForm = ({ faculty }: { faculty: Faculty }) => {
+const UpdateProfileForm = ({ coordinator }: { coordinator: Coordinator }) => {
   const [isPending, setIsPending] = useState(false);
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const form = useForm<z.infer<typeof ProfileUpdateFacultySchema>>({
-    resolver: zodResolver(ProfileUpdateFacultySchema),
+  const form = useForm<z.infer<typeof ProfileUpdateCoordinatorSchema>>({
+    resolver: zodResolver(ProfileUpdateCoordinatorSchema),
     defaultValues: {
-      firstName: faculty.fname ?? "",
-      lastName: faculty.lname ?? "",
-      middleInitial: faculty.mname ?? "",
-      suffix: faculty.suffix ?? "",
-      email: faculty.email ?? "",
-      category: faculty.category ?? "",
+      firstName: coordinator.fname ?? "",
+      lastName: coordinator.lname ?? "",
+      middleInitial: coordinator.mname ?? "",
+      suffix: coordinator.suffix ?? "",
+      email: coordinator.email ?? "",
       status: "Coordinator",
     },
   });
 
   const onSubmit = async (
-    values: z.infer<typeof ProfileUpdateFacultySchema>
+    values: z.infer<typeof ProfileUpdateCoordinatorSchema>
   ) => {
     try {
       setIsPending(true);
@@ -138,17 +137,7 @@ const UpdateProfileForm = ({ faculty }: { faculty: Faculty }) => {
             fieldType={FormFieldType.INPUT}
             name="email"
           />
-          <div className="field-group-col2 mt-2">
-            <CustomFormField
-              control={form.control}
-              label="Category"
-              placeholder="Select Your Category"
-              isRequired
-              options={["Permanent", "Contract of Service", "Part-Time"]}
-              disabled={isPending}
-              fieldType={FormFieldType.SELECT}
-              name="category"
-            />
+          <div className="mt-2">
             <CustomFormField
               control={form.control}
               label="Status"

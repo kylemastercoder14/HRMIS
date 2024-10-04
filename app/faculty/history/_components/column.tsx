@@ -12,6 +12,7 @@ export type EvaluationColumn = {
   no: any;
   ratings: any;
   qce: any;
+  recommendation: any;
 };
 
 export const columns: ColumnDef<EvaluationColumn>[] = [
@@ -30,5 +31,9 @@ export const columns: ColumnDef<EvaluationColumn>[] = [
   {
     accessorKey: "qce",
     header: "QCE Ratings (30%)",
+  },
+  {
+    accessorKey: "recommendation",
+    header: "Recommendation/Feedback",
   },
 ];

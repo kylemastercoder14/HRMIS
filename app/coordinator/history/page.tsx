@@ -31,12 +31,13 @@ const calculateAverageRating = (evaluation: any) => {
 
   const total = ratingFields.reduce((sum, rating) => sum + parseInt(rating), 0);
   const average = total / ratingFields.length;
-  return average; // Return the raw average
+  return average;
 };
 
-// Function to compute the QCE rating
+// Function to compute the QCE rating as 100%
 const computeQCERating = (averageRating: number) => {
-  return (averageRating * 0.3).toFixed(2); // Apply 30% weight
+  const percentageRating = (averageRating / 5) * 100; // Scale the 1-5 average to a 100% scale
+  return percentageRating.toFixed(2);
 };
 
 const History = async () => {
@@ -46,19 +47,41 @@ const History = async () => {
     },
   });
 
+  // Group evaluations by faculty
+  const groupedEvaluations: Record<string, any[]> = evaluations.reduce(
+    (acc, curr) => {
+      if (!acc[curr.evaluatee]) {
+        acc[curr.evaluatee] = [];
+      }
+      acc[curr.evaluatee].push(curr);
+      return acc;
+    },
+    {} as Record<string, any[]>
+  );
+
   let counter = 1;
 
-  // Format the evaluation data
-  const formattedEvaluation: EvaluationColumn[] = evaluations.map((item) => {
-    const averageRating = calculateAverageRating(item); // Compute the average rating
-    const qceRating = computeQCERating(averageRating); // Compute the QCE rating
+  // Format the evaluation data for each faculty
+  const formattedEvaluation: EvaluationColumn[] = Object.keys(
+    groupedEvaluations
+  ).map((faculty) => {
+    const facultyEvaluations = groupedEvaluations[faculty];
+
+    // Calculate the total average rating for all evaluations of this faculty
+    const totalAverageRating =
+      facultyEvaluations.reduce((sum, evaluation) => {
+        return sum + calculateAverageRating(evaluation);
+      }, 0) / facultyEvaluations.length;
+
+    // Compute the QCE rating based on the total average rating
+    const qceRating = parseFloat(computeQCERating(totalAverageRating));
 
     return {
-      id: item.id,
+      id: facultyEvaluations[0].id, // Using the first evaluation id, as the group represents the same faculty
       no: counter++,
-      faculty: item.evaluatee,
-      ratings: averageRating,
-      qce: qceRating,
+      faculty: faculty,
+      ratings: totalAverageRating.toFixed(2), // Format the total average rating to 2 decimal places
+      qce: qceRating.toFixed(2), // Format the QCE rating to 2 decimal places
     };
   });
 
