@@ -27,24 +27,25 @@ model Student {
 }
 
 model Faculty {
-  id          String       @id @unique @default(cuid())
-  clerkId     String       @unique
-  fname       String
-  mname       String?
-  lname       String
-  suffix      String?
-  category    String?
-  status      String?
-  email       String
-  password    String
-  profile     String?
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  Evaluation  Evaluation[]
-  course      String[]
-  section     String[]
-  yearLevel   String[]
-  invitations Invitation[] @relation("AcceptedInvitations")
+  id           String       @id @unique @default(cuid())
+  clerkId      String       @unique
+  fname        String
+  mname        String?
+  lname        String
+  suffix       String?
+  department   String?
+  academicRank String
+  status       String?
+  email        String
+  password     String
+  profile      String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  Evaluation   Evaluation[]
+  course       String[]
+  section      String[]
+  yearLevel    String[]
+  invitations  Invitation[] @relation("AcceptedInvitations")
 }
 
 model Supervisor {
@@ -54,6 +55,8 @@ model Supervisor {
   mname       String?
   lname       String
   suffix      String?
+  department   String?
+  academicRank String
   email       String
   password    String
   profile     String?
@@ -64,22 +67,22 @@ model Supervisor {
 }
 
 model Coordinator {
-  id          String       @id @unique @default(cuid())
-  clerkId     String       @unique
-  fname       String
-  mname       String?
-  lname       String
-  suffix      String?
-  email       String
-  password    String
-  profile     String?
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id        String   @id @unique @default(cuid())
+  clerkId   String   @unique
+  fname     String
+  mname     String?
+  lname     String
+  suffix    String?
+  email     String
+  password  String
+  profile   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Evaluation {
   id            String   @id @unique @default(cuid())
-  studentId     String
+  evaluatorId   String
   ratingPeriod  String
   schoolYear    String
   evaluatee     String
@@ -109,12 +112,11 @@ model Evaluation {
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
-  student    Student      @relation(fields: [studentId], references: [id])
-  faculty    Faculty      @relation(fields: [evaluatee], references: [id])
-  Supervisor Supervisor[]
+  Student    Student    @relation(fields: [evaluatorId], references: [id], map: "Evaluation_Student_FK")
+  Faculty    Faculty    @relation(fields: [evaluatorId], references: [id], map: "Evaluation_Faculty_FK")
+  Supervisor Supervisor @relation(fields: [evaluatorId], references: [id], map: "Evaluation_Supervisor_FK")
 
-  @@index([studentId])
-  @@index([evaluatee])
+  @@index([evaluatorId])
 }
 
 model Invitation {

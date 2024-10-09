@@ -7,35 +7,74 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { FormFieldType } from "@/lib/constants";
 import {
+  Step1Schema,
+  Step2Schema,
+  Step3Schema,
+  Step4Schema,
+  Step5Schema,
   Step6Schema,
 } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { Evaluation } from "@prisma/client";
+import { usePathname, useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-const Step6Form = ({ prevStep }: { prevStep: () => void }) => {
+const Step6Form = ({
+  prevStep,
+  evaluationData,
+}: {
+  prevStep: () => void;
+  evaluationData?: Evaluation | null;
+}) => {
   const [isPending, setIsPending] = useState(false);
   const router = useRouter();
+  const pathname = usePathname();
+
+  if (pathname !== "/faculty/evaluation-history") {
+    localStorage.removeItem("step1DataUpdate");
+    localStorage.removeItem("step2DataUpdate");
+    localStorage.removeItem("step3DataUpdate");
+    localStorage.removeItem("step4DataUpdate");
+    localStorage.removeItem("step5DataUpdate");
+  }
 
   const form = useForm<z.infer<typeof Step6Schema>>({
     resolver: zodResolver(Step6Schema),
     defaultValues: {
-      comments: "",
+      comments: evaluationData?.comments || "",
     },
     mode: "onChange",
   });
 
+  useEffect(() => {
+    if (evaluationData) {
+      form.reset({
+        comments: evaluationData?.comments || "",
+      });
+    }
+  }, [evaluationData, form]);
+
   const onSubmit = async (values: z.infer<typeof Step6Schema>) => {
     setIsPending(true);
     try {
-      const step1Data = JSON.parse(localStorage.getItem("step1Data") || "{}");
-      const step2Data = JSON.parse(localStorage.getItem("step2Data") || "{}");
-      const step3Data = JSON.parse(localStorage.getItem("step3Data") || "{}");
-      const step4Data = JSON.parse(localStorage.getItem("step4Data") || "{}");
-      const step5Data = JSON.parse(localStorage.getItem("step5Data") || "{}");
+      const step1Data = JSON.parse(
+        localStorage.getItem("step1DataUpdate") || "{}"
+      );
+      const step2Data = JSON.parse(
+        localStorage.getItem("step2DataUpdate") || "{}"
+      );
+      const step3Data = JSON.parse(
+        localStorage.getItem("step3DataUpdate") || "{}"
+      );
+      const step4Data = JSON.parse(
+        localStorage.getItem("step4DataUpdate") || "{}"
+      );
+      const step5Data = JSON.parse(
+        localStorage.getItem("step5DataUpdate") || "{}"
+      );
 
       const finalData = {
         ...step1Data,
@@ -52,11 +91,11 @@ const Step6Form = ({ prevStep }: { prevStep: () => void }) => {
       if (result.success) {
         window.location.assign("/faculty");
         toast.success("Evaluation submitted successfully");
-        localStorage.removeItem("step1Data");
-        localStorage.removeItem("step2Data");
-        localStorage.removeItem("step3Data");
-        localStorage.removeItem("step4Data");
-        localStorage.removeItem("step5Data");
+        localStorage.removeItem("step1DataUpdate");
+        localStorage.removeItem("step2DataUpdate");
+        localStorage.removeItem("step3DataUpdate");
+        localStorage.removeItem("step4DataUpdate");
+        localStorage.removeItem("step5DataUpdate");
       } else {
         toast.error(result.message);
       }
@@ -87,7 +126,9 @@ const Step6Form = ({ prevStep }: { prevStep: () => void }) => {
           <Button className="w-full" onClick={prevStep} variant="secondary">
             Back
           </Button>
-          <SubmitButton isLoading={isPending}>Submit</SubmitButton>
+          <SubmitButton isLoading={isPending}>
+            {evaluationData ? "Save Changes" : "Submit"}
+          </SubmitButton>
         </div>
       </form>
     </Form>

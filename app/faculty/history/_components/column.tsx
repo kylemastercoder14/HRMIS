@@ -1,39 +1,97 @@
-
+/* eslint-disable react-hooks/rules-of-hooks */
 "use client";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { getInitials } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
+import { useState } from "react";
+import RecommendationModal from "./recommendation-modal";
+import { Button } from "@/components/ui/button";
+import { Eye } from "lucide-react";
 
 export type EvaluationColumn = {
   id: string;
   faculty: string;
-  no: any;
-  ratings: any;
-  qce: any;
-  recommendation: any;
+  ratingPeriod: string;
+  schoolYear: string;
+  studentRating: any;
+  studentQce: any;
+  peerRating: any;
+  peerQce: any;
+  selfRating: any;
+  selfQce: any;
+  supervisorRating: any;
+  supervisorQce: any;
+  recommendation: string;
+  title: string;
+  overAllQce: any;
 };
 
 export const columns: ColumnDef<EvaluationColumn>[] = [
-  {
-    accessorKey: "no",
-    header: "No.",
-  },
   {
     accessorKey: "faculty",
     header: "Faculty",
   },
   {
-    accessorKey: "ratings",
-    header: "Total Student Ratings",
+    accessorKey: "ratingPeriod",
+    header: "Rating Period",
   },
   {
-    accessorKey: "qce",
-    header: "QCE Ratings (30%)",
+    accessorKey: "schoolYear",
+    header: "S.Y",
+  },
+  {
+    accessorKey: "studentRating",
+    header: "Student Ratings",
+  },
+  {
+    accessorKey: "studentQce",
+    header: "Student QCE",
+  },
+  {
+    accessorKey: "peerRating",
+    header: "Peer Ratings",
+  },
+  {
+    accessorKey: "peerQce",
+    header: "Peer QCE",
+  },
+  {
+    accessorKey: "selfRating",
+    header: "Selfe Ratings",
+  },
+  {
+    accessorKey: "selfQce",
+    header: "Self QCE",
+  },
+  {
+    accessorKey: "supervisorRating",
+    header: "Supervisor Ratings",
+  },
+  {
+    accessorKey: "supervisorQce",
+    header: "Supervisor QCE",
   },
   {
     accessorKey: "recommendation",
-    header: "Recommendation/Feedback",
+    header: "Recommendation",
+    cell: ({ row }) => {
+      const [open, setOpen] = useState(false);
+      return (
+        <>
+          <Button onClick={() => setOpen(true)} size="sm">
+            <Eye className="w-4 h-4" />
+          </Button>
+          <RecommendationModal
+          content={row.original.overAllQce}
+            description={row.original.recommendation}
+            title={row.original.title}
+            isOpen={open}
+            onClose={() => setOpen(false)}
+          />
+        </>
+      );
+    },
   },
 ];

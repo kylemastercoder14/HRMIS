@@ -21,8 +21,17 @@ export const createUser = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { firstName, middleInitial, lastName, suffix, email, password } =
-    validatedField.data;
+  const {
+    firstName,
+    middleInitial,
+    lastName,
+    suffix,
+    email,
+    password,
+    department,
+    status,
+    academicRank,
+  } = validatedField.data;
 
   const hashedPassword = await bcryptjs.hash(password, 10);
 
@@ -36,6 +45,9 @@ export const createUser = async (
         suffix,
         email,
         password: hashedPassword,
+        department,
+        status,
+        academicRank,
       },
     });
     return { success: "User created successfully" };
@@ -49,11 +61,8 @@ export const createUser = async (
 export const fetchFaculties = async () => {
   try {
     const result = await db.faculty.findMany({
-      select: {
-        id: true,
-        fname: true,
-        mname: true,
-        lname: true,
+      orderBy: {
+        lname: "asc",
       },
     });
     return { faculties: result };
@@ -77,6 +86,7 @@ export const fetchFacultyById = async (facultyId: string) => {
         fname: true,
         mname: true,
         lname: true,
+        academicRank: true,
       },
     });
     return { faculty: result };
@@ -204,7 +214,8 @@ export const updateProfileInfo = async (
     lastName,
     email,
     suffix,
-    category,
+    department,
+    academicRank,
     status,
   } = validatedField.data;
 
@@ -227,7 +238,8 @@ export const updateProfileInfo = async (
         lname: lastName,
         suffix,
         email,
-        category,
+        academicRank,
+        department,
         status,
       },
     });

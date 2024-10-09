@@ -1,4 +1,3 @@
-
 import { z } from "zod";
 
 export const UserRegistrationSchema = z.object({
@@ -55,18 +54,27 @@ export const FacultyRegistrationSchema = z.object({
   lastName: z.string().min(1, {
     message: "Last name is required.",
   }),
-  // email: z.string().min(1, {
-  //   message: "Email address is required.",
-  // }),
-  email: z
-    .string()
-    .min(1, {
-      message: "Email address is required.",
-    })
-    .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
-      message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
-    }),
+  email: z.string().min(1, {
+    message: "Email address is required.",
+  }),
+  // email: z
+  //   .string()
+  //   .min(1, {
+  //     message: "Email address is required.",
+  //   })
+  //   .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
+  //     message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
+  //   }),
   suffix: z.string().optional(),
+  department: z.string().min(1, {
+    message: "Department is required.",
+  }),
+  academicRank: z.string().min(1, {
+    message: "Academic rank is required.",
+  }),
+  status: z.string().min(1, {
+    message: "Status is required.",
+  }),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters long." })
@@ -310,8 +318,11 @@ export const ProfileUpdateFacultySchema = z.object({
   email: z.string().min(1, {
     message: "Email address is required.",
   }),
-  category: z.string().min(1, {
-    message: "Category is required.",
+  department: z.string().min(1, {
+    message: "Department is required.",
+  }),
+  academicRank: z.string().min(1, {
+    message: "Academic rank is required.",
   }),
   status: z.string().min(1, {
     message: "Status is required.",

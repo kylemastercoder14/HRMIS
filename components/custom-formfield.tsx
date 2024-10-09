@@ -44,6 +44,7 @@ interface CustomProps {
   icon?: React.ReactNode;
   dateFormat?: string;
   showTimeSelect?: boolean;
+  onValueChange?: (value: string) => void;
   disabled?: boolean;
   children?: React.ReactNode;
   isRequired?: boolean;
@@ -68,6 +69,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
     options,
     label,
     uploaderVar,
+    onValueChange,
     uploaderName,
     enableAI,
     autoFocus,
@@ -150,7 +152,12 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
           <HoverEffectWrapper disabled={disabled}>
             <FormControl>
               <Select
-                onValueChange={field.onChange}
+                onValueChange={(value) => {
+                  field.onChange(value);  // Update form field value
+                  if (onValueChange) {
+                    onValueChange(value);  // Custom handler for selected faculty
+                  }
+                }}
                 value={field.value || renderedValue}
               >
                 <SelectTrigger

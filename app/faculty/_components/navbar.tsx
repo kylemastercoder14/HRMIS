@@ -44,22 +44,28 @@ const FacultyNavbar = ({
           <span>HRMIS - CBSUA</span>
         </Link>
         <Link
+          href="/faculty"
+          className={pathname === "/faculty" ? "text-black" : "text-muted-foreground hover:text-black"}
+        >
+          <span>Evalution Form</span>
+        </Link>
+        <Link
           href="/faculty/history"
           className={pathname === "/faculty/history" ? "text-black" : "text-muted-foreground hover:text-black"}
         >
-          <span>Evalution History</span>
-        </Link>
-        <Link
-          href="/faculty/student-record"
-          className={pathname === "/faculty/student-record" ? "text-black" : "text-muted-foreground hover:text-black"}
-        >
-          <span>Student Record</span>
+          <span>Evalution Summary</span>
         </Link>
         <Link
           href="/faculty/invitation"
           className={pathname === "/faculty/invitation" ? "text-black" : "text-muted-foreground hover:text-black"}
         >
           <span>Training Invitation</span>
+        </Link>
+        <Link
+          href="/faculty/evaluation-history"
+          className={pathname === "/faculty/evaluation-history" ? "text-black" : "text-muted-foreground hover:text-black"}
+        >
+          <span>My Evaluation</span>
         </Link>
       </nav>
       <div className="ml-auto flex-1 sm:flex-initial">

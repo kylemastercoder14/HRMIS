@@ -11,7 +11,7 @@ interface EvaluationClientProps {
 const EvaluationClient: React.FC<EvaluationClientProps> = ({ data }) => {
   return (
     <>
-      <DataTable searchKey="name" columns={columns} data={data} />
+      <DataTable searchKey="faculty" columns={columns} data={data} />
     </>
   );
 };

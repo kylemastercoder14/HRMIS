@@ -13,7 +13,7 @@ export const createEvaluation = async (evaluationData: any) => {
     await db.evaluation.create({
       data: {
         ...evaluationData,
-        studentId: user.id,
+        evaluatorId: user.id,
       },
     });
 
@@ -22,4 +22,12 @@ export const createEvaluation = async (evaluationData: any) => {
     console.error("Error creating evaluation:", error);
     return { message: "Error creating evaluation" };
   }
+};
+
+export const getEvaluationById = async (evaluationId: string) => {
+  return await db.evaluation.findUnique({
+    where: {
+      id: evaluationId,
+    },
+  });
 };
