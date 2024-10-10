@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { AssignColumn } from "./column";
 
 import {
   DropdownMenu,
@@ -10,14 +11,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Copy, Edit, MoreHorizontal, Printer, Trash } from "lucide-react";
+import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { InvitationColumn } from "./column";
-import Link from "next/link";
+import { useState } from "react";
+import AlertModal from "@/components/ui/alert-modal";
 
 interface CellActionProps {
-  data: InvitationColumn;
+  data: AssignColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
@@ -38,7 +39,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => onCopy(data.file)}>
+          <DropdownMenuItem onClick={() => router.push(`/coordinator/assign/${data.id}`)}>
+            <Edit className="w-4 h-4 mr-2" />
+            Assign
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => onCopy(data.name)}>
             <Copy className="w-4 h-4 mr-2" />
             Copy
           </DropdownMenuItem>

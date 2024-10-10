@@ -1,34 +1,40 @@
 
 "use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { getInitials } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
-import Image from "next/image";
 
 export type EvaluationColumn = {
-  id: string;
   faculty: string;
-  no: any;
+  ratingPeriod: string;
+  academicRank: string;
+  evaluator: string;
   ratings: any;
   qce: any;
 };
 
 export const columns: ColumnDef<EvaluationColumn>[] = [
   {
-    accessorKey: "no",
-    header: "No.",
-  },
-  {
     accessorKey: "faculty",
     header: "Faculty",
   },
   {
+    accessorKey: "ratingPeriod",
+    header: "Rating Period",
+  },
+  {
+    accessorKey: "academicRank",
+    header: "Academic Rank",
+  },
+  {
     accessorKey: "ratings",
-    header: "Total Student Ratings",
+    header: "Total Rate",
   },
   {
     accessorKey: "qce",
-    header: "QCE Ratings (30%)",
+    header: "QCE",
+  },
+  {
+    accessorKey: "evaluator",
+    header: "Evaluator",
   },
 ];

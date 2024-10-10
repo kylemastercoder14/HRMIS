@@ -9,21 +9,22 @@ datasource db {
 }
 
 model Student {
-  id         String       @id @unique @default(cuid())
-  clerkId    String       @unique
-  fname      String
-  mname      String?
-  lname      String
-  suffix     String?
-  email      String
-  password   String
-  course     String
-  section    String
-  yearLevel  String
-  profile    String?
-  createdAt  DateTime     @default(now())
-  updatedAt  DateTime     @updatedAt
-  Evaluation Evaluation[]
+  id        String   @id @unique @default(cuid())
+  clerkId   String   @unique
+  fname     String
+  mname     String?
+  lname     String
+  suffix    String?
+  email     String
+  password  String
+  course    String
+  section   String
+  yearLevel String
+  profile   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Answer Answer[] @relation(map: "Evaluation_Student_FK")
 }
 
 model Faculty {
@@ -41,29 +42,31 @@ model Faculty {
   profile      String?
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
-  Evaluation   Evaluation[]
   course       String[]
   section      String[]
   yearLevel    String[]
   invitations  Invitation[] @relation("AcceptedInvitations")
+
+  Answer Answer[] @relation(map: "Evaluation_Faculty_FK")
 }
 
 model Supervisor {
-  id          String       @id @unique @default(cuid())
-  clerkId     String       @unique
-  fname       String
-  mname       String?
-  lname       String
-  suffix      String?
+  id           String       @id @unique @default(cuid())
+  clerkId      String       @unique
+  fname        String
+  mname        String?
+  lname        String
+  suffix       String?
   department   String?
   academicRank String
-  email       String
-  password    String
-  profile     String?
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
-  Evaluation  Evaluation[]
-  Invitations Invitation[]
+  email        String
+  password     String
+  profile      String?
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  Invitations  Invitation[]
+
+  Answer Answer[] @relation(map: "Evaluation_Supervisor_FK")
 }
 
 model Coordinator {
@@ -82,40 +85,55 @@ model Coordinator {
 
 model Evaluation {
   id            String   @id @unique @default(cuid())
-  evaluatorId   String
-  ratingPeriod  String
-  schoolYear    String
-  evaluatee     String
-  academicRank  String
-  evaluator     String
-  demonstrate   String
-  integrate     String
-  available     String
-  regularly     String
-  accurate      String
-  mastery       String
-  draws         String
-  practical     String
-  relevance     String
-  awareness     String
-  teaching      String
-  enhance       String
-  objectives    String
-  independent   String
-  encourage     String
-  opportunity   String
-  roles         String
-  experience    String
-  structures    String
-  instructional String
-  comments      String?
+  title         String
+  description   String
+  startDateTime DateTime
+  endDateTime   DateTime
+  status        String   @default("Pending")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
+
+  Categories Category[]
+}
+
+model Category {
+  id        String     @id @unique @default(cuid())
+  title     String
+  criteria  Int
+  questions Question[]
+
+  evaluation   Evaluation @relation(fields: [evaluationId], references: [id])
+  evaluationId String
+
+  @@index([evaluationId])
+}
+
+model Question {
+  id         String   @id @unique @default(cuid())
+  text       String
+  categoryId String
+  category   Category @relation(fields: [categoryId], references: [id])
+  Answer     Answer[]
+
+  @@index([categoryId])
+}
+
+model Answer {
+  id           String   @id @unique @default(cuid())
+  evaluatorId  String
+  evaluatee    String
+  evaluator    String
+  academicRank String
+  question     Question @relation(fields: [questionId], references: [id])
+  questionId   String
+  rating       Int // e.g., the rating given by the evaluator (1-5)
+  comments     String? // Optional comments from the evaluator
 
   Student    Student    @relation(fields: [evaluatorId], references: [id], map: "Evaluation_Student_FK")
   Faculty    Faculty    @relation(fields: [evaluatorId], references: [id], map: "Evaluation_Faculty_FK")
   Supervisor Supervisor @relation(fields: [evaluatorId], references: [id], map: "Evaluation_Supervisor_FK")
 
+  @@index([questionId])
   @@index([evaluatorId])
 }
 

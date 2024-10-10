@@ -34,7 +34,7 @@ const FacultyNavbar = ({
   const { signOut } = useClerk();
   const pathname = usePathname();
   return (
-    <header className="sticky top-0 flex h-16 z-50 items-center gap-4 border-b bg-background px-4 md:px-6">
+    <header className="sticky top-0 flex h-16 z-[999] items-center gap-4 border-b bg-background px-4 md:px-6">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
         <Link
           href="/faculty"
@@ -60,12 +60,6 @@ const FacultyNavbar = ({
           className={pathname === "/faculty/invitation" ? "text-black" : "text-muted-foreground hover:text-black"}
         >
           <span>Training Invitation</span>
-        </Link>
-        <Link
-          href="/faculty/evaluation-history"
-          className={pathname === "/faculty/evaluation-history" ? "text-black" : "text-muted-foreground hover:text-black"}
-        >
-          <span>My Evaluation</span>
         </Link>
       </nav>
       <div className="ml-auto flex-1 sm:flex-initial">

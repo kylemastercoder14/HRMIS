@@ -9,17 +9,17 @@ export const UserRegistrationSchema = z.object({
     message: "Last name is required.",
   }),
   suffix: z.string().optional(),
-  // email: z.string().min(1, {
-  //   message: "Last name is required.",
-  // }),
-  email: z
-    .string()
-    .min(1, {
-      message: "Email address is required.",
-    })
-    .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
-      message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
-    }),
+  email: z.string().min(1, {
+    message: "Last name is required.",
+  }),
+  // email: z
+  //   .string()
+  //   .min(1, {
+  //     message: "Email address is required.",
+  //   })
+  //   .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
+  //     message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
+  //   }),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters long." })
@@ -100,18 +100,24 @@ export const SupervisorRegistrationSchema = z.object({
   lastName: z.string().min(1, {
     message: "Last name is required.",
   }),
-  // email: z.string().min(1, {
-  //   message: "Email address is required.",
-  // }),
-  email: z
-    .string()
-    .min(1, {
-      message: "Email address is required.",
-    })
-    .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
-      message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
-    }),
+  email: z.string().min(1, {
+    message: "Email address is required.",
+  }),
+  // email: z
+  //   .string()
+  //   .min(1, {
+  //     message: "Email address is required.",
+  //   })
+  //   .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
+  //     message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
+  //   }),
   suffix: z.string().optional(),
+  department: z.string().min(1, {
+    message: "Department is required.",
+  }),
+  academicRank: z.string().min(1, {
+    message: "Academic rank is required.",
+  }),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters long." })
@@ -137,17 +143,17 @@ export const CoordinatorRegistrationSchema = z.object({
   lastName: z.string().min(1, {
     message: "Last name is required.",
   }),
-  // email: z.string().min(1, {
-  //   message: "Email address is required.",
-  // }),
-  email: z
-    .string()
-    .min(1, {
-      message: "Email address is required.",
-    })
-    .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
-      message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
-    }),
+  email: z.string().min(1, {
+    message: "Email address is required.",
+  }),
+  // email: z
+  //   .string()
+  //   .min(1, {
+  //     message: "Email address is required.",
+  //   })
+  //   .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
+  //     message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
+  //   }),
   suffix: z.string().optional(),
   password: z
     .string()
@@ -173,28 +179,25 @@ export const EmailVerificationSchema = z.object({
 });
 
 export const UserLoginSchema = z.object({
-  // email: z.string().min(1, {
-  //   message: "Email address is required.",
-  // }),
-  email: z
-    .string()
-    .min(1, {
-      message: "Email address is required.",
-    })
-    .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
-      message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
-    }),
+  email: z.string().min(1, {
+    message: "Email address is required.",
+  }),
+  // email: z
+  //   .string()
+  //   .min(1, {
+  //     message: "Email address is required.",
+  //   })
+  //   .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
+  //     message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
+  //   }),
   password: z.string().min(1, {
     message: "Password is required.",
   }),
 });
 
-export const Step1Schema = z.object({
+export const EvaluationFormSchema = z.object({
   ratingPeriod: z.string().min(1, {
     message: "Rating period is required.",
-  }),
-  schoolYear: z.string().min(1, {
-    message: "School year is required.",
   }),
   evaluatee: z.string().min(1, {
     message: "Name of faculty to be evaluated is required.",
@@ -205,6 +208,17 @@ export const Step1Schema = z.object({
   evaluator: z.string().min(1, {
     message: "Evaluator is required.",
   }),
+  questions: z
+    .array(
+      z.object({
+        questionId: z.string(),
+        answer: z.enum(["5", "4", "3", "2", "1"]),
+      })
+    )
+    .min(1, {
+      message: "At least one question must be answered.",
+    }),
+  comments: z.string().optional(),
 });
 
 export const Step2Schema = z.object({

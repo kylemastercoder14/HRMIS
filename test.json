@@ -1,0 +1,57 @@
+{
+  "title": "Evaluation Form Title",
+  "description": "Evaluation Form Description",
+  "startDateTime": "2024-10-10T00:00:00Z",
+  "endDateTime": "2021-10-12T23:59:59Z",
+  "status": "Active",
+  "evaluator": "Student",
+  "evaluatee": "Lim, Kyle Andre",
+  "academicRank": "Instructor I",
+  "category": [
+    {
+      "title": "Commitment",
+      "criteria": "20",
+      "questions": [
+        "Demonstrates sensitivity to students' ability to attend and absorb content information.",
+        "Integrate sensitivity his/her learning objectives with those of the students in a collaborative process.",
+        "Makes self-available to students beyond official time.",
+        "Regularly comes to class on time, well-groomed, and well-prepared to complete assigned responsibilities.",
+        "Keeps accurate records of the students'performance and prompts submission of the same."
+      ]
+    },
+    {
+      "title": "Knowledge of the Subject",
+      "criteria": "20",
+      "questions": [
+        "Demonstrates mastery of the subject matter (explain the subject matter without relying solely on the prescribed textbook).",
+        "Draws and share information on the state-of-the-art theory and practice in his/her discipline.",
+        "Integrates subject to practical circumstances and learning intents/purposes of students.",
+        "Explain the relevance of present topics to the previous lessons, and relates the subject matter relevant current issues and/or daily life activities.",
+        "Demonstrate up-to-date knowledge and/or awareness on current trends and issues of the subject."
+      ]
+    },
+    {
+      "title": "Teaching for Independent Learning",
+      "criteria": "30",
+      "questions": [
+        "Enhances students' understanding of the subject matter and objectives.",
+        "Encourages students to be independent learners.",
+        "Provides opportunities for students to take on leadership roles.",
+        "Shares his/her experience and structures instructional activities to provide opportunities for students to learn from each other.",
+        "Provides instructional activities that encourage students to be independent learners."
+      ]
+    },
+    {
+      "title": "Management Learning",
+      "criteria": "30",
+      "questions": [
+        "Provides opportunities for students to take on leadership roles.",
+        "Shares his/her experience and structures instructional activities to provide opportunities for students to learn from each other.",
+        "Provides instructional activities that encourage students to be independent learners.",
+        "Encourages students to be independent learners.",
+        "Enhances students' understanding of the subject matter and objectives."
+      ]
+    }
+  ],
+  "comments": "Amazing"
+}

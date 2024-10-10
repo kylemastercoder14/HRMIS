@@ -47,7 +47,7 @@ const InvitationForm = ({ supervisorId }: { supervisorId: string }) => {
       .then((data) => {
         if (data.success) {
           toast.success(data.success);
-          window.location.assign("/supervisor/invitation");
+          window.location.reload();
         } else {
           toast.error(data.error);
         }

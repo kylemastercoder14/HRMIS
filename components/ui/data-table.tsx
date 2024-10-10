@@ -1,5 +1,6 @@
 "use client";
 
+import React, { useState } from "react";
 import {
   ColumnDef,
   flexRender,
@@ -8,8 +9,9 @@ import {
   getPaginationRowModel,
   ColumnFiltersState,
   getFilteredRowModel,
+  getFacetedRowModel,
+  getFacetedUniqueValues,
 } from "@tanstack/react-table";
-
 import {
   Table,
   TableBody,
@@ -20,7 +22,14 @@ import {
 } from "@/components/ui/table";
 import { Button } from "./button";
 import { Input } from "@/components/ui/input";
-import React from "react";
+import { COURSES } from "@/lib/constants";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -31,11 +40,13 @@ interface DataTableProps<TData, TValue> {
 export function DataTable<TData, TValue>({
   columns,
   data,
-  searchKey
+  searchKey,
 }: DataTableProps<TData, TValue>) {
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
+  const [selectedCourse, setSelectedCourse] = useState(""); // State for selected course
+
   const table = useReactTable({
     data,
     columns,
@@ -43,14 +54,23 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    getFacetedRowModel: getFacetedRowModel(),
+    getFacetedUniqueValues: getFacetedUniqueValues(),
     state: {
       columnFilters,
     },
   });
 
+  // Handle course change
+  const handleCourseChange = (course: string) => {
+    setSelectedCourse(course);
+    table.getColumn("course")?.setFilterValue(course); // Filter by course
+  };
+
   return (
     <div>
-      <div className="flex items-center py-4">
+      <div className="flex justify-between items-center py-4">
+        {/* Search Input */}
         <Input
           placeholder="Search..."
           value={(table.getColumn(searchKey)?.getFilterValue() as string) ?? ""}
@@ -59,24 +79,42 @@ export function DataTable<TData, TValue>({
           }
           className="max-w-sm border-primary"
         />
+
+        {table.getColumn("course") && (
+          <Select
+            defaultValue={selectedCourse}
+            onValueChange={handleCourseChange}
+          >
+            <SelectTrigger className="w-[300px] border border-input!important">
+              <SelectValue placeholder="All Courses" />
+            </SelectTrigger>
+            <SelectContent>
+              {COURSES.map((course) => (
+                <SelectItem key={course} value={course}>
+                  {course}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
       </div>
+
+      {/* Table */}
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  );
-                })}
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
               </TableRow>
             ))}
           </TableHeader>
@@ -110,6 +148,8 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
+
+      {/* Pagination Controls */}
       <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="outline"

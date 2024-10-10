@@ -1,8 +1,8 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 export const getErrorMessage = (
@@ -35,10 +35,24 @@ export function getInitials(name: string) {
 }
 
 export function getAcronym(phrase: string): string {
-  const excludeWords = ['of', 'in', 'and']; // Add common words to exclude from acronym
+  const excludeWords = ["of", "in", "and"]; // Add common words to exclude from acronym
   return phrase
-    .split(' ') // Split phrase into words
-    .filter(word => !excludeWords.includes(word.toLowerCase())) // Exclude common words
-    .map(word => word[0].toUpperCase()) // Get the first letter of each word
-    .join(''); // Join the letters into the acronym
+    .split(" ") // Split phrase into words
+    .filter((word) => !excludeWords.includes(word.toLowerCase())) // Exclude common words
+    .map((word) => word[0].toUpperCase()) // Get the first letter of each word
+    .join(""); // Join the letters into the acronym
 }
+
+export const formatDate = (dateString: string | undefined) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  return date.toLocaleString("en-PH", {
+    weekday: "short",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+};

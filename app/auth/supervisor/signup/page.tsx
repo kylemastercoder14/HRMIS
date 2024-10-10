@@ -36,6 +36,8 @@ const Signup = () => {
       middleInitial: "",
       lastName: "",
       suffix: "",
+      department: "",
+      academicRank: "",
       email: "",
       password: "",
       terms: false,
@@ -118,6 +120,36 @@ const Signup = () => {
       setIsPending(false);
     }
   };
+
+  const facultyRanks = [
+    "Associate Professor I",
+    "Associate Professor II",
+    "Associate Professor III",
+    "Associate Professor IV",
+    "Associate Professor V",
+    "Assistant Professor I",
+    "Assistant Professor II",
+    "Assistant Professor III",
+    "Assistant Professor IV",
+    "Assistant Professor V",
+    "COS Faculty",
+    "Instructor I",
+    "Instructor II",
+    "Instructor III",
+    "Professor I",
+    "Professor II",
+    "Professor III",
+    "Professor IV",
+  ];
+
+  const department = [
+    "College of Criminology",
+    "College of Education",
+    "College of Industrial Technology",
+    "College of Information Technology",
+    "College of BSES and BSAF Program",
+  ];
+
 
   // Display the verification form to capture the OTP code
   if (verifying) {
@@ -214,6 +246,30 @@ const Signup = () => {
                 fieldType={FormFieldType.INPUT}
               />
             </div>
+          </div>
+          <div className="grid gap-2">
+            <CustomFormField
+              control={form.control}
+              name="department"
+              placeholder="Select Department"
+              disabled={isPending}
+              options={department}
+              isRequired
+              label="Department"
+              fieldType={FormFieldType.SELECT}
+            />
+          </div>
+          <div className="grid gap-2">
+            <CustomFormField
+              control={form.control}
+              name="academicRank"
+              placeholder="Select Academic Rank"
+              disabled={isPending}
+              options={facultyRanks}
+              isRequired
+              label="Academic Rank"
+              fieldType={FormFieldType.SELECT}
+            />
           </div>
           <div className="grid gap-2">
             <CustomFormField

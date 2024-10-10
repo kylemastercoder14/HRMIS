@@ -17,7 +17,7 @@ export const createUser = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { firstName, middleInitial, lastName, suffix, email, password } =
+  const { firstName, middleInitial, lastName, suffix, email, password, department, academicRank } =
     validatedField.data;
 
   const hashedPassword = await bcryptjs.hash(password, 10);
@@ -32,6 +32,8 @@ export const createUser = async (
         suffix,
         email,
         password: hashedPassword,
+        department,
+        academicRank,
       },
     });
     return { success: "User created successfully" };

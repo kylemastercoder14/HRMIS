@@ -41,10 +41,10 @@ const SupervisorNavbar = ({
           <span>HRMIS - CBSUA</span>
         </Link>
         <Link
-          href="/supervisor/dashboard"
-          className={pathname === "/supervisor/dashboard" ? "text-black" : "text-muted-foreground hover:text-black"}
+          href="/supervisor"
+          className={pathname === "/supervisor" ? "text-black" : "text-muted-foreground hover:text-black"}
         >
-          <span>Dashboard</span>
+          <span>Evalution Form</span>
         </Link>
         <Link
           href="/supervisor/history"
@@ -53,22 +53,10 @@ const SupervisorNavbar = ({
           <span>Evalution History</span>
         </Link>
         <Link
-          href="/supervisor/student-record"
-          className={pathname === "/supervisor/student-record" ? "text-black" : "text-muted-foreground hover:text-black"}
-        >
-          <span>Student Record</span>
-        </Link>
-        <Link
           href="/supervisor/invitation"
           className={pathname === "/supervisor/invitation" ? "text-black" : "text-muted-foreground hover:text-black"}
         >
           <span>Training Invitation</span>
-        </Link>
-        <Link
-          href="/supervisor/assign"
-          className={pathname === "/supervisor/assign" ? "text-black" : "text-muted-foreground hover:text-black"}
-        >
-          <span>Assign Rater to Ratee</span>
         </Link>
       </nav>
       <div className="ml-auto flex-1 sm:flex-initial">

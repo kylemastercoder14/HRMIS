@@ -47,6 +47,24 @@ const CoordinatorNavbar = ({
           <span>Dashboard</span>
         </Link>
         <Link
+          href="/coordinator/evaluation-form"
+          className={pathname === "/coordinator/evaluation-form" ? "text-black" : "text-muted-foreground hover:text-black"}
+        >
+          <span>Evaluation Form</span>
+        </Link>
+        <Link
+          href="/coordinator/list-evaluation"
+          className={pathname === "/coordinator/list-evaluation" ? "text-black" : "text-muted-foreground hover:text-black"}
+        >
+          <span>Evaluation Record</span>
+        </Link>
+        <Link
+          href="/coordinator/invitation"
+          className={pathname === "/coordinator/invitation" ? "text-black" : "text-muted-foreground hover:text-black"}
+        >
+          <span>Training Invitation</span>
+        </Link>
+        <Link
           href="/coordinator/history"
           className={pathname === "/coordinator/history" ? "text-black" : "text-muted-foreground hover:text-black"}
         >
@@ -63,6 +81,12 @@ const CoordinatorNavbar = ({
           className={pathname === "/coordinator/student-record" ? "text-black" : "text-muted-foreground hover:text-black"}
         >
           <span>Student Record</span>
+        </Link>
+        <Link
+          href="/coordinator/assign"
+          className={pathname === "/coordinator/assign" ? "text-black" : "text-muted-foreground hover:text-black"}
+        >
+          <span>Assign Rater to Ratee</span>
         </Link>
       </nav>
       <div className="ml-auto flex-1 sm:flex-initial">
