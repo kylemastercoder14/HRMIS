@@ -71,12 +71,6 @@ const CoordinatorNavbar = ({
           <span>Evalution History</span>
         </Link>
         <Link
-          href="/coordinator/faculty-record"
-          className={pathname === "/coordinator/faculty-record" ? "text-black" : "text-muted-foreground hover:text-black"}
-        >
-          <span>Faculty Record</span>
-        </Link>
-        <Link
           href="/coordinator/student-record"
           className={pathname === "/coordinator/student-record" ? "text-black" : "text-muted-foreground hover:text-black"}
         >
