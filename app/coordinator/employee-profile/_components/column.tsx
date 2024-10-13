@@ -2,25 +2,21 @@
 "use client";
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { getInitials } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
-import { CellAction } from "./cell-action";
 
-export type AssignColumn = {
+export type EmployeeProfileColumn = {
   id: string;
   name: string;
   status: string;
   imageUrl: string;
   email: string;
-  courses: string;
+  academicRank: string;
   department: string;
-  yearLevel: string;
-  section: string;
   createdAt: string;
 };
 
-export const columns: ColumnDef<AssignColumn>[] = [
+export const columns: ColumnDef<EmployeeProfileColumn>[] = [
   {
     accessorKey: "name",
     header: "Faculty",
@@ -49,32 +45,19 @@ export const columns: ColumnDef<AssignColumn>[] = [
     ),
   },
   {
-    accessorKey: "status",
-    header: "Status",
-  },
-  {
     accessorKey: "department",
     header: "Department",
   },
   {
-    accessorKey: "yearLevel",
-    header: "Year Level",
+    accessorKey: "status",
+    header: "Status",
   },
   {
-    accessorKey: "courses",
-    header: "Course",
-  },
-  {
-    accessorKey: "section",
-    header: "Section",
+    accessorKey: "academicRank",
+    header: "Academic Rank",
   },
   {
     accessorKey: "createdAt",
     header: "Date Created",
-  },
-  {
-    id: "actions",
-    header: "Actions",
-    cell: ({ row }) => <CellAction data={row.original} />,
   },
 ];

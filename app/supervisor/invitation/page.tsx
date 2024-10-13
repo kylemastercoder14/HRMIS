@@ -47,7 +47,6 @@ const Invitation = async () => {
           title={`Invitation Record`}
           description="Welcome to the Invitation Record page, where you can manage and track invitations sent to faculty members for training programs."
         />
-        <InvitationForm supervisorId={supervisorId as string} />a
       </div>
       <InvitationClient data={formattedInvitation} />
     </div>

@@ -64,7 +64,6 @@ model Supervisor {
   profile      String?
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
-  Invitations  Invitation[]
 
   Answer Answer[] @relation(map: "Evaluation_Supervisor_FK")
 }
@@ -89,7 +88,8 @@ model Evaluation {
   description   String
   startDateTime DateTime
   endDateTime   DateTime
-  status        String   @default("Pending")
+  semester      String
+  status        String   @default("Starting")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -124,6 +124,7 @@ model Answer {
   evaluatee    String
   evaluator    String
   academicRank String
+  semester     String
   question     Question @relation(fields: [questionId], references: [id])
   questionId   String
   rating       Int // e.g., the rating given by the evaluator (1-5)
@@ -142,15 +143,9 @@ model Invitation {
   name      String
   platform  String
   file      String
+  startDate String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  supervisorId String
-  supervisor   Supervisor @relation(fields: [supervisorId], references: [id])
-
-  acceptedById String?
-  acceptedBy   Faculty? @relation("AcceptedInvitations", fields: [acceptedById], references: [id])
-
-  @@index([supervisorId])
-  @@index([acceptedById])
+  faculties Faculty[] @relation("AcceptedInvitations")
 }

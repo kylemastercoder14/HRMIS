@@ -1,6 +1,6 @@
 "use client";
 
-import { assignFaculty } from "@/actions/faculty";
+import { assignFaculty, fetchFaculties } from "@/actions/faculty";
 import { addInvitation } from "@/actions/invitation";
 import CustomFormField from "@/components/custom-formfield";
 import FileUpload from "@/components/file-upload";
@@ -19,31 +19,52 @@ import {
 import { FormFieldType } from "@/lib/constants";
 import { InvitationFormSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Faculty } from "@prisma/client";
+import { Faculty, Invitation } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-const InvitationForm = ({ supervisorId }: { supervisorId: string }) => {
+const InvitationForm = ({
+  initialData,
+}: {
+  initialData?: any | null;
+}) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [faculties, setFaculties] = useState<Faculty[]>([]);
+
+  useEffect(() => {
+    const fetchFacultiesData = async () => {
+      const response = await fetchFaculties();
+      if (response.faculties) {
+        setFaculties(response.faculties);
+      } else {
+        setFaculties([]);
+      }
+    };
+
+    fetchFacultiesData();
+  }, []);
+
   const params = useParams();
   const router = useRouter();
 
   const form = useForm<z.infer<typeof InvitationFormSchema>>({
     resolver: zodResolver(InvitationFormSchema),
     defaultValues: {
-      name: "",
+      name: initialData?.name ?? "",
       platform: "",
       file: "",
+      dateStarted: "",
+      selectedFaculties: [],
     },
   });
 
   async function onSubmit(values: z.infer<typeof InvitationFormSchema>) {
     setIsLoading(true);
-    addInvitation(values, supervisorId)
+    addInvitation(values)
       .then((data) => {
         if (data.success) {
           toast.success(data.success);
@@ -81,6 +102,27 @@ const InvitationForm = ({ supervisorId }: { supervisorId: string }) => {
                 name="platform"
                 label="Platform"
                 isRequired
+              />
+              <CustomFormField
+                control={form.control}
+                fieldType={FormFieldType.DATE_PICKER}
+                placeholder="Select Date"
+                name="dateStarted"
+                label="Start Date"
+                isRequired
+              />
+              <CustomFormField
+                control={form.control}
+                fieldType={FormFieldType.DYNAMIC_SELECT}
+                label="Selected Faculties"
+                name="selectedFaculties"
+                placeholder="Select Faculties"
+                dynamicOptions={faculties.map((faculty) => ({
+                  label: `${faculty.fname} ${faculty.lname}`,
+                  value: faculty.id,
+                }))}
+                isRequired={true}
+                disabled={isLoading}
               />
               <div className="space-y-3">
                 <FormField

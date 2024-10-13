@@ -7,9 +7,16 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash } from "lucide-react";
 import { createEvaluationForm } from "@/actions/evaluation";
 import { useRouter } from "next/navigation";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface Question {
   text: string;
@@ -26,6 +33,7 @@ interface EvaluationForm {
   description: string;
   startDateTime: string;
   endDateTime: string;
+  semester: string;
   categories: Category[];
 }
 
@@ -37,6 +45,7 @@ const AddEvaluationForm = () => {
     description: "",
     startDateTime: "",
     endDateTime: "",
+    semester: "",
     categories: [],
   });
 
@@ -54,6 +63,16 @@ const AddEvaluationForm = () => {
   const handleAddQuestion = (categoryIndex: number) => {
     const updatedCategories = [...form.categories];
     updatedCategories[categoryIndex].questions.push({ text: "" });
+    setForm({ ...form, categories: updatedCategories });
+  };
+
+  // Remove a question from a category
+  const handleRemoveQuestion = (
+    categoryIndex: number,
+    questionIndex: number
+  ) => {
+    const updatedCategories = [...form.categories];
+    updatedCategories[categoryIndex].questions.splice(questionIndex, 1);
     setForm({ ...form, categories: updatedCategories });
   };
 
@@ -157,12 +176,28 @@ const AddEvaluationForm = () => {
               disabled={isLoading}
             />
           </div>
+          <div className="mb-4 space-y-1">
+            <Label>Semester</Label>
+            <Select
+              disabled={isLoading}
+              onValueChange={(value) => setForm({ ...form, semester: value })}
+              defaultValue={form.semester}
+            >
+              <SelectTrigger className="border border-input!important">
+                <SelectValue placeholder="Select Semester" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1st Semester">1st Semester</SelectItem>
+                <SelectItem value="2nd Semester">2nd Semester</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           {form.categories.map((category, categoryIndex) => (
             <div
               key={categoryIndex}
               className="mb-6 border rounded-2xl p-4 mt-2"
             >
-              <h3 className="text-xl mb-2">Category {categoryIndex + 1}</h3>
+              <h3 className="text-xl mb-2">Criteria {categoryIndex + 1}</h3>
               <div className="mb-4 space-y-1">
                 <Label>Title</Label>
                 <Input
@@ -170,7 +205,7 @@ const AddEvaluationForm = () => {
                   value={category.title}
                   onChange={(e) => handleChange(e, categoryIndex)}
                   required
-                  placeholder="Enter Category Title"
+                  placeholder="Enter Title"
                   className="border border-input!important"
                   disabled={isLoading}
                 />
@@ -189,19 +224,33 @@ const AddEvaluationForm = () => {
                 />
               </div>
               {category.questions.map((question, questionIndex) => (
-                <div key={questionIndex} className="mb-4 space-y-1">
-                  <Label>Question {questionIndex + 1}</Label>
-                  <Input
-                    name="question"
-                    value={question.text}
-                    onChange={(e) =>
-                      handleChange(e, categoryIndex, questionIndex)
+                <div
+                  key={questionIndex}
+                  className="flex items-center mb-4 w-full gap-2"
+                >
+                  <div className="space-y-1 w-full">
+                    <Label>Question {questionIndex + 1}</Label>
+                    <Input
+                      name="question"
+                      value={question.text}
+                      onChange={(e) =>
+                        handleChange(e, categoryIndex, questionIndex)
+                      }
+                      required
+                      placeholder="Enter Question"
+                      className="border w-full border-input!important"
+                      disabled={isLoading}
+                    />
+                  </div>
+                  <Button
+                    onClick={() =>
+                      handleRemoveQuestion(categoryIndex, questionIndex)
                     }
-                    required
-                    placeholder="Enter Question"
-                    className="border border-input!important"
-                    disabled={isLoading}
-                  />
+                    className="w-[50px] mt-6"
+                    variant="destructive"
+                  >
+                    <Trash />
+                  </Button>
                 </div>
               ))}
               <Button
@@ -223,7 +272,7 @@ const AddEvaluationForm = () => {
               className="mb-4 w-full"
               disabled={isLoading}
             >
-              Add Category
+              Add Criteria
             </Button>
             <Button
               type="submit"

@@ -10,50 +10,25 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Copy, Edit, MoreHorizontal, Trash } from "lucide-react";
+import { Copy, Edit, MoreHorizontal, Printer } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { StudentColumn } from "./column";
-import AlertModal from "@/components/ui/alert-modal";
-import { deleteStudent } from "@/actions/users";
-import React from "react";
+import { ListEvaluationColumn } from "./column";
+import Link from "next/link";
 
 interface CellActionProps {
-  data: StudentColumn;
+  data: ListEvaluationColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
-  const [open, setOpen] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
   const router = useRouter();
   const onCopy = (name: string) => {
     navigator.clipboard.writeText(name);
     toast.success("Data copied to the clipboard");
   };
 
-  const onDelete = async () => {
-    setLoading(true);
-    try {
-      await deleteStudent(data.id);
-      toast.success("Student deleted");
-      setOpen(false);
-      window.location.reload();
-    } catch (error) {
-      toast.error("Failed to delete student");
-      console.log("Failed to delete student", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <>
-      <AlertModal
-        loading={loading}
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        onConfirm={onDelete}
-      />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -63,9 +38,13 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={() => setOpen(true)}>
-            <Trash className="w-4 h-4 mr-2" />
-            Delete
+          <DropdownMenuItem onClick={() => router.push(`/supervisor/list-of-evaluation/${data.evaluatee}`)}>
+            <Edit className="w-4 h-4 mr-2" />
+            Update
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => onCopy(data.evaluatee)}>
+            <Copy className="w-4 h-4 mr-2" />
+            Copy
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

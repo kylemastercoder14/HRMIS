@@ -13,19 +13,23 @@ const getRecommendationMessage = (qceRating: number) => {
   let description = "";
   if (qceRating >= 4.5) {
     title = "OUTSTANDING FACULTY";
-    description = "The teacher demonstrates a strong commitment to student success and academic excellence.";
+    description =
+      "The teacher demonstrates a strong commitment to student success and academic excellence.";
   } else if (qceRating >= 3.5) {
     title = "VERY SATISFACTORY FACULTY";
-    description = "The teacher shows effective teaching skills and dedication, but there's room for improvement.";
+    description =
+      "The teacher is performing well, but there's still room for small improvements.";
   } else if (qceRating >= 2.5) {
     title = "SATISFACTORY FACULTY";
-    description = "The teacher's performance is below expectations, requiring significant effort for better results.";
+    description =
+      "The teacher meets the minimum expectations but can enhance their effectiveness.";
   } else if (qceRating >= 1.5) {
     title = "FAIR FACULTY";
-    description = "The teacher's performance is unsatisfactory and needs substantial improvement.";
+    description = "The teacher needs improvement to meet job requirements.";
   } else {
     title = "POOR FACULTY";
-    description = "The teacher's performance is unacceptable and requires immediate intervention.";
+    description =
+      "The teacher is failing to meet job requirements and requires immediate intervention.";
   }
   return { title, description };
 };
@@ -70,6 +74,14 @@ const History = async () => {
     }
   });
 
+  // Define weights for each evaluator type
+  const weights: { [key: string]: number } = {
+    student: 0.3, // 30%
+    supervisor: 0.3, // 30%
+    peer: 0.2, // 20%
+    self: 0.2, // 20%
+  };
+
   // Calculate average ratings for each evaluator type and total QCE
   const averageRatings: {
     [key: string]: { averageRating: number; qce: string };
@@ -79,11 +91,11 @@ const History = async () => {
     (acc, [type, ratings]) => {
       const totalRatings = ratings.length;
       const sumRatings = ratings.reduce((sum, rating) => sum + rating, 0);
-      
+
       // Correctly calculate the average rating on a scale of 100
       const averageRating =
-        totalRatings > 0 ? (sumRatings / totalRatings) * 100 / 5 : 0; // Convert to percentage
-      const qce = (averageRating * 0.3).toFixed(2); // 30% of average rating
+        totalRatings > 0 ? ((sumRatings / totalRatings) * 100) / 5 : 0; // Convert to percentage
+      const qce = (averageRating * weights[type]).toFixed(2); // 30% of average rating
       acc[type] = { averageRating, qce };
       return acc;
     },
@@ -91,12 +103,18 @@ const History = async () => {
   );
 
   // Calculate overall QCE
-  const totalQce = Object.values(averageRatings).reduce((sum, { qce }) => sum + Number(qce), 0);
+  const totalQce = Object.entries(averageRatings).reduce(
+    (sum, [type, { qce }]) => {
+      return sum + Number(qce);
+    },
+    0
+  );
   const totalCount = Object.values(averageRatings).length;
-  const overallQce = totalCount > 0 ? (totalQce / totalCount).toFixed(2) : "0.00";
+  const overallQce = totalCount > 0 ? totalQce.toFixed(2) : "0.00"; // Sum of QCEs
   const overallRecommendation = getRecommendationMessage(Number(overallQce));
 
-  const { title: overallTitle, description: overallDescription } = overallRecommendation;
+  const { title: overallTitle, description: overallDescription } =
+    overallRecommendation;
 
   // Calculate overall average rating
   const totalRating = ratings.reduce((sum, { rating }) => sum + rating, 0);
@@ -131,7 +149,7 @@ const History = async () => {
     supervisorQce: averageRatings.supervisor.qce || "N/A",
     recommendation: overallDescription,
     title: overallTitle,
-    overAllQce: averageScore + "%"
+    overAllQce: averageScore + "%",
   };
 
   return (
@@ -142,7 +160,7 @@ const History = async () => {
           description="A detailed record of all evaluations completed by the student, including dates, scores, and feedback from faculty members."
         />
       </div>
-      <EvaluationClient data={[formattedEvaluation]} /> {/* Wrap in array */}
+      <EvaluationClient data={[formattedEvaluation]} />
     </div>
   );
 };

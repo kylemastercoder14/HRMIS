@@ -1,8 +1,11 @@
 "use server";
 
 import db from "@/lib/db";
-import { ProfileUpdateCoordinatorSchema, CoordinatorRegistrationSchema } from "@/lib/validators";
-import { clerkClient, currentUser } from "@clerk/nextjs/server";
+import {
+  ProfileUpdateCoordinatorSchema,
+  CoordinatorRegistrationSchema,
+} from "@/lib/validators";
+import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
 import bcryptjs from "bcryptjs";
 import { z } from "zod";
 
@@ -44,22 +47,36 @@ export const createUser = async (
 
 export const createProfile = async (profile: string) => {
   if (!profile) return { error: "Profile image is required" };
-  const user = await currentUser();
+  const { userId } = auth();
 
-  if (!user) return { error: "User not found" };
+  if (!userId) return { error: "User not found" };
 
   try {
-    // await clerkClient.users.updateUser(user.id, { profileImageID: profile });
+    // Check if the coordinator record exists
+    const existingCoordinator = await db.coordinator.findUnique({
+      where: { clerkId: userId },
+    });
+
+    if (!existingCoordinator) {
+      return {
+        error:
+          "Coordinator profile not found. Please ensure you are registered as a coordinator.",
+      };
+    }
+
+    // Update the profile if the record exists
     await db.coordinator.update({
       where: {
-        clerkId: user.id,
+        clerkId: userId,
       },
       data: {
         profile,
       },
     });
+
     return { success: "Profile updated successfully" };
   } catch (error: any) {
+    console.error("Error updating profile:", error); // Log the error
     return {
       error: `Failed to update profile. Please try again. ${
         error.message || ""
@@ -102,13 +119,8 @@ export const updateProfileInfo = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const {
-    firstName,
-    middleInitial,
-    lastName,
-    email,
-    suffix,
-  } = validatedField.data;
+  const { firstName, middleInitial, lastName, email, suffix } =
+    validatedField.data;
 
   const user = await currentUser();
   if (!user) return { error: "User not found" };
@@ -160,4 +172,3 @@ export const deleteProfile = async () => {
     };
   }
 };
-

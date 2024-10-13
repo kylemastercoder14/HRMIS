@@ -2,6 +2,7 @@ export enum FormFieldType {
   INPUT = "input",
   TEXTAREA = "textarea",
   PHONE_INPUT = "phoneInput",
+  DYNAMIC_SELECT = "dynamicSelect",
   OTP_INPUT = "otpInput",
   SELECT = "select",
   RADIO = "radio",
@@ -66,7 +67,9 @@ export const YEAR_LEVEL = [
   },
 ] as const;
 
-export const SECTIONS = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
+export const SECTIONS = Array.from({ length: 26 }, (_, i) =>
+  String.fromCharCode(65 + i)
+);
 export const COURSES = [
   "Bachelor of Science in Criminology",
   "Bachelor of Elementary Education",
@@ -78,3 +81,16 @@ export const COURSES = [
   "Bachelor of Science in Information Technology",
   "Bachelor of Engineering Technology",
 ];
+
+export const DEPARTMENTS = [
+  "College of Criminology",
+  "College of Education",
+  "College of Industrial Technology",
+  "College of Information Technology",
+  "College of BSES and BSAF Program",
+];
+
+export const DATE_YEAR_MIN = 1970;
+export const DATE_DEFAULT_FORMAT = "yyyy-MM-dd"; // 2022-08-11
+export const DATETIME_DEFAULT_FORMAT = "yyyy-MM-dd h:mm a"; // 2022-08-11 1:00 PM
+export const DATE_DISPLAY_FORMAT = "dd/MM/yyyy";

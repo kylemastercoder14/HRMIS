@@ -10,6 +10,7 @@ import { formatDate } from "@/lib/utils";
 import { EvaluationFormSchema } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
+  Answer,
   Category,
   Evaluation,
   Faculty,
@@ -29,12 +30,14 @@ interface EvaluationFeatures extends Evaluation {
 
 const StudentEvaluationForm = ({
   studentData,
+  answers,
   facultyData,
   evaluationData,
 }: {
   studentData: Student | null;
   facultyData: Faculty[];
   evaluationData: EvaluationFeatures | null;
+  answers: Answer[];
 }) => {
   const [isPending, setIsPending] = useState(false);
   const formattedStartDate = formatDate(
@@ -47,11 +50,21 @@ const StudentEvaluationForm = ({
   const ratingPeriod = `${formattedStartDate} - ${formattedEndDate}`;
   const [selectedFaculty, setSelectedFaculty] = useState<string>("");
 
+  const availableFaculty = facultyData.filter(
+    (faculty) =>
+      !answers.some(
+        (answer) =>
+          answer.evaluatee ===
+          `${faculty.lname}, ${faculty.fname} ${faculty.mname || ""}`.trim()
+      )
+  );
+
   // Define default values, including an empty array for questions
   const form = useForm<z.infer<typeof EvaluationFormSchema>>({
     resolver: zodResolver(EvaluationFormSchema),
     defaultValues: {
       ratingPeriod: ratingPeriod ?? "",
+      semester: evaluationData?.semester ?? "",
       evaluatee: "",
       evaluator: "Student",
       academicRank: "",
@@ -100,30 +113,42 @@ const StudentEvaluationForm = ({
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex mt-5 flex-1 space-y-3 flex-col items-center"
       >
-        <CustomFormField
-          control={form.control}
-          name="ratingPeriod"
-          isRequired
-          fieldType={FormFieldType.INPUT}
-          label="Rating Period"
-          placeholder="Select Rating Period"
-          disabled
-          className="w-full"
-        />
+        <div className="field-group-col2 w-full">
+          <CustomFormField
+            control={form.control}
+            name="ratingPeriod"
+            isRequired
+            fieldType={FormFieldType.INPUT}
+            label="Rating Period"
+            placeholder="Select Rating Period"
+            disabled
+            className="w-full"
+          />
+          <CustomFormField
+            control={form.control}
+            name="semester"
+            isRequired
+            fieldType={FormFieldType.INPUT}
+            label="Semester"
+            placeholder="Enter Semester"
+            disabled
+            className="w-full"
+          />
+        </div>
+
         <div className="field-group-col2 w-full">
           <CustomFormField
             control={form.control}
             name="evaluatee"
             isRequired
             fieldType={FormFieldType.SELECT}
-            options={facultyData.map((faculty) =>
+            options={availableFaculty.map((faculty) =>
               `${faculty.lname}, ${faculty.fname} ${faculty.mname || ""}`.trim()
             )}
             label="Name of Faculty to be Evaluated"
             placeholder="Select Faculty"
             disabled={isPending}
             className="w-full"
-            description="Format: Surname, Full Name (Example: Dela Cruz, Juan)"
             onValueChange={(value) => setSelectedFaculty(value)}
           />
           <CustomFormField
@@ -135,7 +160,6 @@ const StudentEvaluationForm = ({
             placeholder="Academic Rank"
             disabled
             className="w-full"
-            description="Use Roman Numerals (For Example: Instructor I)"
           />
         </div>
         <CustomFormField

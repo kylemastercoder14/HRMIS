@@ -31,7 +31,7 @@ const SupervisorNavbar = ({
   const { signOut } = useClerk();
   const pathname = usePathname();
   return (
-    <header className="sticky top-0 flex z-50 h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
+    <header className="sticky top-0 flex z-[999] h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
         <Link
           href="/supervisor"
@@ -44,13 +44,19 @@ const SupervisorNavbar = ({
           href="/supervisor"
           className={pathname === "/supervisor" ? "text-black" : "text-muted-foreground hover:text-black"}
         >
-          <span>Evalution Form</span>
+          <span>Evaluation Form</span>
+        </Link>
+        <Link
+          href="/supervisor/list-of-evaluation"
+          className={pathname === "/supervisor/list-of-evaluation" ? "text-black" : "text-muted-foreground hover:text-black"}
+        >
+          <span>List of Evaluation</span>
         </Link>
         <Link
           href="/supervisor/history"
           className={pathname === "/supervisor/history" ? "text-black" : "text-muted-foreground hover:text-black"}
         >
-          <span>Evalution History</span>
+          <span>Evaluation History</span>
         </Link>
         <Link
           href="/supervisor/invitation"

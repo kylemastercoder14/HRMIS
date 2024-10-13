@@ -15,8 +15,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { usePathname } from "next/navigation";
 import { useClerk } from "@clerk/nextjs";
 
@@ -47,13 +45,19 @@ const FacultyNavbar = ({
           href="/faculty"
           className={pathname === "/faculty" ? "text-black" : "text-muted-foreground hover:text-black"}
         >
-          <span>Evalution Form</span>
+          <span>Evaluation Form</span>
         </Link>
         <Link
           href="/faculty/history"
           className={pathname === "/faculty/history" ? "text-black" : "text-muted-foreground hover:text-black"}
         >
-          <span>Evalution Summary</span>
+          <span>Evaluation Summary</span>
+        </Link>
+        <Link
+          href="/faculty/list-of-evaluation"
+          className={pathname === "/faculty/list-of-evaluation" ? "text-black" : "text-muted-foreground hover:text-black"}
+        >
+          <span>List of Evaluation</span>
         </Link>
         <Link
           href="/faculty/invitation"

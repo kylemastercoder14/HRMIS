@@ -14,7 +14,8 @@ export type InvitationColumn = {
   time: string;
   name: string;
   platform: string;
-  createdAt: string;
+  dateStarted: string;
+  faculties: string[];
 };
 
 export const columns: ColumnDef<InvitationColumn>[] = [
@@ -31,8 +32,8 @@ export const columns: ColumnDef<InvitationColumn>[] = [
     header: "File",
   },
   {
-    accessorKey: "createdAt",
-    header: "Date Created",
+    accessorKey: "dateStarted",
+    header: "Start Date",
   },
   {
     id: "actions",

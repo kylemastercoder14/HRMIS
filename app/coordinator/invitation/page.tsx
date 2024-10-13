@@ -16,6 +16,9 @@ const Invitation = async () => {
     orderBy: {
       createdAt: "desc",
     },
+    include: {
+      faculties: true,
+    },
   });
 
   const faculty = await db.faculty.findUnique({
@@ -34,9 +37,10 @@ const Invitation = async () => {
       title: item.name,
       platform: item.platform,
       file: item.file,
-      createdAt: format(item.createdAt, "MMMM dd, yyyy"),
       time: format(item.createdAt, "hh:mm a"),
       name: facultyName,
+      dateStarted: format(item.startDate, "MMMM dd, yyyy"),
+      faculties: item.faculties.map((faculty) => faculty.id),
     };
   });
 
@@ -47,7 +51,7 @@ const Invitation = async () => {
           title={`Invitation Record`}
           description="Welcome to the Invitation Record page, where you can manage and track invitations sent to faculty members for training programs."
         />
-        <InvitationForm supervisorId={facultyId as string} />
+        <InvitationForm />
       </div>
       <InvitationClient data={formattedInvitation} />
     </div>

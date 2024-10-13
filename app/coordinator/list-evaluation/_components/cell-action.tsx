@@ -10,28 +10,36 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { CirclePlay, CircleStop, Copy, MoreHorizontal } from "lucide-react";
+import {
+  CirclePlay,
+  CircleStop,
+  Copy,
+  MoreHorizontal,
+  Trash,
+} from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { EvaluationColumn } from "./column";
 import StartEvaluationModal from "@/components/start-evaluation-modal";
 import { useState } from "react";
 import EndEvaluationModal from "@/components/end-evaluation-modal";
-import { endEvaluation, startEvaluation } from "@/actions/evaluation";
+import {
+  deleteEvaluation,
+  endEvaluation,
+  startEvaluation,
+} from "@/actions/evaluation";
+import AlertModal from "@/components/ui/alert-modal";
 
 interface CellActionProps {
   data: EvaluationColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
+  const [openDelete, setOpenDelete] = useState(false);
   const [openStart, setOpenStart] = useState(false);
   const [openEnd, setOpenEnd] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const onCopy = (name: string) => {
-    navigator.clipboard.writeText(name);
-    toast.success("Data copied to the clipboard");
-  };
 
   const onStart = async () => {
     setLoading(true);
@@ -62,6 +70,21 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
     }
   };
 
+  const onDelete = async () => {
+    setLoading(true);
+    try {
+      await deleteEvaluation(data.id);
+      toast.success("Evaluation deleted");
+      setOpenEnd(false);
+      window.location.reload();
+    } catch (error) {
+      toast.error("Failed to delete evaluation");
+      console.log("Failed to delete evaluation", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <StartEvaluationModal
@@ -75,6 +98,12 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         onClose={() => setOpenEnd(false)}
         loading={loading}
         onConfirm={onEnd}
+      />
+      <AlertModal
+        isOpen={openDelete}
+        onClose={() => setOpenDelete(false)}
+        loading={loading}
+        onConfirm={onDelete}
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -93,9 +122,9 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
             <CircleStop className="w-4 h-4 mr-2" />
             End
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => onCopy(data.title)}>
-            <Copy className="w-4 h-4 mr-2" />
-            Copy
+          <DropdownMenuItem onClick={() => setOpenDelete(true)}>
+            <Trash className="w-4 h-4 mr-2" />
+            Delete
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -192,8 +192,26 @@ export const getStudentById = async (id: string) => {
     return { student };
   } catch (error: any) {
     return {
-      error: `Failed to fetch student. Please try again. ${error.message || ""}`,
+      error: `Failed to fetch student. Please try again. ${
+        error.message || ""
+      }`,
     };
   }
 };
 
+export const deleteStudent = async (id: string) => {
+  try {
+    await db.student.delete({
+      where: {
+        id: id,
+      },
+    });
+    return { success: "Student deleted successfully" };
+  } catch (error: any) {
+    return {
+      error: `Failed to delete student. Please try again. ${
+        error.message || ""
+      }`,
+    };
+  }
+};

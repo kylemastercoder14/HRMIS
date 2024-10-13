@@ -10,7 +10,7 @@ export const UserRegistrationSchema = z.object({
   }),
   suffix: z.string().optional(),
   email: z.string().min(1, {
-    message: "Last name is required.",
+    message: "Email address is required.",
   }),
   // email: z
   //   .string()
@@ -207,6 +207,9 @@ export const EvaluationFormSchema = z.object({
   }),
   evaluator: z.string().min(1, {
     message: "Evaluator is required.",
+  }),
+  semester: z.string().min(1, {
+    message: "Semester is required.",
   }),
   questions: z
     .array(
@@ -419,5 +422,11 @@ export const InvitationFormSchema = z.object({
   }),
   file: z.string().min(1, {
     message: "File attachment is required.",
+  }),
+  dateStarted: z.string().min(1, {
+    message: "Date started is required.",
+  }),
+  selectedFaculties: z.array(z.string()).min(1, {
+    message: "At least one faculty is required.",
   }),
 });

@@ -8,29 +8,30 @@ import {
 import { Separator } from "@/components/ui/separator";
 import db from "@/lib/db";
 import { auth } from "@clerk/nextjs/server";
-import SupervisorEvaluationForm from "./_components/supervisor-evaluation-form";
+import UpdateEvaluationForm from "../_components/update-evaluation-form";
 
-const Home = async () => {
+const ListEvaluationPage = async ({
+  params,
+}: {
+  params: { evaluationId: string };
+}) => {
   const { userId } = auth();
+
+  const decodedString = decodeURIComponent(params.evaluationId);
+
+  const existingEvaluation = await db.answer.findMany({
+    where: {
+      evaluatee: decodedString,
+    },
+  });
+
   const evaluationForm = await db.evaluation.findFirst({
     include: {
       Categories: { include: { questions: true } },
     },
   });
 
-  const faculties = await db.faculty.findMany();
-
-  const evaluatorDepartment = await db.supervisor.findUnique({
-    where: { clerkId: userId as string },
-  });
-
   const paragraphs = evaluationForm?.description.split("\n").filter(Boolean);
-
-  const answers = await db.answer.findMany({
-    where: {
-      evaluatorId: userId as string,
-    },
-  });
 
   const evaluationData = evaluationForm
     ? {
@@ -89,11 +90,9 @@ const Home = async () => {
         </CardHeader>
         <Separator />
         <CardContent>
-          <SupervisorEvaluationForm
-            answers={answers}
+          <UpdateEvaluationForm
             evaluationData={evaluationData}
-            facultyData={faculties}
-            evaluatorDepartment={evaluatorDepartment?.department as string}
+            existingEvaluation={existingEvaluation}
           />
         </CardContent>
       </Card>
@@ -101,4 +100,4 @@ const Home = async () => {
   );
 };
 
-export default Home;
+export default ListEvaluationPage;

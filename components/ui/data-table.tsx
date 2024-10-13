@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "./button";
 import { Input } from "@/components/ui/input";
-import { COURSES } from "@/lib/constants";
+import { COURSES, DEPARTMENTS } from "@/lib/constants";
 import {
   Select,
   SelectContent,
@@ -45,7 +45,9 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
   );
-  const [selectedCourse, setSelectedCourse] = useState(""); // State for selected course
+  const [selectedCourse, setSelectedCourse] = useState("");
+  const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState("");
 
   const table = useReactTable({
     data,
@@ -64,7 +66,17 @@ export function DataTable<TData, TValue>({
   // Handle course change
   const handleCourseChange = (course: string) => {
     setSelectedCourse(course);
-    table.getColumn("course")?.setFilterValue(course); // Filter by course
+    table.getColumn("course")?.setFilterValue(course);
+  };
+
+  const handleStatusChange = (status: string) => {
+    setSelectedStatus(status);
+    table.getColumn("status")?.setFilterValue(status);
+  };
+
+  const handleDepartmentChange = (department: string) => {
+    setSelectedDepartment(department);
+    table.getColumn("department")?.setFilterValue(department);
   };
 
   return (
@@ -96,6 +108,42 @@ export function DataTable<TData, TValue>({
               ))}
             </SelectContent>
           </Select>
+        )}
+
+        {(table.getColumn("status") || table.getColumn("department")) && (
+          <div className="flex items-center gap-5">
+            {table.getColumn("status") && (
+              <Select
+                defaultValue={selectedStatus}
+                onValueChange={handleStatusChange}
+              >
+                <SelectTrigger className="w-[300px] border border-input!important">
+                  <SelectValue placeholder="All Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Regular">Regular</SelectItem>
+                  <SelectItem value="COS">COS</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+            {table.getColumn("department") && (
+              <Select
+                defaultValue={selectedDepartment}
+                onValueChange={handleDepartmentChange}
+              >
+                <SelectTrigger className="w-[300px] border border-input!important">
+                  <SelectValue placeholder="All Department" />
+                </SelectTrigger>
+                <SelectContent>
+                  {DEPARTMENTS.map((department) => (
+                    <SelectItem key={department} value={department}>
+                      {department}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          </div>
         )}
       </div>
 

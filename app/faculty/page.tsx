@@ -20,6 +20,16 @@ const Home = async () => {
 
   const faculties = await db.faculty.findMany();
 
+  const evaluatorDepartment = await db.faculty.findUnique({
+    where: { clerkId: userId as string },
+  });
+
+  const answers = await db.answer.findMany({
+    where: {
+      evaluatorId: userId as string,
+    },
+  });
+
   const paragraphs = evaluationForm?.description.split("\n").filter(Boolean);
 
   const evaluationData = evaluationForm
@@ -80,8 +90,11 @@ const Home = async () => {
         <Separator />
         <CardContent>
           <FacultyEvaluationForm
+            userId={userId as string}
+            answers={answers}
             evaluationData={evaluationData}
             facultyData={faculties}
+            evaluatorDepartment={evaluatorDepartment?.department as string}
           />
         </CardContent>
       </Card>

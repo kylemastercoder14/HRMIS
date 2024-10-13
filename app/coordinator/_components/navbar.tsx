@@ -68,13 +68,19 @@ const CoordinatorNavbar = ({
           href="/coordinator/history"
           className={pathname === "/coordinator/history" ? "text-black" : "text-muted-foreground hover:text-black"}
         >
-          <span>Evalution History</span>
+          <span>Evaluation History</span>
         </Link>
         <Link
           href="/coordinator/student-record"
           className={pathname === "/coordinator/student-record" ? "text-black" : "text-muted-foreground hover:text-black"}
         >
           <span>Student Record</span>
+        </Link>
+        <Link
+          href="/coordinator/employee-profile"
+          className={pathname === "/coordinator/employee-profile" ? "text-black" : "text-muted-foreground hover:text-black"}
+        >
+          <span>Employee Profile</span>
         </Link>
         <Link
           href="/coordinator/assign"

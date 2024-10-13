@@ -1,6 +1,13 @@
 "use client";
 
-import { FormFieldType, OPT_LENGTH, UploaderType } from "@/lib/constants";
+import {
+  DATE_DEFAULT_FORMAT,
+  DATE_DISPLAY_FORMAT,
+  DATE_YEAR_MIN,
+  FormFieldType,
+  OPT_LENGTH,
+  UploaderType,
+} from "@/lib/constants";
 import { useState } from "react";
 import { Control } from "react-hook-form";
 import {
@@ -12,7 +19,7 @@ import {
   FormMessage,
 } from "./ui/form";
 import { Input } from "./ui/input";
-import { Eye, EyeOff } from "lucide-react";
+import { CalendarIcon, Eye, EyeOff } from "lucide-react";
 import HoverEffectWrapper from "./motion/hover-effect-wrapper";
 import { InputOTP, InputOTPSlot } from "./ui/input-otp";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
@@ -27,6 +34,11 @@ import { Checkbox } from "./ui/checkbox";
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Textarea } from "./ui/textarea";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Button } from "./ui/button";
+import { Calendar } from "./ui/custom-calendar";
+import { format } from "date-fns";
+import { DynamicArraySelect } from "./dynamic-select";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {}
@@ -39,6 +51,8 @@ interface CustomProps {
   label?: string;
   type?: string | number;
   readOnly?: boolean;
+  dynamicOptions?: { label: string; value: string }[];
+  onCreate?: (value: string) => void;
   placeholder?: string;
   description?: string | React.ReactNode;
   icon?: React.ReactNode;
@@ -68,6 +82,8 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
     readOnly,
     options,
     label,
+    dynamicOptions,
+    onCreate,
     uploaderVar,
     onValueChange,
     uploaderName,
@@ -153,9 +169,9 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
             <FormControl>
               <Select
                 onValueChange={(value) => {
-                  field.onChange(value);  // Update form field value
+                  field.onChange(value); // Update form field value
                   if (onValueChange) {
-                    onValueChange(value);  // Custom handler for selected faculty
+                    onValueChange(value); // Custom handler for selected faculty
                   }
                 }}
                 value={field.value || renderedValue}
@@ -251,6 +267,65 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
                   }}
                 />
               </div>
+            </FormControl>
+          </HoverEffectWrapper>
+          {description && <FormDescription>{description}</FormDescription>}
+        </>
+      );
+    case FormFieldType.DATE_PICKER:
+      return (
+        <>
+          <HoverEffectWrapper disabled={disabled}>
+            <Popover>
+              <PopoverTrigger asChild>
+                <FormControl>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "flex w-full pl-2 justify-start font-normal focus-visible:ring-0 focus-visible:ring-offset-0 disabled:cursor-not-allowed",
+                      !field.value && "text-muted-foreground"
+                    )}
+                    disabled={disabled}
+                  >
+                    <CalendarIcon className="mr-4 h-4 w-4" />
+                    {field.value ? (
+                      format(field.value, DATE_DISPLAY_FORMAT)
+                    ) : (
+                      <span>Select a date</span>
+                    )}
+                  </Button>
+                </FormControl>
+              </PopoverTrigger>
+              <PopoverContent align="start" className=" w-auto p-0">
+                <Calendar
+                  mode="single"
+                  captionLayout="dropdown-buttons"
+                  selected={field.value ? new Date(field.value) : undefined}
+                  onSelect={(date) =>
+                    date && field.onChange(format(date, DATE_DEFAULT_FORMAT))
+                  }
+                  fromYear={DATE_YEAR_MIN}
+                  toYear={new Date().getFullYear()}
+                />
+              </PopoverContent>
+            </Popover>
+          </HoverEffectWrapper>
+          {description && <FormDescription>{description}</FormDescription>}
+        </>
+      );
+    case FormFieldType.DYNAMIC_SELECT:
+      return (
+        <>
+          <HoverEffectWrapper disabled={disabled}>
+            <FormControl>
+              <DynamicArraySelect
+                onChange={field.onChange}
+                disabled={disabled}
+                placeholder={placeholder}
+                options={dynamicOptions}
+                onCreate={(value) => onCreate && onCreate(value)}
+                value={field.value || []}
+              />
             </FormControl>
           </HoverEffectWrapper>
           {description && <FormDescription>{description}</FormDescription>}

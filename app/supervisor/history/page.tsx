@@ -12,19 +12,23 @@ const getRecommendationMessage = (qceRating: number) => {
   let description = "";
   if (qceRating >= 4.5) {
     title = "OUTSTANDING FACULTY";
-    description = "The teacher demonstrates a strong commitment to student success and academic excellence.";
+    description =
+      "The teacher demonstrates a strong commitment to student success and academic excellence.";
   } else if (qceRating >= 3.5) {
     title = "VERY SATISFACTORY FACULTY";
-    description = "The teacher shows effective teaching skills and dedication, but there's room for improvement.";
+    description =
+      "The teacher is performing well, but there's still room for small improvements.";
   } else if (qceRating >= 2.5) {
     title = "SATISFACTORY FACULTY";
-    description = "The teacher's performance is below expectations, requiring significant effort for better results.";
+    description =
+      "The teacher meets the minimum expectations but can enhance their effectiveness.";
   } else if (qceRating >= 1.5) {
     title = "FAIR FACULTY";
-    description = "The teacher's performance is unsatisfactory and needs substantial improvement.";
+    description = "The teacher needs improvement to meet job requirements.";
   } else {
     title = "POOR FACULTY";
-    description = "The teacher's performance is unacceptable and requires immediate intervention.";
+    description =
+      "The teacher is failing to meet job requirements and requires immediate intervention.";
   }
   return { title, description };
 };
@@ -38,7 +42,11 @@ const History = async () => {
     include: { Categories: { include: { questions: true } } },
   });
 
-  const ratings = await db.answer.findMany();
+  const ratings = await db.answer.findMany({
+    where: {
+      evaluator: "Supervisor"
+    }
+  });
 
   // Group ratings by evaluatee (faculty)
   const ratingsByEvaluatee: { [evaluatee: string]: { ratings: number[], academicRank: string } } = {};

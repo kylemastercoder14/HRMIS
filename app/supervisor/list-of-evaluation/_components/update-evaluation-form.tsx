@@ -1,6 +1,6 @@
 "use client";
 
-import { createEvaluation } from "@/actions/evaluation";
+import { createEvaluation, updateEvaluation } from "@/actions/evaluation";
 import CustomFormField from "@/components/custom-formfield";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -15,7 +15,6 @@ import {
   Evaluation,
   Faculty,
   Question,
-  Student,
 } from "@prisma/client";
 import { Loader2 } from "lucide-react";
 import React, { useEffect, useState } from "react";
@@ -28,79 +27,63 @@ interface EvaluationFeatures extends Evaluation {
   questions: Question[];
 }
 
-const FacultyEvaluationForm = ({
-  facultyData,
+const UpdateEvaluationForm = ({
   evaluationData,
-  answers,
-  userId,
-  evaluatorDepartment
+  existingEvaluation,
 }: {
-  facultyData: Faculty[];
   evaluationData: EvaluationFeatures | null;
-  answers: Answer[];
-  userId: string;
-  evaluatorDepartment: string;
+  existingEvaluation: Answer[];
 }) => {
   const [isPending, setIsPending] = useState(false);
-  const formattedStartDate = formatDate(
-    evaluationData?.startDateTime?.toISOString()
-  );
-  const formattedEndDate = formatDate(
-    evaluationData?.endDateTime?.toISOString()
-  );
+  const answerIds = existingEvaluation.map(answer => answer.id);
 
-  const ratingPeriod = `${formattedStartDate} - ${formattedEndDate}`;
-  const [selectedFaculty, setSelectedFaculty] = useState<string>("");
-
-  const availableFaculty = facultyData.filter(
-    (faculty) =>
-      faculty.department === evaluatorDepartment &&
-      !answers.some(
-        (answer) =>
-          answer.evaluatee ===
-          `${faculty.lname}, ${faculty.fname} ${faculty.mname || ""}`.trim()
-      )
-  );
-  
-
-  // Define default values, including an empty array for questions
   const form = useForm<z.infer<typeof EvaluationFormSchema>>({
     resolver: zodResolver(EvaluationFormSchema),
     defaultValues: {
-      semester: evaluationData?.semester || "",
-      ratingPeriod: ratingPeriod ?? "",
+      semester: "",
+      ratingPeriod: "",
       evaluatee: "",
       evaluator: "",
       academicRank: "",
-      questions:
-        evaluationData?.questions.map((question) => ({
-          questionId: question.id,
-          answer: undefined,
-        })) || [],
+      questions: [],
+      comments: existingEvaluation[0]?.comments || "",
     },
     mode: "onChange",
   });
 
+  // useEffect to update the form values when evaluationData or existingEvaluation changes
   useEffect(() => {
-    if (selectedFaculty) {
-      const faculty = facultyData.find(
-        (f) =>
-          `${f.lname}, ${f.fname} ${f.mname || ""}`.trim() === selectedFaculty
-      );
-      if (faculty) {
-        form.setValue("academicRank", faculty.academicRank);
+    if (evaluationData && existingEvaluation.length > 0) {
+      // Reset form with values from evaluationData and existingEvaluation
+      form.reset({
+        semester: evaluationData?.semester || "",
+        ratingPeriod: `${formatDate(
+          evaluationData?.startDateTime.toISOString()
+        )} - ${formatDate(evaluationData?.endDateTime.toISOString())}`,
+        evaluatee: existingEvaluation[0]?.evaluatee || "",
+        evaluator: existingEvaluation[0]?.evaluator || "",
+        academicRank: existingEvaluation[0]?.academicRank || "",
+        questions:
+          evaluationData?.questions.map((question) => {
+            const answerObj = existingEvaluation.find(
+              (ans) => ans.questionId === question.id
+            );
+            const answer = answerObj ? (["5", "4", "3", "2", "1"].includes(answerObj.rating.toString()) ? answerObj.rating.toString() as "5" | "4" | "3" | "2" | "1" : undefined) : undefined; // Ensure answer is a valid rating
 
-        const isSelf = faculty.clerkId === userId;
-        console.log("isSelf", isSelf);
-        form.setValue("evaluator", isSelf ? "Self" : "Peer");
-      }
+            return {
+              questionId: question.id,
+              answer: answer, // Populate the answer correctly
+            };
+          }) || [],
+        comments: existingEvaluation[0]?.comments || "",
+      });
     }
-  }, [selectedFaculty, form, facultyData, userId]);
+  }, [evaluationData, existingEvaluation, form]);
 
   const onSubmit = async (values: z.infer<typeof EvaluationFormSchema>) => {
     setIsPending(true);
     try {
-      const response = await createEvaluation(values);
+      const response = await updateEvaluation(values, answerIds);
       if (response.error) {
         toast.error(response.error);
       } else {
@@ -108,8 +91,8 @@ const FacultyEvaluationForm = ({
         window.location.reload();
       }
     } catch (error) {
-      toast.error("Failed to submit evaluation");
-      console.log("Failed to submit evaluation", error);
+      toast.error("Failed to update evaluation");
+      console.error("Update error", error);
     } finally {
       setIsPending(false);
     }
@@ -148,15 +131,11 @@ const FacultyEvaluationForm = ({
             control={form.control}
             name="evaluatee"
             isRequired
-            fieldType={FormFieldType.SELECT}
-            options={availableFaculty.map((faculty) =>
-              `${faculty.lname}, ${faculty.fname} ${faculty.mname || ""}`.trim()
-            )}
+            fieldType={FormFieldType.INPUT}
             label="Name of Faculty to be Evaluated"
             placeholder="Select Faculty"
-            disabled={isPending}
+            disabled
             className="w-full"
-            onValueChange={(value) => setSelectedFaculty(value)}
           />
           <CustomFormField
             control={form.control}
@@ -188,13 +167,11 @@ const FacultyEvaluationForm = ({
             </p>
             {evaluationData?.questions
               .filter((question) => question.categoryId === category.id)
-              .map((question) => (
+              .map((question, index) => (
                 <CustomFormField
                   key={question.id}
                   control={form.control}
-                  name={`questions.${evaluationData.questions.findIndex(
-                    (q) => q.id === question.id
-                  )}.answer`} // Ensure correct indexing
+                  name={`questions.${index}.answer`}
                   isRequired
                   fieldType={FormFieldType.RADIO}
                   options={["5", "4", "3", "2", "1"]}
@@ -215,13 +192,9 @@ const FacultyEvaluationForm = ({
           disabled={isPending}
           className="w-full"
         />
-        <Button type="submit" disabled={isPending} className="w-full">
-          {isPending && <Loader2 className="w-4 h-4 mr-2" />}
-          Submit Form
-        </Button>
       </form>
     </Form>
   );
 };
 
-export default FacultyEvaluationForm;
+export default UpdateEvaluationForm;
