@@ -4,7 +4,6 @@ import Heading from "@/components/heading";
 import { format } from "date-fns";
 import { InvitationColumn } from "./_components/column";
 import InvitationClient from "./_components/client";
-import InvitationForm from "./_components/invitation-form";
 import { auth } from "@clerk/nextjs/server";
 
 const Invitation = async () => {
