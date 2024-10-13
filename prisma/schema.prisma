@@ -51,8 +51,8 @@ model Faculty {
 }
 
 model Supervisor {
-  id           String       @id @unique @default(cuid())
-  clerkId      String       @unique
+  id           String   @id @unique @default(cuid())
+  clerkId      String   @unique
   fname        String
   mname        String?
   lname        String
@@ -62,8 +62,8 @@ model Supervisor {
   email        String
   password     String
   profile      String?
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   Answer Answer[] @relation(map: "Evaluation_Supervisor_FK")
 }
@@ -144,6 +144,7 @@ model Invitation {
   platform  String
   file      String
   startDate String
+  status    String   @default("Pending")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

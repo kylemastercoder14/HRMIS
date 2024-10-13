@@ -96,6 +96,7 @@ const Signin = () => {
               fieldType={FormFieldType.INPUT}
             />
           </div>
+          <Link href="/auth/student/forgot-password" className="text-sm text-right font-semibold underline">Forgot Password?</Link>
           <SubmitButton isLoading={isPending}>Continue</SubmitButton>
         </form>
       </Form>

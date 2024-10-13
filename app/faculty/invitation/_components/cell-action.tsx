@@ -38,15 +38,17 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem asChild>
-            <Link
-            target="_blank"
-              href={`/certificate?name=${data.name}&title=${data.title}&platform=${data.platform}&date=${data.createdAt}&time=${data.time}`}
-            >
-              <Printer className="w-4 h-4 mr-2" />
-              Print Certificate
-            </Link>
-          </DropdownMenuItem>
+          {data.statuses === "Completed" && (
+            <DropdownMenuItem asChild>
+              <Link
+                target="_blank"
+                href={`/certificate?name=${data.name}&title=${data.title}&platform=${data.platform}&date=${data.createdAt}&time=${data.time}`}
+              >
+                <Printer className="w-4 h-4 mr-2" />
+                Print Certificate
+              </Link>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem onClick={() => onCopy(data.file)}>
             <Copy className="w-4 h-4 mr-2" />
             Copy

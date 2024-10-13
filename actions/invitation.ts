@@ -14,7 +14,7 @@ export const addInvitation = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { file, name, platform, dateStarted, selectedFaculties } = validatedField.data;
+  const { file, name, platform, dateStarted, selectedFaculties, status } = validatedField.data;
 
   try {
     await db.invitation.create({
@@ -22,6 +22,7 @@ export const addInvitation = async (
         name,
         platform,
         startDate: dateStarted,
+        status,
         faculties: {
           connect: selectedFaculties.map((facultyId: string) => ({ id: facultyId })),
         },
@@ -49,13 +50,14 @@ export const updateInvitation = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { file, name, platform, dateStarted, selectedFaculties } = validatedField.data;
+  const { file, name, platform, dateStarted, selectedFaculties, status } = validatedField.data;
 
   try {
     await db.invitation.update({
       data: {
         name,
         platform,
+        status,
         startDate: dateStarted,
         faculties: {
           connect: selectedFaculties.map((facultyId: string) => ({ id: facultyId })),

@@ -27,11 +27,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-const InvitationForm = ({
-  initialData,
-}: {
-  initialData?: any | null;
-}) => {
+const InvitationForm = ({ initialData }: { initialData?: any | null }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [faculties, setFaculties] = useState<Faculty[]>([]);
 
@@ -58,6 +54,7 @@ const InvitationForm = ({
       platform: "",
       file: "",
       dateStarted: "",
+      status: "",
       selectedFaculties: [],
     },
   });
@@ -121,6 +118,16 @@ const InvitationForm = ({
                   label: `${faculty.fname} ${faculty.lname}`,
                   value: faculty.id,
                 }))}
+                isRequired={true}
+                disabled={isLoading}
+              />
+              <CustomFormField
+                control={form.control}
+                fieldType={FormFieldType.SELECT}
+                label="Status"
+                name="status"
+                placeholder="Select Status"
+                options={["Pending", "On-Going", "Completed"]}
                 isRequired={true}
                 disabled={isLoading}
               />

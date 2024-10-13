@@ -31,7 +31,7 @@ const Profile = async () => {
       </Card>
       <Card className="shadow-md">
         <CardContent className="p-5">
-          <ChangePasswordForm />
+          <ChangePasswordForm student={student} />
         </CardContent>
       </Card>
     </div>

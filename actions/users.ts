@@ -1,6 +1,10 @@
 "use server";
 
-import { ProfileUpdateSchema, UserRegistrationSchema } from "@/lib/validators";
+import {
+  ChangePasswordSchema,
+  ProfileUpdateSchema,
+  UserRegistrationSchema,
+} from "@/lib/validators";
 import { z } from "zod";
 import bcryptjs from "bcryptjs";
 import db from "@/lib/db";
@@ -210,6 +214,82 @@ export const deleteStudent = async (id: string) => {
   } catch (error: any) {
     return {
       error: `Failed to delete student. Please try again. ${
+        error.message || ""
+      }`,
+    };
+  }
+};
+
+export const changePassword = async (
+  values: z.infer<typeof ChangePasswordSchema>,
+  id: string
+) => {
+  const validatedField = ChangePasswordSchema.safeParse(values);
+
+  if (!validatedField.success) {
+    const errors = validatedField.error.errors.map((err) => err.message);
+    return { error: `Validation Error: ${errors.join(", ")}` };
+  }
+
+  const { oldPassword, newPassword, confirmPassword } = validatedField.data;
+
+  try {
+    const faculty = await db.faculty.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (!faculty) return { error: "User not found" };
+
+    const isMatch = await bcryptjs.compare(oldPassword, faculty.password);
+
+    if (!isMatch) {
+      return { error: "Old password is incorrect" };
+    }
+
+    if (newPassword !== confirmPassword) {
+      return { error: "New password and confirm password do not match" };
+    }
+
+    const hashedPassword = await bcryptjs.hash(newPassword, 10);
+
+    await db.faculty.update({
+      where: {
+        id: id,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+
+    return { success: "Password changed successfully" };
+  } catch (error: any) {
+    return {
+      error: `Failed to change password. Please try again. ${
+        error.message || ""
+      }`,
+    };
+  }
+};
+
+export const resetPassword = async (newPassword: string, userId: string) => {
+  try {
+    const hashedPassword = await bcryptjs.hash(newPassword, 10);
+
+    await db.student.update({
+      where: {
+        clerkId: userId,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+
+    return { success: "Password changed successfully" };
+  } catch (error: any) {
+    return {
+      error: `Failed to change password. Please try again. ${
         error.message || ""
       }`,
     };

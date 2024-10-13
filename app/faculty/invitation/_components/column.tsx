@@ -6,6 +6,7 @@ import { getInitials } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import { CellAction } from "./cell-action";
+import { Badge } from "@/components/ui/badge";
 
 export type InvitationColumn = {
   id: string;
@@ -13,6 +14,7 @@ export type InvitationColumn = {
   title: string;
   time: string;
   name: string;
+  statuses: string;
   platform: string;
   createdAt: string;
 };
@@ -29,6 +31,24 @@ export const columns: ColumnDef<InvitationColumn>[] = [
   {
     accessorKey: "file",
     header: "File",
+  },
+  {
+    accessorKey: "statuses",
+    header: "Status",
+    cell: ({ row }) => {
+      const status = row.original.statuses;
+      let variant: "default" | "secondary" | "outline" | "destructive" | null | undefined = "default";
+  
+      if (status === "Pending") {
+        variant = "destructive";
+      } else if (status === "On-going") {
+        variant = "secondary";
+      } else if (status === "Completed") {
+        variant = "default";
+      }
+  
+      return <Badge variant={variant}>{status}</Badge>;
+    }
   },
   {
     accessorKey: "createdAt",

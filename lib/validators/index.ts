@@ -195,6 +195,38 @@ export const UserLoginSchema = z.object({
   }),
 });
 
+export const ForgotPasswordSchema = z.object({
+  email: z.string().min(1, {
+    message: "Email address is required.",
+  }),
+  // email: z
+  //   .string()
+  //   .min(1, {
+  //     message: "Email address is required.",
+  //   })
+  //   .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
+  //     message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
+  //   }),
+});
+
+export const ResetPasswordSchema = z.object({
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters long." })
+    .regex(/[A-Z]/, {
+      message: "Password must contain at least one uppercase letter.",
+    })
+    .regex(/[a-z]/, {
+      message: "Password must contain at least one lowercase letter.",
+    })
+    .regex(/[!@#$%^&*(),._?":{}|<>]/, {
+      message: "Password must contain at least one special character.",
+    }),
+  otpCode: z.string().min(1, {
+    message: "OTP code is required.",
+  }),
+});
+
 export const EvaluationFormSchema = z.object({
   ratingPeriod: z.string().min(1, {
     message: "Rating period is required.",
@@ -428,5 +460,8 @@ export const InvitationFormSchema = z.object({
   }),
   selectedFaculties: z.array(z.string()).min(1, {
     message: "At least one faculty is required.",
+  }),
+  status: z.string().min(1, {
+    message: "Status is required.",
   }),
 });

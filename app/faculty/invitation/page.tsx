@@ -34,6 +34,7 @@ const Invitation = async () => {
       title: item.name,
       platform: item.platform,
       file: item.file,
+      statuses: item.status,
       createdAt: format(item.createdAt, "MMMM dd, yyyy"),
       time: format(item.createdAt, "hh:mm a"),
       name: facultyName,

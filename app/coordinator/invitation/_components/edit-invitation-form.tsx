@@ -60,6 +60,7 @@ const EditInvitationForm = ({
       name: initialData?.title ?? "",
       platform: initialData?.platform ?? "",
       file: initialData?.file ?? "",
+      status: initialData?.status ?? "",
       dateStarted: initialData?.dateStarted ?? "",
       selectedFaculties: initialData?.faculties ?? [],
     },
@@ -120,6 +121,16 @@ const EditInvitationForm = ({
                 label: `${faculty.fname} ${faculty.lname}`,
                 value: faculty.id,
               }))}
+              isRequired={true}
+              disabled={isLoading}
+            />
+            <CustomFormField
+              control={form.control}
+              fieldType={FormFieldType.SELECT}
+              label="Status"
+              name="status"
+              placeholder="Select Status"
+              options={["Pending", "On-Going", "Completed"]}
               isRequired={true}
               disabled={isLoading}
             />
