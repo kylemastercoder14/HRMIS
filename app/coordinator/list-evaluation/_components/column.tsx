@@ -8,7 +8,8 @@ export type EvaluationColumn = {
   id: string;
   title: string;
   ratingPeriod: string;
-  status: string;
+  semester: string;
+  statuses: string;
 };
 
 export const columns: ColumnDef<EvaluationColumn>[] = [
@@ -21,10 +22,14 @@ export const columns: ColumnDef<EvaluationColumn>[] = [
     header: "Rating Period",
   },
   {
-    accessorKey: "status",
+    accessorKey: "semester",
+    header: "Semester",
+  },
+  {
+    accessorKey: "statuses",
     header: "Status",
     cell: ({ row }) => (
-      <Badge variant={row.original.status === "Starting" ? "default" : "destructive"}>{row.original.status}</Badge>
+      <Badge variant={row.original.statuses === "Starting" ? "default" : "destructive"}>{row.original.statuses}</Badge>
     )
   },
   {

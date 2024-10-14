@@ -1,6 +1,6 @@
 "use client";
 
-import { changePassword } from "@/actions/users";
+import { changePassword } from "@/actions/coordinator";
 import CustomFormField from "@/components/custom-formfield";
 import SubmitButton from "@/components/submit-button";
 import { Form } from "@/components/ui/form";
@@ -20,7 +20,6 @@ const ChangePasswordForm = ({ coordinator }: { coordinator: Coordinator }) => {
   const form = useForm<z.infer<typeof ChangePasswordSchema>>({
     resolver: zodResolver(ChangePasswordSchema),
     defaultValues: {
-      oldPassword: "",
       newPassword: "",
       confirmPassword: "",
     },
@@ -29,7 +28,7 @@ const ChangePasswordForm = ({ coordinator }: { coordinator: Coordinator }) => {
   const onSubmit = async (values: z.infer<typeof ChangePasswordSchema>) => {
     setIsPending(true);
     try {
-      const response = await changePassword(values, coordinator.id);
+      const response = await changePassword(values, coordinator.clerkId);
       if (response.error) {
         toast.error(response.error);
       } else {
@@ -46,17 +45,7 @@ const ChangePasswordForm = ({ coordinator }: { coordinator: Coordinator }) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="field-group-col3">
-          <CustomFormField
-            control={form.control}
-            label="Old Password"
-            placeholder="********"
-            isRequired={true}
-            type="password"
-            disabled={isPending}
-            fieldType={FormFieldType.INPUT}
-            name="oldPassword"
-          />
+        <div className="field-group-col2">
           <CustomFormField
             control={form.control}
             label="New Password"

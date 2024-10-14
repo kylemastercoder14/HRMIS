@@ -25,7 +25,8 @@ const ListEvaluation = async () => {
     return {
       id: item.id,
       title: item.title,
-      status: item.status,
+      semester: item.semester,
+      statuses: item.status,
       ratingPeriod: ratingPeriod,
     };
   });

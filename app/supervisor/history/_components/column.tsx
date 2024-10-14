@@ -5,6 +5,7 @@ import { ColumnDef } from "@tanstack/react-table";
 
 export type EvaluationColumn = {
   faculty: string;
+  semester: string;
   ratingPeriod: string;
   academicRank: string;
   evaluator: string;
@@ -20,6 +21,10 @@ export const columns: ColumnDef<EvaluationColumn>[] = [
   {
     accessorKey: "ratingPeriod",
     header: "Rating Period",
+  },
+  {
+    accessorKey: "semester",
+    header: "Semester",
   },
   {
     accessorKey: "academicRank",

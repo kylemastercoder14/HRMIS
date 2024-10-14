@@ -3,6 +3,7 @@
 import db from "@/lib/db";
 import {
   AssignFormSchema,
+  ChangePasswordSchema,
   FacultyRegistrationSchema,
   ProfileUpdateFacultySchema,
 } from "@/lib/validators";
@@ -301,6 +302,74 @@ export const assignFaculty = async (
   } catch (error: any) {
     return {
       error: `Failed to assign faculty. Please try again. ${
+        error.message || ""
+      }`,
+    };
+  }
+};
+
+export const changePassword = async (
+  values: z.infer<typeof ChangePasswordSchema>,
+  id: string
+) => {
+  const validatedField = ChangePasswordSchema.safeParse(values);
+
+  if (!validatedField.success) {
+    const errors = validatedField.error.errors.map((err) => err.message);
+    return { error: `Validation Error: ${errors.join(", ")}` };
+  }
+
+  const { newPassword, confirmPassword } = validatedField.data;
+
+  try {
+
+    if (newPassword !== confirmPassword) {
+      return { error: "New password and confirm password do not match" };
+    }
+
+    const hashedPassword = await bcryptjs.hash(newPassword, 10);
+
+    await db.faculty.update({
+      where: {
+        clerkId: id,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+
+    await clerkClient.users.updateUser(id, {
+      password: newPassword,
+      signOutOfOtherSessions: true,
+    })
+
+    return { success: "Password changed successfully" };
+  } catch (error: any) {
+    return {
+      error: `Failed to change password. Please try again. ${
+        error.message || ""
+      }`,
+    };
+  }
+};
+
+export const resetPassword = async (newPassword: string, userId: string) => {
+  try {
+    const hashedPassword = await bcryptjs.hash(newPassword, 10);
+
+    await db.faculty.update({
+      where: {
+        clerkId: userId,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+
+    return { success: "Password changed successfully" };
+  } catch (error: any) {
+    return {
+      error: `Failed to change password. Please try again. ${
         error.message || ""
       }`,
     };

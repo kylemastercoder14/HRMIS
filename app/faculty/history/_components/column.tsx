@@ -14,6 +14,7 @@ export type EvaluationColumn = {
   id: string;
   faculty: string;
   ratingPeriod: string;
+  semester: string;
   studentRating: any;
   studentQce: any;
   peerRating: any;
@@ -35,6 +36,10 @@ export const columns: ColumnDef<EvaluationColumn>[] = [
   {
     accessorKey: "ratingPeriod",
     header: "Rating Period",
+  },
+  {
+    accessorKey: "semester",
+    header: "Semester",
   },
   {
     accessorKey: "studentRating",

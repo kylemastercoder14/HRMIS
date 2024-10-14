@@ -42,7 +42,7 @@ const Signin = () => {
       // If sign-in process is complete, set the created session as active and redirect the user
       if (signInAttempt.status === "complete") {
         await setActive({ session: signInAttempt.createdSessionId });
-        router.push("/supervisor");
+        router.push("/non-teaching");
       } else {
         console.error(JSON.stringify(signInAttempt, null, 2));
       }
@@ -89,14 +89,14 @@ const Signin = () => {
               fieldType={FormFieldType.INPUT}
             />
           </div>
-          <Link href="/auth/supervisor/forgot-password" className="text-sm text-right font-semibold underline">Forgot Password?</Link>
-          <SubmitButton isLoading={isPending}>Continue</SubmitButton>
+          <Link href="/auth/non-teaching/forgot-password" className="text-sm text-right font-semibold underline">Forgot Password?</Link>
+          <SubmitButton isDisabled isLoading={isPending}>Continue</SubmitButton>
         </form>
       </Form>
       <p className="text-center mt-3 text-muted-foreground">
         Don&apos;t have an account?{" "}
         <Link
-          href="/auth/supervisor/signup"
+          href="/auth/non-teaching/signup"
           className="font-semibold underline text-black"
         >
           Sign Up

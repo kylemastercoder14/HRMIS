@@ -46,6 +46,49 @@ export const UserRegistrationSchema = z.object({
   }),
 });
 
+export const NonTeachingRegistrationSchema = z.object({
+  firstName: z.string().min(1, {
+    message: "First name is required.",
+  }),
+  middleInitial: z.string().optional(),
+  lastName: z.string().min(1, {
+    message: "Last name is required.",
+  }),
+  suffix: z.string().optional(),
+  email: z.string().min(1, {
+    message: "Email address is required.",
+  }),
+  // email: z
+  //   .string()
+  //   .min(1, {
+  //     message: "Email address is required.",
+  //   })
+  //   .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
+  //     message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
+  //   }),
+  password: z
+    .string()
+    .min(8, { message: "Password must be at least 8 characters long." })
+    .regex(/[A-Z]/, {
+      message: "Password must contain at least one uppercase letter.",
+    })
+    .regex(/[a-z]/, {
+      message: "Password must contain at least one lowercase letter.",
+    })
+    .regex(/[!@#$%^&*(),.?_":{}|<>]/, {
+      message: "Password must contain at least one special character.",
+    }),
+  office: z.string().min(1, {
+    message: "Office is required.",
+  }),
+  position: z.string().min(1, {
+    message: "Position is required.",
+  }),
+  terms: z.boolean().refine((val) => val === true, {
+    message: "Terms of agreement must be accepted.",
+  }),
+});
+
 export const FacultyRegistrationSchema = z.object({
   firstName: z.string().min(1, {
     message: "First name is required.",
@@ -410,9 +453,6 @@ export const ProfileUpdateSupervisorSchema = z.object({
 });
 
 export const ChangePasswordSchema = z.object({
-  oldPassword: z.string().min(1, {
-    message: "Old Password is required.",
-  }),
   newPassword: z
     .string()
     .min(8, { message: "New Password must be at least 8 characters long." })

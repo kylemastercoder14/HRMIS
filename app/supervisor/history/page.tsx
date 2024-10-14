@@ -33,6 +33,16 @@ const getRecommendationMessage = (qceRating: number) => {
   return { title, description };
 };
 
+const formatDatePeriod = (dateString: string | number | Date | undefined) => {
+  if (!dateString) return "Invalid Date";
+  const options = {
+    year: "numeric" as const,
+    month: "short" as const,
+    day: "numeric" as const,
+  };
+  return new Intl.DateTimeFormat("en-US", options).format(new Date(dateString));
+};
+
 const History = async () => {
   const { userId } = auth();
 
@@ -44,12 +54,14 @@ const History = async () => {
 
   const ratings = await db.answer.findMany({
     where: {
-      evaluator: "Supervisor"
-    }
+      evaluator: "Supervisor",
+    },
   });
 
   // Group ratings by evaluatee (faculty)
-  const ratingsByEvaluatee: { [evaluatee: string]: { ratings: number[], academicRank: string } } = {};
+  const ratingsByEvaluatee: {
+    [evaluatee: string]: { ratings: number[]; academicRank: string };
+  } = {};
 
   ratings.forEach((rating) => {
     const evaluateeName = rating.evaluatee; // Assuming evaluatee has a name field
@@ -62,34 +74,41 @@ const History = async () => {
   });
 
   // Generate evaluation data for each faculty (evaluatee)
-  const evaluationsData: EvaluationColumn[] = Object.entries(ratingsByEvaluatee).map(
-    ([facultyName, { ratings, academicRank }]) => {
-      const totalRatings = ratings.length;
-      const sumRatings = ratings.reduce((sum, rating) => sum + rating, 0);
-      
-      // Calculate average rating and QCE
-      const averageRating = totalRatings > 0 ? (sumRatings / totalRatings) * 100 / 5 : 0;
-      const qce = (averageRating * 0.3).toFixed(2); // 30% of average rating
+  const evaluationsData: EvaluationColumn[] = Object.entries(
+    ratingsByEvaluatee
+  ).map(([facultyName, { ratings, academicRank }]) => {
+    const totalRatings = ratings.length;
+    const sumRatings = ratings.reduce((sum, rating) => sum + rating, 0);
 
-      const overallRecommendation = getRecommendationMessage(Number(qce));
-      const { title: overallTitle, description: overallDescription } = overallRecommendation;
+    // Calculate average rating and QCE
+    const averageRating =
+      totalRatings > 0 ? ((sumRatings / totalRatings) * 100) / 5 : 0;
+    const qce = (averageRating * 0.3).toFixed(2); // 30% of average rating
 
-      const formattedStartDate = formatDate(evaluations[0]?.startDateTime?.toISOString());
-      const formattedEndDate = formatDate(evaluations[0]?.endDateTime?.toISOString());
-      const ratingPeriod = `${formattedStartDate} - ${formattedEndDate}`;
+    const overallRecommendation = getRecommendationMessage(Number(qce));
+    const { title: overallTitle, description: overallDescription } =
+      overallRecommendation;
 
-      return {
-        ratingPeriod,
-        faculty: facultyName,
-        academicRank: academicRank, // Example rank, adjust based on your data
-        evaluator: "Supervisor",
-        ratings: averageRating.toFixed(2) + "%",
-        qce: qce + "%",
-        recommendation: overallDescription,
-        title: overallTitle,
-      };
-    }
-  );
+    const formattedStartDate = formatDatePeriod(
+      evaluations[0]?.startDateTime?.toISOString()
+    );
+    const formattedEndDate = formatDatePeriod(
+      evaluations[0]?.endDateTime?.toISOString()
+    );
+    const ratingPeriod = `${formattedStartDate} - ${formattedEndDate}`;
+
+    return {
+      ratingPeriod,
+      semester: evaluations[0]?.semester,
+      faculty: facultyName,
+      academicRank: academicRank, // Example rank, adjust based on your data
+      evaluator: "Supervisor",
+      ratings: averageRating.toFixed(2) + "%",
+      qce: qce + "%",
+      recommendation: overallDescription,
+      title: overallTitle,
+    };
+  });
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
@@ -99,7 +118,8 @@ const History = async () => {
           description="A detailed record of all evaluations completed, including total ratings and QCE rates per faculty."
         />
       </div>
-      <EvaluationClient data={evaluationsData} /> {/* Pass the evaluation data */}
+      <EvaluationClient data={evaluationsData} />{" "}
+      {/* Pass the evaluation data */}
     </div>
   );
 };

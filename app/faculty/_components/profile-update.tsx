@@ -4,9 +4,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { TrashIcon, UploadCloud } from "lucide-react";
 import React, { useState } from "react";
-import { uploadDirect } from "@uploadcare/upload-client";
 import { toast } from "sonner";
 import { createProfile, removeProfile } from "@/actions/faculty";
+import { useDropzone } from "react-dropzone";
+import { uploadToS3 } from "@/lib/s3";
 
 const ProfileUpdate = ({
   image,
@@ -18,47 +19,34 @@ const ProfileUpdate = ({
   const [profile, setProfile] = useState<string | null>(image);
   const [uploading, setUploading] = useState(false);
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: { "image/*": [] },
+    maxFiles: 1,
+    onDrop: async (acceptedImage) => {
+      const image = acceptedImage[0];
+      if (image.size > 10 * 1024 * 1024) {
+        toast.error("Please upload a smaller image.");
+        return;
+      }
       setUploading(true);
-      const toastId = toast.loading("Uploading: 0%", { duration: Infinity });
-
       try {
-        const result = await uploadDirect(file, {
-          publicKey: "79cc1ac0a5122232368b",
-          store: "auto",
-          onProgress: (progress: any) => {
-            // Check if progress has `uploaded` and `total` properties
-            if ("uploaded" in progress && "total" in progress) {
-              const percentage = Math.round(
-                (progress.uploaded / progress.total) * 100
-              );
-              // Update the toast progress
-              toast.message(`Uploading: ${percentage}%`, { id: toastId });
-            }
-          },
+        const { url } = await uploadToS3(image, (progress) => {
+          console.log(`Upload progress: ${progress}%`);
         });
-
-        setProfile(result.cdnUrl);
-        const data = await createProfile(result.cdnUrl ?? "");
-        if (data.error) {
-          toast.error(data.error);
-        } else {
-          toast.success(data.success);
-          window.location.reload();
-        }
+        await createProfile(url);
+        setProfile(url);
+        toast.success("Image uploaded successfully!");
       } catch (error) {
-        console.error("Image upload failed:", error);
-        toast.error("Image upload failed");
+        toast.error("Image upload failed.");
+        console.log(error);
       } finally {
         setUploading(false);
       }
-    }
-  };
+    },
+  });
 
   const handleRemove = async () => {
-    setProfile(null);
+    setProfile(null); // Reset profile image
     const response = await removeProfile();
     if (response.error) {
       toast.error(response.error);
@@ -67,6 +55,7 @@ const ProfileUpdate = ({
       window.location.reload();
     }
   };
+
   return (
     <div className="flex items-center gap-5">
       <Avatar className="w-20 h-20">
@@ -76,17 +65,11 @@ const ProfileUpdate = ({
         </AvatarFallback>
       </Avatar>
       <div className="flex items-center gap-3">
-        <input
-          type="file"
-          accept="image/*"
-          id="image-upload"
-          style={{ display: "none" }}
-          onChange={handleUpload}
-        />
         <Button
           variant="default"
           onClick={() => document.getElementById("image-upload")?.click()}
           disabled={uploading}
+          {...getRootProps()}
         >
           <UploadCloud className="w-5 h-5 mr-2" />
           {uploading ? "Uploading..." : "Upload"}
@@ -99,6 +82,11 @@ const ProfileUpdate = ({
           <TrashIcon className="w-5 h-5 mr-2" />
           Remove
         </Button>
+        <input
+          {...getInputProps()}
+          id="image-upload"
+          style={{ display: "none" }}
+        />
       </div>
     </div>
   );

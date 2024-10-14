@@ -48,6 +48,7 @@ export function DataTable<TData, TValue>({
   const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("");
+  const [semester, setSemester] = useState("");
 
   const table = useReactTable({
     data,
@@ -77,6 +78,11 @@ export function DataTable<TData, TValue>({
   const handleDepartmentChange = (department: string) => {
     setSelectedDepartment(department);
     table.getColumn("department")?.setFilterValue(department);
+  };
+
+  const handleSemesterChange = (semester: string) => {
+    setSemester(semester);
+    table.getColumn("semester")?.setFilterValue(semester);
   };
 
   return (
@@ -140,6 +146,24 @@ export function DataTable<TData, TValue>({
                       {department}
                     </SelectItem>
                   ))}
+                </SelectContent>
+              </Select>
+            )}
+            {table.getColumn("semester") && (
+              <Select
+                defaultValue={semester}
+                onValueChange={handleSemesterChange}
+              >
+                <SelectTrigger className="w-[300px] border border-input!important">
+                  <SelectValue placeholder="All Semester" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1st Semester">
+                  1st Semester
+                  </SelectItem>
+                  <SelectItem value="2nd Semester">
+                  2nd Semester
+                  </SelectItem>
                 </SelectContent>
               </Select>
             )}

@@ -231,37 +231,28 @@ export const changePassword = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { oldPassword, newPassword, confirmPassword } = validatedField.data;
+  const {newPassword, confirmPassword } = validatedField.data;
 
   try {
-    const faculty = await db.faculty.findUnique({
-      where: {
-        id,
-      },
-    });
-
-    if (!faculty) return { error: "User not found" };
-
-    const isMatch = await bcryptjs.compare(oldPassword, faculty.password);
-
-    if (!isMatch) {
-      return { error: "Old password is incorrect" };
-    }
-
     if (newPassword !== confirmPassword) {
       return { error: "New password and confirm password do not match" };
     }
 
     const hashedPassword = await bcryptjs.hash(newPassword, 10);
 
-    await db.faculty.update({
+    await db.student.update({
       where: {
-        id: id,
+        clerkId: id,
       },
       data: {
         password: hashedPassword,
       },
     });
+
+    await clerkClient.users.updateUser(id, {
+      password: newPassword,
+      signOutOfOtherSessions: true,
+    })
 
     return { success: "Password changed successfully" };
   } catch (error: any) {

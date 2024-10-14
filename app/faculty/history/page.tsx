@@ -34,6 +34,16 @@ const getRecommendationMessage = (qceRating: number) => {
   return { title, description };
 };
 
+const formatDatePeriod = (dateString: string | number | Date | undefined) => {
+  if (!dateString) return "Invalid Date";
+  const options = {
+    year: "numeric" as const,
+    month: "short" as const,
+    day: "numeric" as const,
+  };
+  return new Intl.DateTimeFormat("en-US", options).format(new Date(dateString));
+};
+
 const History = async () => {
   const { userId } = auth();
   const user = await db.faculty.findUnique({
@@ -120,18 +130,15 @@ const History = async () => {
   const totalRating = ratings.reduce((sum, { rating }) => sum + rating, 0);
   const averageScore = (totalRating / (ratings.length * 5)) * 100;
 
-  const formattedStartDate = formatDate(
-    evaluations[0]?.startDateTime?.toISOString()
-  );
-  const formattedEndDate = formatDate(
-    evaluations[0]?.endDateTime?.toISOString()
-  );
+  const formattedStartDate = formatDatePeriod(evaluations[0]?.startDateTime?.toISOString());
+  const formattedEndDate = formatDatePeriod(evaluations[0]?.endDateTime?.toISOString());
 
   const ratingPeriod = `${formattedStartDate} - ${formattedEndDate}`;
 
   const formattedEvaluation: EvaluationColumn = {
     id: evaluatee,
     ratingPeriod: ratingPeriod, // Add logic for the rating period if needed
+    semester: evaluations[0]?.semester || "N/A",
     faculty: evaluatee,
     studentRating: averageRatings.student.averageRating.toFixed(2) + "%",
     studentQce: averageRatings.student.qce || "N/A",

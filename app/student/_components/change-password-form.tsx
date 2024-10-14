@@ -20,7 +20,6 @@ const ChangePasswordForm = ({ student }: { student: Student }) => {
   const form = useForm<z.infer<typeof ChangePasswordSchema>>({
     resolver: zodResolver(ChangePasswordSchema),
     defaultValues: {
-      oldPassword: "",
       newPassword: "",
       confirmPassword: "",
     },
@@ -29,13 +28,13 @@ const ChangePasswordForm = ({ student }: { student: Student }) => {
   const onSubmit = async (values: z.infer<typeof ChangePasswordSchema>) => {
     setIsPending(true);
     try {
-      const response = await changePassword(values, student.id);
+      const response = await changePassword(values, student.clerkId);
       if (response.error) {
         toast.error(response.error);
       } else {
         toast.success(response.success);
         router.refresh();
-        window.location.reload();
+        window.location.assign("/");
       }
     } catch (error) {
       console.error(error);
@@ -46,17 +45,7 @@ const ChangePasswordForm = ({ student }: { student: Student }) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="field-group-col3">
-          <CustomFormField
-            control={form.control}
-            label="Old Password"
-            placeholder="********"
-            isRequired={true}
-            type="password"
-            disabled={isPending}
-            fieldType={FormFieldType.INPUT}
-            name="oldPassword"
-          />
+        <div className="field-group-col2">
           <CustomFormField
             control={form.control}
             label="New Password"
