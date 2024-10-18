@@ -28,7 +28,7 @@ const ChangePasswordForm = ({ coordinator }: { coordinator: Coordinator }) => {
   const onSubmit = async (values: z.infer<typeof ChangePasswordSchema>) => {
     setIsPending(true);
     try {
-      const response = await changePassword(values, coordinator.clerkId);
+      const response = await changePassword(values, coordinator.id);
       if (response.error) {
         toast.error(response.error);
       } else {
