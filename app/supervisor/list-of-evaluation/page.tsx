@@ -4,6 +4,7 @@ import Heading from "@/components/heading";
 import { auth } from "@clerk/nextjs/server";
 import ListEvaluationClient from "./_components/client";
 import { ListEvaluationColumn } from "./_components/column";
+import { getSupervisorFromCookies } from "@/lib/hooks/use-supervisor";
 
 // Define the interface for grouped evaluations
 interface GroupedEvaluations {
@@ -18,7 +19,7 @@ interface GroupedEvaluations {
 }
 
 const ListEvaluation = async () => {
-  const { userId } = auth();
+  const { userId } = await getSupervisorFromCookies();
   const facultyId = userId;
 
   // Fetching evaluations for the evaluator

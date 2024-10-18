@@ -28,7 +28,6 @@ const UpdateProfileForm = ({ coordinator }: { coordinator: Coordinator }) => {
       middleInitial: coordinator.mname ?? "",
       suffix: coordinator.suffix ?? "",
       email: coordinator.email ?? "",
-      status: "Coordinator",
     },
   });
 
@@ -137,17 +136,6 @@ const UpdateProfileForm = ({ coordinator }: { coordinator: Coordinator }) => {
             fieldType={FormFieldType.INPUT}
             name="email"
           />
-          <div className="mt-2">
-            <CustomFormField
-              control={form.control}
-              label="Status"
-              placeholder="Enter Your Status"
-              isRequired
-              disabled
-              fieldType={FormFieldType.INPUT}
-              name="status"
-            />
-          </div>
           <div className="flex mt-4 items-center justify-between">
             <div className="flex items-center gap-3">
               <SubmitButton isLoading={isPending}>Save Changes</SubmitButton>

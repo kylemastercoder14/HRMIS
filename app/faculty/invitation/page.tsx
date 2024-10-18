@@ -5,9 +5,10 @@ import { format } from "date-fns";
 import { InvitationColumn } from "./_components/column";
 import InvitationClient from "./_components/client";
 import { auth } from "@clerk/nextjs/server";
+import { getFacultyFromCookies } from "@/lib/hooks/use-faculty";
 
 const Invitation = async () => {
-  const { userId } = auth();
+  const { userId } = await getFacultyFromCookies();
   const facultyId = userId;
 
   // Fetching invitations with supervisors
@@ -19,7 +20,7 @@ const Invitation = async () => {
 
   const faculty = await db.faculty.findUnique({
     where: {
-      clerkId: facultyId as string,
+      id: facultyId as string,
     },
   });
 

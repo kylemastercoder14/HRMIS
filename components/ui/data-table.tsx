@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/table";
 import { Button } from "./button";
 import { Input } from "@/components/ui/input";
-import { COURSES, DEPARTMENTS } from "@/lib/constants";
+import { COURSES, DEPARTMENTS, OFFICES } from "@/lib/constants";
 import {
   Select,
   SelectContent,
@@ -48,6 +48,7 @@ export function DataTable<TData, TValue>({
   const [selectedCourse, setSelectedCourse] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("");
+  const [selectedOffice, setSelectedOffice] = useState("");
   const [semester, setSemester] = useState("");
 
   const table = useReactTable({
@@ -80,6 +81,11 @@ export function DataTable<TData, TValue>({
     table.getColumn("department")?.setFilterValue(department);
   };
 
+  const handleOfficeChange = (office: string) => {
+    setSelectedOffice(office);
+    table.getColumn("office")?.setFilterValue(office);
+  };
+
   const handleSemesterChange = (semester: string) => {
     setSemester(semester);
     table.getColumn("semester")?.setFilterValue(semester);
@@ -108,6 +114,24 @@ export function DataTable<TData, TValue>({
             </SelectTrigger>
             <SelectContent>
               {COURSES.map((course) => (
+                <SelectItem key={course} value={course}>
+                  {course}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+
+        {table.getColumn("office") && (
+          <Select
+            defaultValue={selectedOffice}
+            onValueChange={handleOfficeChange}
+          >
+            <SelectTrigger className="w-[300px] border border-input!important">
+              <SelectValue placeholder="All Office" />
+            </SelectTrigger>
+            <SelectContent>
+              {OFFICES.map((course) => (
                 <SelectItem key={course} value={course}>
                   {course}
                 </SelectItem>
@@ -158,12 +182,8 @@ export function DataTable<TData, TValue>({
                   <SelectValue placeholder="All Semester" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1st Semester">
-                  1st Semester
-                  </SelectItem>
-                  <SelectItem value="2nd Semester">
-                  2nd Semester
-                  </SelectItem>
+                  <SelectItem value="1st Semester">1st Semester</SelectItem>
+                  <SelectItem value="2nd Semester">2nd Semester</SelectItem>
                 </SelectContent>
               </Select>
             )}

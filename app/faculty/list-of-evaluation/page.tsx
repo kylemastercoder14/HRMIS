@@ -4,6 +4,7 @@ import Heading from "@/components/heading";
 import { auth } from "@clerk/nextjs/server";
 import ListEvaluationClient from "./_components/client";
 import { ListEvaluationColumn } from "./_components/column";
+import { getFacultyFromCookies } from "@/lib/hooks/use-faculty";
 
 // Define the interface for grouped evaluations
 interface GroupedEvaluations {
@@ -18,7 +19,7 @@ interface GroupedEvaluations {
 }
 
 const ListEvaluation = async () => {
-  const { userId } = auth();
+  const { userId } = await getFacultyFromCookies();
   const facultyId = userId;
 
   // Fetching evaluations for the evaluator

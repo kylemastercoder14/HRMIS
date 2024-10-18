@@ -10,7 +10,6 @@ datasource db {
 
 model Student {
   id        String   @id @unique @default(cuid())
-  clerkId   String   @unique
   fname     String
   mname     String?
   lname     String
@@ -19,7 +18,7 @@ model Student {
   password  String
   course    String
   section   String
-  yearLevel String
+  yearLevel Int
   profile   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -29,17 +28,19 @@ model Student {
 
 model Faculty {
   id           String       @id @unique @default(cuid())
-  clerkId      String       @unique
+  employeeId   String
   fname        String
   mname        String?
   lname        String
   suffix       String?
   department   String?
   academicRank String
+  position     String
   status       String?
   email        String
   password     String
   profile      String?
+  dateHired    String
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   course       String[]
@@ -51,30 +52,35 @@ model Faculty {
 }
 
 model NonTeaching {
-  id        String   @id @unique @default(cuid())
-  clerkId   String   @unique
-  fname     String
-  mname     String?
-  lname     String
-  suffix    String?
-  office    String
-  position  String
-  email     String
-  password  String
-  profile   String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id         String   @id @unique @default(cuid())
+  fname      String
+  mname      String?
+  lname      String
+  suffix     String?
+  office     String
+  position   String
+  email      String
+  status     String?
+  dateHired  String
+  employeeId String
+  password   String
+  profile    String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
 }
 
 model Supervisor {
   id           String   @id @unique @default(cuid())
-  clerkId      String   @unique
+  employeeId   String
   fname        String
   mname        String?
   lname        String
   suffix       String?
   department   String?
   academicRank String
+  position     String
+  status       String?
+  dateHired    String
   email        String
   password     String
   profile      String?
@@ -86,7 +92,6 @@ model Supervisor {
 
 model Coordinator {
   id        String   @id @unique @default(cuid())
-  clerkId   String   @unique
   fname     String
   mname     String?
   lname     String

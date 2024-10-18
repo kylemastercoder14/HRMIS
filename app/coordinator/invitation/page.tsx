@@ -6,9 +6,10 @@ import { InvitationColumn } from "./_components/column";
 import InvitationClient from "./_components/client";
 import InvitationForm from "./_components/invitation-form";
 import { auth } from "@clerk/nextjs/server";
+import { getCoordinatorFromCookies } from "@/lib/hooks/use-coordinator";
 
 const Invitation = async () => {
-  const { userId } = auth();
+  const { userId } = await getCoordinatorFromCookies();
   const facultyId = userId;
 
   // Fetching invitations with supervisors
@@ -23,7 +24,7 @@ const Invitation = async () => {
 
   const faculty = await db.faculty.findUnique({
     where: {
-      clerkId: facultyId as string,
+      id: facultyId as string,
     },
   });
 

@@ -5,12 +5,13 @@ import React from "react";
 import ProfileUpdate from "../_components/profile-update";
 import UpdateProfileForm from "../_components/update-profile-form";
 import ChangePasswordForm from "../_components/change-password-form";
+import { getStudentFromCookies } from "@/lib/hooks/use-student";
 
 const Profile = async () => {
-  const {userId} = auth();
+  const { userId } = await getStudentFromCookies();
   const student = await db.student.findUnique({
     where: {
-      clerkId: userId as string,
+      id: userId as string,
     },
   });
   if (!userId || !student) return null;

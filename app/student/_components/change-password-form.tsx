@@ -28,7 +28,7 @@ const ChangePasswordForm = ({ student }: { student: Student }) => {
   const onSubmit = async (values: z.infer<typeof ChangePasswordSchema>) => {
     setIsPending(true);
     try {
-      const response = await changePassword(values, student.clerkId);
+      const response = await changePassword(values, student.id);
       if (response.error) {
         toast.error(response.error);
       } else {

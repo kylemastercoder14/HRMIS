@@ -28,6 +28,11 @@ const UpdateProfileForm = ({ supervisor }: { supervisor: Supervisor }) => {
       middleInitial: supervisor.mname ?? "",
       suffix: supervisor.suffix ?? "",
       email: supervisor.email ?? "",
+      department: supervisor.department ?? "",
+      academicRank: supervisor.academicRank ?? "",
+      status: supervisor.status ?? "",
+      position: supervisor.position ?? "",
+      dateHired: supervisor.dateHired ?? "",
     },
   });
 
@@ -69,6 +74,35 @@ const UpdateProfileForm = ({ supervisor }: { supervisor: Supervisor }) => {
       setOpen(false);
     }
   };
+
+  const facultyRanks = [
+    "Associate Professor I",
+    "Associate Professor II",
+    "Associate Professor III",
+    "Associate Professor IV",
+    "Associate Professor V",
+    "Assistant Professor I",
+    "Assistant Professor II",
+    "Assistant Professor III",
+    "Assistant Professor IV",
+    "Assistant Professor V",
+    "COS Faculty",
+    "Instructor I",
+    "Instructor II",
+    "Instructor III",
+    "Professor I",
+    "Professor II",
+    "Professor III",
+    "Professor IV",
+  ];
+
+  const department = [
+    "College of Criminology",
+    "College of Education",
+    "College of Industrial Technology",
+    "College of Information Technology",
+    "College of BSES and BSAF Program",
+  ];
 
   return (
     <>
@@ -136,6 +170,58 @@ const UpdateProfileForm = ({ supervisor }: { supervisor: Supervisor }) => {
             fieldType={FormFieldType.INPUT}
             name="email"
           />
+          <div className="field-group-col2 mt-2 mb-2">
+            <CustomFormField
+              control={form.control}
+              label="Department"
+              placeholder="Select Your Department"
+              isRequired
+              options={department}
+              disabled={isPending}
+              fieldType={FormFieldType.SELECT}
+              name="department"
+            />
+            <CustomFormField
+              control={form.control}
+              label="Status"
+              placeholder="Select Your Status"
+              isRequired
+              options={["COS", "Regular"]}
+              disabled={isPending}
+              fieldType={FormFieldType.SELECT}
+              name="status"
+            />
+          </div>
+          <CustomFormField
+            control={form.control}
+            label="Academic Rank"
+            placeholder="Select Your Academic Rank"
+            isRequired
+            options={facultyRanks}
+            disabled={isPending}
+            fieldType={FormFieldType.SELECT}
+            name="academicRank"
+          />
+          <div className="field-group-col2 mt-2 mb-2">
+            <CustomFormField
+              control={form.control}
+              label="Position"
+              placeholder="Select Your Position"
+              isRequired
+              disabled
+              fieldType={FormFieldType.INPUT}
+              name="position"
+            />
+            <CustomFormField
+              control={form.control}
+              name="dateHired"
+              placeholder="Enter Date Hired"
+              disabled={isPending}
+              isRequired
+              label="Date Hired"
+              fieldType={FormFieldType.DATE_PICKER}
+            />
+          </div>
           <div className="flex mt-4 items-center justify-between">
             <div className="flex items-center gap-3">
               <SubmitButton isLoading={isPending}>Save Changes</SubmitButton>

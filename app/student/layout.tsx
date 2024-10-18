@@ -1,25 +1,19 @@
-import { currentUser } from "@clerk/nextjs/server";
+
 import { redirect } from "next/navigation";
 import React from "react";
 import StudentNavbar from "./_components/navbar";
-import db from "@/lib/db";
+import { getStudentFromCookies } from "@/lib/hooks/use-student";
 
 const StudentLayout = async ({ children }: { children: React.ReactNode }) => {
-  const user = await currentUser();
-  const student = await db.student.findUnique({
-    where: {
-      clerkId: user?.id,
-    },
-  });
-  if (!user || !student) redirect("/");
-  const fullName = `${student.fname} ${student.mname} ${student.lname} ${student.suffix}`;
+  const { user } = await getStudentFromCookies();
+  const fullName = `${user?.fname} ${user?.mname} ${user?.lname} ${user?.suffix}`;
   return (
     <div className="flex min-h-screen w-full flex-col">
       <StudentNavbar
-        image={student?.profile as string}
-        email={student.email}
+        image={user?.profile as string}
+        email={user?.email as string}
         name={fullName as string}
-        fallback={student.fname?.charAt(0) as string}
+        fallback={user?.fname?.charAt(0) as string}
       />
       {children}
     </div>

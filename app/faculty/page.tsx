@@ -7,11 +7,11 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import db from "@/lib/db";
-import { auth } from "@clerk/nextjs/server";
 import FacultyEvaluationForm from "./_components/faculty-evaluation-form";
+import { getFacultyFromCookies } from "@/lib/hooks/use-faculty";
 
 const Home = async () => {
-  const { userId } = auth();
+  const { userId } = await getFacultyFromCookies();
   const evaluationForm = await db.evaluation.findFirst({
     include: {
       Categories: { include: { questions: true } },
@@ -21,7 +21,7 @@ const Home = async () => {
   const faculties = await db.faculty.findMany();
 
   const evaluatorDepartment = await db.faculty.findUnique({
-    where: { clerkId: userId as string },
+    where: { id: userId as string },
   });
 
   const answers = await db.answer.findMany({

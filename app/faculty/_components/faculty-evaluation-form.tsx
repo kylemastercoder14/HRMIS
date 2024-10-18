@@ -90,7 +90,7 @@ const FacultyEvaluationForm = ({
       if (faculty) {
         form.setValue("academicRank", faculty.academicRank);
 
-        const isSelf = faculty.clerkId === userId;
+        const isSelf = faculty.id === userId;
         console.log("isSelf", isSelf);
         form.setValue("evaluator", isSelf ? "Self" : "Peer");
       }

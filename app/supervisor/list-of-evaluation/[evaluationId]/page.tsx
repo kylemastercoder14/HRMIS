@@ -7,15 +7,15 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import db from "@/lib/db";
-import { auth } from "@clerk/nextjs/server";
 import UpdateEvaluationForm from "../_components/update-evaluation-form";
+import { getSupervisorFromCookies } from "@/lib/hooks/use-supervisor";
 
 const ListEvaluationPage = async ({
   params,
 }: {
   params: { evaluationId: string };
 }) => {
-  const { userId } = auth();
+  const { userId } = await getSupervisorFromCookies();
 
   const decodedString = decodeURIComponent(params.evaluationId);
 

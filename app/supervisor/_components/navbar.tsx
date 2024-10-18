@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { usePathname } from "next/navigation";
 import { useClerk } from "@clerk/nextjs";
+import { logout } from "@/actions/supervisor";
 
 const SupervisorNavbar = ({
   image,
@@ -28,7 +29,10 @@ const SupervisorNavbar = ({
   fallback: string;
   email: string;
 }) => {
-  const { signOut } = useClerk();
+  const handleLogout = async () => {
+    await logout();
+    window.location.assign("/");
+  };
   const pathname = usePathname();
   return (
     <header className="sticky top-0 flex z-[999] h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
@@ -88,7 +92,7 @@ const SupervisorNavbar = ({
                 <Link href="/supervisor/profile">Profile</Link>
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => signOut({ redirectUrl: "/" })}
+                onClick={handleLogout}
                 className="cursor-pointer"
                 asChild
               >

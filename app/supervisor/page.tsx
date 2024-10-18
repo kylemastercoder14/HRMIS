@@ -7,11 +7,11 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import db from "@/lib/db";
-import { auth } from "@clerk/nextjs/server";
 import SupervisorEvaluationForm from "./_components/supervisor-evaluation-form";
+import { getSupervisorFromCookies } from "@/lib/hooks/use-supervisor";
 
 const Home = async () => {
-  const { userId } = auth();
+  const { userId } = await getSupervisorFromCookies();
   const evaluationForm = await db.evaluation.findFirst({
     include: {
       Categories: { include: { questions: true } },
@@ -21,7 +21,7 @@ const Home = async () => {
   const faculties = await db.faculty.findMany();
 
   const evaluatorDepartment = await db.supervisor.findUnique({
-    where: { clerkId: userId as string },
+    where: { id: userId as string },
   });
 
   const paragraphs = evaluationForm?.description.split("\n").filter(Boolean);

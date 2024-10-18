@@ -13,9 +13,9 @@ import { UserLoginSchema } from "@/lib/validators";
 import CustomFormField from "@/components/custom-formfield";
 import { FormFieldType } from "@/lib/constants";
 import { useSignIn } from "@clerk/nextjs";
+import { loginUser } from "@/actions/non-teaching";
 
 const Signin = () => {
-  const { isLoaded, signIn, setActive } = useSignIn();
   const [isPending, setIsPending] = useState(false);
   const router = useRouter();
 
@@ -30,21 +30,14 @@ const Signin = () => {
 
   // Submit login data
   const onSubmit = async (values: z.infer<typeof UserLoginSchema>) => {
-    if (!isLoaded) return;
-
     try {
       setIsPending(true);
-      const signInAttempt = await signIn.create({
-        identifier: values.email,
-        password: values.password,
-      });
-
-      // If sign-in process is complete, set the created session as active and redirect the user
-      if (signInAttempt.status === "complete") {
-        await setActive({ session: signInAttempt.createdSessionId });
-        router.push("/non-teaching");
+      const response = await loginUser(values);
+      if (response.error) {
+        toast.error(response.error);
       } else {
-        console.error(JSON.stringify(signInAttempt, null, 2));
+        toast.success("Redirecting to dashboard...");
+        router.push("/non-teaching");
       }
     } catch (error: any) {
       console.error(JSON.stringify(error, null, 2));
@@ -90,7 +83,7 @@ const Signin = () => {
             />
           </div>
           <Link href="/auth/non-teaching/forgot-password" className="text-sm text-right font-semibold underline">Forgot Password?</Link>
-          <SubmitButton isDisabled isLoading={isPending}>Continue</SubmitButton>
+          <SubmitButton isLoading={isPending}>Continue</SubmitButton>
         </form>
       </Form>
       <p className="text-center mt-3 text-muted-foreground">

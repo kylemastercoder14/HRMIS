@@ -1,14 +1,21 @@
 "use server";
 
 import db from "@/lib/db";
-import { ChangePasswordSchema, ProfileUpdateSupervisorSchema, SupervisorRegistrationSchema } from "@/lib/validators";
-import { clerkClient, currentUser } from "@clerk/nextjs/server";
+import {
+  ChangePasswordSchema,
+  ProfileUpdateSupervisorSchema,
+  SupervisorRegistrationSchema,
+  UserLoginSchema,
+} from "@/lib/validators";
+import { clerkClient } from "@clerk/nextjs/server";
 import bcryptjs from "bcryptjs";
 import { z } from "zod";
+import * as jose from "jose";
+import { cookies } from "next/headers";
+import { getSupervisorFromCookies } from "@/lib/hooks/use-supervisor";
 
 export const createUser = async (
-  values: z.infer<typeof SupervisorRegistrationSchema>,
-  clerkId: string
+  values: z.infer<typeof SupervisorRegistrationSchema>
 ) => {
   const validatedField = SupervisorRegistrationSchema.safeParse(values);
 
@@ -17,23 +24,38 @@ export const createUser = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { firstName, middleInitial, lastName, suffix, email, password, department, academicRank } =
-    validatedField.data;
+  const {
+    firstName,
+    middleInitial,
+    lastName,
+    suffix,
+    email,
+    password,
+    department,
+    academicRank,
+    position,
+    dateHired,
+  } = validatedField.data;
 
-  const hashedPassword = await bcryptjs.hash(password, 10);
+  const year = new Date().getFullYear().toString().slice(-2);
+  const randomNumber = Math.floor(1000 + Math.random() * 9000);
+
+  const employeeId = `${year}-${randomNumber}`;
 
   try {
     await db.supervisor.create({
       data: {
         fname: firstName,
-        clerkId,
         mname: middleInitial,
         lname: lastName,
         suffix,
         email,
-        password: hashedPassword,
+        password,
         department,
         academicRank,
+        employeeId,
+        position,
+        dateHired,
       },
     });
     return { success: "User created successfully" };
@@ -44,9 +66,61 @@ export const createUser = async (
   }
 };
 
+export const loginUser = async (values: z.infer<typeof UserLoginSchema>) => {
+  const validatedField = UserLoginSchema.safeParse(values);
+
+  if (!validatedField.success) {
+    const errors = validatedField.error.errors.map((err) => err.message);
+    return { error: `Validation Error: ${errors.join(", ")}` };
+  }
+
+  const { email, password } = validatedField.data;
+
+  try {
+    const user = await db.supervisor.findFirst({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      return { error: "User not found" };
+    }
+
+    // Create JWT token
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+    const alg = "HS256";
+
+    const jwt = await new jose.SignJWT({})
+      .setProtectedHeader({ alg })
+      .setExpirationTime("72h")
+      .setSubject(user.id.toString())
+      .sign(secret);
+
+    // Set the cookie with the JWT
+    cookies().set("Authorization", jwt, {
+      httpOnly: true, // Set to true for security
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      maxAge: 60 * 60 * 24 * 3, // Cookie expiration (3 days in seconds)
+      sameSite: "strict", // Adjust according to your needs
+      path: "/", // Adjust path as needed
+    });
+
+    return { token: jwt };
+  } catch (error: any) {
+    return {
+      error: `Failed to sign in user. Please try again. ${error.message || ""}`,
+    };
+  }
+};
+
+export const logout = async () => {
+  cookies().set("Authorization", "", { maxAge: 0, path: "/" });
+};
+
 export const createProfile = async (profile: string) => {
   if (!profile) return { error: "Profile image is required" };
-  const user = await currentUser();
+  const { user } = await getSupervisorFromCookies();
 
   if (!user) return { error: "User not found" };
 
@@ -54,7 +128,7 @@ export const createProfile = async (profile: string) => {
     // await clerkClient.users.updateUser(user.id, { profileImageID: profile });
     await db.supervisor.update({
       where: {
-        clerkId: user.id,
+        id: user.id,
       },
       data: {
         profile,
@@ -71,14 +145,14 @@ export const createProfile = async (profile: string) => {
 };
 
 export const removeProfile = async () => {
-  const user = await currentUser();
+  const { user } = await getSupervisorFromCookies();
 
   if (!user) return { error: "User not found" };
 
   try {
     await db.supervisor.update({
       where: {
-        clerkId: user.id,
+        id: user.id,
       },
       data: {
         profile: null,
@@ -110,20 +184,20 @@ export const updateProfileInfo = async (
     lastName,
     email,
     suffix,
+    department,
+    status,
+    position,
+    dateHired,
+    academicRank,
   } = validatedField.data;
 
-  const user = await currentUser();
+  const { user } = await getSupervisorFromCookies();
   if (!user) return { error: "User not found" };
 
   try {
-    await clerkClient.users.updateUser(user.id, {
-      firstName,
-      lastName,
-      signOutOfOtherSessions: true,
-    });
     await db.supervisor.update({
       where: {
-        clerkId: user.id,
+        id: user.id,
       },
       data: {
         fname: firstName,
@@ -131,6 +205,11 @@ export const updateProfileInfo = async (
         lname: lastName,
         suffix,
         email,
+        department,
+        position,
+        dateHired,
+        status,
+        academicRank,
       },
     });
     return { success: "User updated successfully" };
@@ -142,7 +221,7 @@ export const updateProfileInfo = async (
 };
 
 export const deleteProfile = async () => {
-  const user = await currentUser();
+  const { user } = await getSupervisorFromCookies();
 
   if (!user) return { error: "User not found" };
 
@@ -150,7 +229,7 @@ export const deleteProfile = async () => {
     await clerkClient.users.deleteUser(user.id);
     await db.supervisor.delete({
       where: {
-        clerkId: user.id,
+        id: user.id,
       },
     });
     return { success: "User removed successfully" };
@@ -174,7 +253,7 @@ export const changePassword = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const {newPassword, confirmPassword } = validatedField.data;
+  const { newPassword, confirmPassword } = validatedField.data;
 
   try {
     if (newPassword !== confirmPassword) {
@@ -185,17 +264,12 @@ export const changePassword = async (
 
     await db.supervisor.update({
       where: {
-        clerkId: id,
+        id: id,
       },
       data: {
         password: hashedPassword,
       },
     });
-
-    await clerkClient.users.updateUser(id, {
-      password: newPassword,
-      signOutOfOtherSessions: true,
-    })
 
     return { success: "Password changed successfully" };
   } catch (error: any) {
@@ -209,14 +283,12 @@ export const changePassword = async (
 
 export const resetPassword = async (newPassword: string, userId: string) => {
   try {
-    const hashedPassword = await bcryptjs.hash(newPassword, 10);
-
     await db.supervisor.update({
       where: {
-        clerkId: userId,
+        id: userId,
       },
       data: {
-        password: hashedPassword,
+        password: newPassword,
       },
     });
 
@@ -229,4 +301,3 @@ export const resetPassword = async (newPassword: string, userId: string) => {
     };
   }
 };
-

@@ -38,7 +38,7 @@ export const UserRegistrationSchema = z.object({
   section: z.string().min(1, {
     message: "Section is required.",
   }),
-  yearLevel: z.string().min(1, {
+  yearLevel: z.coerce.number().min(1, {
     message: "Year level is required.",
   }),
   terms: z.boolean().refine((val) => val === true, {
@@ -87,6 +87,9 @@ export const NonTeachingRegistrationSchema = z.object({
   terms: z.boolean().refine((val) => val === true, {
     message: "Terms of agreement must be accepted.",
   }),
+  dateHired: z.string().min(1, {
+    message: "Date hired is required.",
+  }),
 });
 
 export const FacultyRegistrationSchema = z.object({
@@ -133,6 +136,12 @@ export const FacultyRegistrationSchema = z.object({
   terms: z.boolean().refine((val) => val === true, {
     message: "Terms of agreement must be accepted.",
   }),
+  position: z.string().min(1, {
+    message: "Position is required.",
+  }),
+  dateHired: z.string().min(1, {
+    message: "Date hired is required.",
+  }),
 });
 
 export const SupervisorRegistrationSchema = z.object({
@@ -175,6 +184,12 @@ export const SupervisorRegistrationSchema = z.object({
     }),
   terms: z.boolean().refine((val) => val === true, {
     message: "Terms of agreement must be accepted.",
+  }),
+  position: z.string().min(1, {
+    message: "Position is required.",
+  }),
+  dateHired: z.string().min(1, {
+    message: "Date hired is required.",
   }),
 });
 
@@ -393,7 +408,7 @@ export const ProfileUpdateSchema = z.object({
   section: z.string().min(1, {
     message: "Section is required.",
   }),
-  yearLevel: z.string().min(1, {
+  yearLevel: z.coerce.number().min(1, {
     message: "Year level is required.",
   }),
 });
@@ -419,6 +434,12 @@ export const ProfileUpdateFacultySchema = z.object({
   status: z.string().min(1, {
     message: "Status is required.",
   }),
+  position: z.string().min(1, {
+    message: "Position is required.",
+  }),
+  dateHired: z.string().min(1, {
+    message: "Date hired is required.",
+  }),
 });
 
 export const ProfileUpdateCoordinatorSchema = z.object({
@@ -433,9 +454,6 @@ export const ProfileUpdateCoordinatorSchema = z.object({
   email: z.string().min(1, {
     message: "Email address is required.",
   }),
-  status: z.string().min(1, {
-    message: "Status is required.",
-  }),
 });
 
 export const ProfileUpdateSupervisorSchema = z.object({
@@ -449,6 +467,21 @@ export const ProfileUpdateSupervisorSchema = z.object({
   }),
   email: z.string().min(1, {
     message: "Email address is required.",
+  }),
+  department: z.string().min(1, {
+    message: "Department is required.",
+  }),
+  academicRank: z.string().min(1, {
+    message: "Academic rank is required.",
+  }),
+  status: z.string().min(1, {
+    message: "Status is required.",
+  }),
+  position: z.string().min(1, {
+    message: "Position is required.",
+  }),
+  dateHired: z.string().min(1, {
+    message: "Date hired is required.",
   }),
 });
 

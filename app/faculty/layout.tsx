@@ -1,14 +1,15 @@
-import { currentUser } from "@clerk/nextjs/server";
+
 import { redirect } from "next/navigation";
 import React from "react";
 import FacultyNavbar from "./_components/navbar";
 import db from "@/lib/db";
+import { getFacultyFromCookies } from "@/lib/hooks/use-faculty";
 
 const FacultyLayout = async ({ children }: { children: React.ReactNode }) => {
-  const user = await currentUser();
+  const {user} = await getFacultyFromCookies();
   const faculty = await db.faculty.findUnique({
     where: {
-      clerkId: user?.id,
+      id: user?.id,
     },
   });
   if (!user || !faculty) redirect("/");

@@ -14,11 +14,11 @@ const StudentRecord = async () => {
 
   const formattedAssign: StudentColumn[] = students.map((item) => ({
     id: item.id,
-    name: item.fname + " " + item.mname + " " + item.lname + " " + item.suffix,
+    name: item.fname + " " + item.lname,
     email: item.email,
     imageUrl: item.profile ?? "",
     course: item.course,
-    yearLevel: item.yearLevel,
+    yearLevel: item.yearLevel.toString(),
     section: item.section,
     createdAt: format(item.createdAt, "MMMM dd, yyyy"),
   }));

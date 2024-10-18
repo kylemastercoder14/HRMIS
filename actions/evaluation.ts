@@ -1,6 +1,7 @@
 "use server";
 
 import db from "@/lib/db";
+import { getStudentFromCookies } from "@/lib/hooks/use-student";
 import { EvaluationFormSchema } from "@/lib/validators";
 import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
@@ -19,7 +20,7 @@ async function checkIfEvaluated(evaluatorId: string, evaluateeId: string) {
 export const createEvaluation = async (
   values: z.infer<typeof EvaluationFormSchema>
 ) => {
-  const { userId } = auth();
+  const { userId } = await getStudentFromCookies();
   if (!userId) return { error: "User not found" };
   const validatedField = EvaluationFormSchema.safeParse(values);
 

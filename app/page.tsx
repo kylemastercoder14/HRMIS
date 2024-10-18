@@ -1,10 +1,8 @@
-import { currentUser } from "@clerk/nextjs/server";
+
 import Image from "next/image";
 import Link from "next/link";
 
 export default async function Hero() {
-  const user = await currentUser();
-
   return (
     <section className="text-center flex overflow-hidden flex-col items-center justify-center mt-10">
       <Image
@@ -28,18 +26,18 @@ export default async function Hero() {
       <p className="mt-3 font-semibold">Are you a?</p>
       <div className="mt-4 flex gap-4 justify-center flex-wrap">
         <Link
-          href={!user ? "/auth/student/login" : "/student"}
+          href="/auth/student/login"
           className="bg-black text-white py-2 px-4 rounded-full"
         >
           Student
         </Link>
-        <Link href={!user ? "/auth/faculty/login" : "/faculty"} className="bg-black text-white py-2 px-4 rounded-full">
+        <Link href="/auth/faculty/login" className="bg-black text-white py-2 px-4 rounded-full">
           Faculty
         </Link>
-        <Link href={!user ? "/auth/non-teaching/login" : "/non-teaching"} className="bg-black text-white py-2 px-4 rounded-full">
+        <Link href="/auth/non-teaching/login" className="bg-black text-white py-2 px-4 rounded-full">
           Non-Teaching
         </Link>
-        <Link href={"/auth/supervisor/login"} className="bg-black text-white py-2 px-4 rounded-full">
+        <Link href="/auth/supervisor/login" className="bg-black text-white py-2 px-4 rounded-full">
           Supervisor
         </Link>
       </div>

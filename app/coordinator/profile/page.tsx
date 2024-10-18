@@ -5,12 +5,13 @@ import React from "react";
 import ProfileUpdate from "../_components/profile-update";
 import UpdateProfileForm from "../_components/update-profile-form";
 import ChangePasswordForm from "../_components/change-password-form";
+import { getCoordinatorFromCookies } from "@/lib/hooks/use-coordinator";
 
 const Profile = async () => {
-  const {userId} = auth();
+  const {userId} = await getCoordinatorFromCookies();
   const coordinator = await db.coordinator.findUnique({
     where: {
-      clerkId: userId as string,
+      id: userId as string,
     },
   });
   if (!userId || !coordinator) return null;

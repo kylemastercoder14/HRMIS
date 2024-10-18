@@ -3,16 +3,19 @@
 import {
   ChangePasswordSchema,
   ProfileUpdateSchema,
+  UserLoginSchema,
   UserRegistrationSchema,
 } from "@/lib/validators";
 import { z } from "zod";
 import bcryptjs from "bcryptjs";
 import db from "@/lib/db";
 import { clerkClient, currentUser } from "@clerk/nextjs/server";
+import * as jose from "jose";
+import { cookies } from "next/headers";
+import { getStudentFromCookies } from "@/lib/hooks/use-student";
 
 export const createUser = async (
-  values: z.infer<typeof UserRegistrationSchema>,
-  clerkId: string
+  values: z.infer<typeof UserRegistrationSchema>
 ) => {
   const validatedField = UserRegistrationSchema.safeParse(values);
 
@@ -33,18 +36,15 @@ export const createUser = async (
     course,
   } = validatedField.data;
 
-  const hashedPassword = await bcryptjs.hash(password, 10);
-
   try {
     await db.student.create({
       data: {
         fname: firstName,
-        clerkId,
         mname: middleInitial,
         lname: lastName,
         suffix,
         email,
-        password: hashedPassword,
+        password,
         section,
         yearLevel,
         course,
@@ -58,17 +58,68 @@ export const createUser = async (
   }
 };
 
+export const loginUser = async (values: z.infer<typeof UserLoginSchema>) => {
+  const validatedField = UserLoginSchema.safeParse(values);
+
+  if (!validatedField.success) {
+    const errors = validatedField.error.errors.map((err) => err.message);
+    return { error: `Validation Error: ${errors.join(", ")}` };
+  }
+
+  const { email, password } = validatedField.data;
+
+  try {
+    const user = await db.student.findFirst({
+      where: {
+        email,
+      },
+    });
+
+    if (!user) {
+      return { error: "User not found" };
+    }
+
+    // Create JWT token
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+    const alg = "HS256";
+
+    const jwt = await new jose.SignJWT({})
+      .setProtectedHeader({ alg })
+      .setExpirationTime("72h")
+      .setSubject(user.id.toString())
+      .sign(secret);
+
+    // Set the cookie with the JWT
+    cookies().set("Authorization", jwt, {
+      httpOnly: true, // Set to true for security
+      secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+      maxAge: 60 * 60 * 24 * 3, // Cookie expiration (3 days in seconds)
+      sameSite: "strict", // Adjust according to your needs
+      path: "/", // Adjust path as needed
+    });
+
+    return { token: jwt };
+  } catch (error: any) {
+    return {
+      error: `Failed to sign in user. Please try again. ${error.message || ""}`,
+    };
+  }
+};
+
+export const logout = async () => {
+  cookies().set("Authorization", "", { maxAge: 0, path: "/" });
+};
+
 export const createProfile = async (profile: string) => {
   if (!profile) return { error: "Profile image is required" };
-  const user = await currentUser();
+  const { user } = await getStudentFromCookies();
 
   if (!user) return { error: "User not found" };
 
   try {
-    // await clerkClient.users.updateUser(user.id, { profileImageID: profile });
     await db.student.update({
       where: {
-        clerkId: user.id,
+        id: user.id,
       },
       data: {
         profile,
@@ -85,14 +136,14 @@ export const createProfile = async (profile: string) => {
 };
 
 export const removeProfile = async () => {
-  const user = await currentUser();
+  const { user } = await getStudentFromCookies();
 
   if (!user) return { error: "User not found" };
 
   try {
     await db.student.update({
       where: {
-        clerkId: user.id,
+        id: user.id,
       },
       data: {
         profile: null,
@@ -128,18 +179,13 @@ export const updateProfileInfo = async (
     course,
   } = validatedField.data;
 
-  const user = await currentUser();
+  const { user } = await getStudentFromCookies();
   if (!user) return { error: "User not found" };
 
   try {
-    await clerkClient.users.updateUser(user.id, {
-      firstName,
-      lastName,
-      signOutOfOtherSessions: true,
-    });
     await db.student.update({
       where: {
-        clerkId: user.id,
+        id: user.id,
       },
       data: {
         fname: firstName,
@@ -160,7 +206,7 @@ export const updateProfileInfo = async (
 };
 
 export const deleteProfile = async () => {
-  const user = await currentUser();
+  const { user } = await getStudentFromCookies();
 
   if (!user) return { error: "User not found" };
 
@@ -168,7 +214,7 @@ export const deleteProfile = async () => {
     await clerkClient.users.deleteUser(user.id);
     await db.student.delete({
       where: {
-        clerkId: user.id,
+        id: user.id,
       },
     });
     return { success: "User removed successfully" };
@@ -185,7 +231,7 @@ export const getStudentById = async (id: string) => {
   try {
     const student = await db.student.findFirst({
       where: {
-        clerkId: id,
+        id: id,
       },
     });
 
@@ -231,7 +277,7 @@ export const changePassword = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const {newPassword, confirmPassword } = validatedField.data;
+  const { newPassword, confirmPassword } = validatedField.data;
 
   try {
     if (newPassword !== confirmPassword) {
@@ -242,17 +288,12 @@ export const changePassword = async (
 
     await db.student.update({
       where: {
-        clerkId: id,
+        id: id,
       },
       data: {
         password: hashedPassword,
       },
     });
-
-    await clerkClient.users.updateUser(id, {
-      password: newPassword,
-      signOutOfOtherSessions: true,
-    })
 
     return { success: "Password changed successfully" };
   } catch (error: any) {
@@ -266,14 +307,12 @@ export const changePassword = async (
 
 export const resetPassword = async (newPassword: string, userId: string) => {
   try {
-    const hashedPassword = await bcryptjs.hash(newPassword, 10);
-
     await db.student.update({
       where: {
-        clerkId: userId,
+        id: userId,
       },
       data: {
-        password: hashedPassword,
+        password: newPassword,
       },
     });
 

@@ -3,12 +3,13 @@ import { redirect } from "next/navigation";
 import React from "react";
 import CoordinatorNavbar from "./_components/navbar";
 import db from "@/lib/db";
+import { getCoordinatorFromCookies } from "@/lib/hooks/use-coordinator";
 
 const CoordinatorLayout = async ({ children }: { children: React.ReactNode }) => {
-  const user = await currentUser();
+  const {user} = await getCoordinatorFromCookies();
   const coordinator = await db.coordinator.findUnique({
     where: {
-      clerkId: user?.id,
+      id: user?.id,
     },
   });
   if (!user || !coordinator) redirect("/");

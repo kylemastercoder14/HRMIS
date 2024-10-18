@@ -30,7 +30,7 @@ const UpdateProfileForm = ({ student }: { student: Student }) => {
       email: student.email ?? "",
       course: student.course ?? "",
       section: student.section ?? "",
-      yearLevel: student.yearLevel ?? "",
+      yearLevel: student.yearLevel ?? 1,
     },
   });
 

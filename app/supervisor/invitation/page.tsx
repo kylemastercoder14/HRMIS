@@ -4,10 +4,10 @@ import Heading from "@/components/heading";
 import { format } from "date-fns";
 import { InvitationColumn } from "./_components/column";
 import InvitationClient from "./_components/client";
-import { auth } from "@clerk/nextjs/server";
+import { getSupervisorFromCookies } from "@/lib/hooks/use-supervisor";
 
 const Invitation = async () => {
-  const { userId } = auth();
+  const { userId } = await getSupervisorFromCookies();
   const supervisorId = userId;
 
   // Fetching invitations with supervisors
@@ -19,7 +19,7 @@ const Invitation = async () => {
 
   const supervisor = await db.supervisor.findUnique({
     where: {
-      clerkId: supervisorId as string,
+      id: supervisorId as string,
     },
   });
 

@@ -2,51 +2,59 @@ import React from "react";
 import db from "@/lib/db";
 import Heading from "@/components/heading";
 import { format } from "date-fns";
-import { getAcronym } from "@/lib/utils";
-import { EmployeeProfileColumn } from "./_components/column";
+import {
+  EmployeeProfileColumn,
+  NonTeachingProfileColumn,
+} from "./_components/column";
 import EmployeeProfileClient from "./_components/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const EmployeeProfile = async () => {
-  const facultyCOS = await db.faculty.findMany({
+  const faculty = await db.faculty.findMany({
     orderBy: {
       createdAt: "desc",
     },
-    where: {
-      status: "COS",
-    },
   });
 
-  const facultyRegular = await db.faculty.findMany({
+  const supervisor = await db.supervisor.findMany({
     orderBy: {
       createdAt: "desc",
     },
-    where: {
-      status: "Regular",
+  });
+
+  const nonTeaching = await db.nonTeaching.findMany({
+    orderBy: {
+      createdAt: "desc",
     },
   });
 
-  const formattedCos: EmployeeProfileColumn[] = facultyCOS.map((item) => ({
-    id: item.id,
-    name: item.fname + " " + item.mname + " " + item.lname + " " + item.suffix,
-    email: item.email,
-    imageUrl: item.profile ?? "",
-    department: item.department ?? "",
-    academicRank: item.academicRank ?? "",
-    createdAt: format(item.createdAt, "MMMM dd, yyyy"),
-    status: item.status ?? "N/A",
-  }));
+  const teachingStaff = [...faculty, ...supervisor];
 
-  const formattedRegular: EmployeeProfileColumn[] = facultyRegular.map(
+  const formattedTeaching: EmployeeProfileColumn[] = teachingStaff.map(
     (item) => ({
       id: item.id,
-      name:
-        item.fname + " " + item.mname + " " + item.lname + " " + item.suffix,
+      name: item.fname + " " + item.lname,
       email: item.email,
       imageUrl: item.profile ?? "",
       department: item.department ?? "",
+      employeeId: item.employeeId,
       academicRank: item.academicRank ?? "",
-      createdAt: format(item.createdAt, "MMMM dd, yyyy"),
+      position: item.position ?? "",
+      dateHired: format(item.dateHired, "MMMM dd, yyyy"),
+      status: item.status ?? "N/A",
+    })
+  );
+
+  const formattedNonTeaching: NonTeachingProfileColumn[] = nonTeaching.map(
+    (item) => ({
+      id: item.id,
+      name: item.fname + " " + item.lname,
+      email: item.email,
+      imageUrl: item.profile ?? "",
+      position: item.position ?? "",
+      employeeId: item.employeeId,
+      dateHired: format(item.dateHired, "MMMM dd, yyyy"),
+      office: item.office ?? "N/A",
       status: item.status ?? "N/A",
     })
   );
@@ -56,18 +64,22 @@ const EmployeeProfile = async () => {
       <div className="flex items-center justify-between space-y-2">
         <Heading title={`Employee Profile`} description="" />
       </div>
-      <Tabs defaultValue="regular">
+      <Tabs defaultValue="teaching">
         <TabsList>
-          <TabsTrigger value="regular">Regular</TabsTrigger>
+          <TabsTrigger value="teaching">Teaching</TabsTrigger>
           <TabsTrigger value="non-teaching">Non-Teaching</TabsTrigger>
-          <TabsTrigger value="cos">Contract of Service</TabsTrigger>
         </TabsList>
-        <TabsContent value="regular">
-          <EmployeeProfileClient data={formattedRegular} />
+        <TabsContent value="teaching">
+          <EmployeeProfileClient
+            data={formattedTeaching}
+            isNonTeaching={false}
+          />
         </TabsContent>
-        <TabsContent value="non-teaching"></TabsContent>
-        <TabsContent value="cos">
-          <EmployeeProfileClient data={formattedCos} />
+        <TabsContent value="non-teaching">
+          <EmployeeProfileClient
+            isNonTeaching={true}
+            data2={formattedNonTeaching}
+          />
         </TabsContent>
       </Tabs>
     </div>

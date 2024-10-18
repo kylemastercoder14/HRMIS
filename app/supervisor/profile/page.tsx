@@ -5,12 +5,13 @@ import React from "react";
 import ProfileUpdate from "../_components/profile-update";
 import UpdateProfileForm from "../_components/update-profile-form";
 import ChangePasswordForm from "../_components/change-password-form";
+import { getSupervisorFromCookies } from "@/lib/hooks/use-supervisor";
 
 const Profile = async () => {
-  const {userId} = auth();
+  const {userId} = await getSupervisorFromCookies();
   const supervisor = await db.supervisor.findUnique({
     where: {
-      clerkId: userId as string,
+      id: userId as string,
     },
   });
   if (!userId || !supervisor) return null;

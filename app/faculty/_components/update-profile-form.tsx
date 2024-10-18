@@ -31,6 +31,8 @@ const UpdateProfileForm = ({ faculty }: { faculty: Faculty }) => {
       department: faculty.department ?? "",
       academicRank: faculty.academicRank ?? "",
       status: faculty.status ?? "",
+      position: faculty.position ?? "",
+      dateHired: faculty.dateHired ?? "",
     },
   });
 
@@ -191,15 +193,36 @@ const UpdateProfileForm = ({ faculty }: { faculty: Faculty }) => {
             />
           </div>
           <CustomFormField
+            control={form.control}
+            label="Academic Rank"
+            placeholder="Select Your Academic Rank"
+            isRequired
+            options={facultyRanks}
+            disabled={isPending}
+            fieldType={FormFieldType.SELECT}
+            name="academicRank"
+          />
+          <div className="field-group-col2 mt-2 mb-2">
+            <CustomFormField
               control={form.control}
-              label="Academic Rank"
-              placeholder="Select Your Academic Rank"
+              label="Position"
+              placeholder="Select Your Position"
               isRequired
-              options={facultyRanks}
+              options={["Teaching", "Chairperson"]}
               disabled={isPending}
               fieldType={FormFieldType.SELECT}
-              name="academicRank"
+              name="position"
             />
+            <CustomFormField
+              control={form.control}
+              name="dateHired"
+              placeholder="Enter Date Hired"
+              disabled={isPending}
+              isRequired
+              label="Date Hired"
+              fieldType={FormFieldType.DATE_PICKER}
+            />
+          </div>
           <div className="flex mt-4 items-center justify-between">
             <div className="flex items-center gap-3">
               <SubmitButton isLoading={isPending}>Save Changes</SubmitButton>

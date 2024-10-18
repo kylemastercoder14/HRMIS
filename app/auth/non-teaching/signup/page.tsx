@@ -15,7 +15,7 @@ import {
   NonTeachingRegistrationSchema,
 } from "@/lib/validators";
 import CustomFormField from "@/components/custom-formfield";
-import { FormFieldType, OPT_LENGTH } from "@/lib/constants";
+import { FormFieldType, OFFICES, OPT_LENGTH } from "@/lib/constants";
 import { useSignUp } from "@clerk/nextjs";
 import { createUser } from "@/actions/non-teaching";
 import { maskEmail } from "@/lib/utils";
@@ -23,10 +23,7 @@ import { InputOTP, InputOTPSlot } from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS_AND_CHARS } from "input-otp";
 
 const Signup = () => {
-  const { isLoaded, signUp, setActive } = useSignUp();
   const [isPending, setIsPending] = useState(false);
-  const [verifying, setVerifying] = useState(false);
-  const [code, setCode] = useState("");
   const router = useRouter();
 
   // User registration form
@@ -42,14 +39,7 @@ const Signup = () => {
       office: "",
       position: "",
       terms: false,
-    },
-  });
-
-  // Email verification form (OTP)
-  const form2 = useForm<z.infer<typeof EmailVerificationSchema>>({
-    resolver: zodResolver(EmailVerificationSchema),
-    defaultValues: {
-      otpCode: "",
+      dateHired: "",
     },
   });
 
@@ -57,24 +47,15 @@ const Signup = () => {
   const onSubmit = async (
     values: z.infer<typeof NonTeachingRegistrationSchema>
   ) => {
-    if (!isLoaded) return;
-
     try {
       setIsPending(true);
-      await signUp.create({
-        emailAddress: values.email,
-        password: values.password,
-        firstName: values.firstName,
-        lastName: values.suffix
-          ? values.lastName + " " + values.suffix
-          : values.lastName,
-      });
-
-      // Send OTP to email
-      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
-
-      // Transition to verification step
-      setVerifying(true);
+      const data = await createUser(values);
+      if (data.error) {
+        toast.error(data.error);
+      } else {
+        toast.success(data.success);
+        router.push("/auth/non-teaching/login");
+      }
     } catch (error: any) {
       console.error(JSON.stringify(error, null, 2));
       toast.error(error.message || "Failed to sign up.");
@@ -82,85 +63,6 @@ const Signup = () => {
       setIsPending(false);
     }
   };
-
-  // Handle OTP verification and user creation in the database
-  const onVerify = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!isLoaded) return;
-
-    try {
-      setIsPending(true);
-
-      const completeSignUp = await signUp.attemptEmailAddressVerification({
-        code: code,
-      });
-
-      if (completeSignUp.status === "complete") {
-        await setActive({ session: completeSignUp.createdSessionId });
-
-        // Capture form data and insert into the database
-        const registrationData = form.getValues(); // Get values from the first form
-        await createUser(
-          registrationData,
-          completeSignUp.createdUserId ?? ""
-        ).then((data) => {
-          if (data.error) {
-            toast.error(data.error);
-          } else {
-            toast.success(data.success);
-            router.push("/non-teaching");
-          }
-        });
-      } else {
-        toast.error("Failed to verify OTP. Please try again.");
-      }
-    } catch (err: any) {
-      console.error("Error:", JSON.stringify(err, null, 2));
-      toast.error(err.message || "Failed to verify OTP.");
-    } finally {
-      setIsPending(false);
-    }
-  };
-
-  // Display the verification form to capture the OTP code
-  if (verifying) {
-    return (
-      <div className="mx-auto md:px-20 px-5 grid gap-6">
-        <div className="grid gap-2">
-          <h1 className="text-3xl font-bold">Enter The OTP Code</h1>
-          <p className="text-balance text-muted-foreground">
-            Enter the OTP code that we sent to your email <br />
-            <span className="font-bold text-green-400">
-              {maskEmail(form.watch("email"))}
-            </span>{" "}
-            and be careful not to share the code with anyone.
-          </p>
-        </div>
-        <form
-          onSubmit={onVerify}
-          className="flex items-center justify-center flex-col"
-        >
-          <InputOTP
-            maxLength={OPT_LENGTH}
-            pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
-            className="shad-otp"
-            value={code}
-            onChange={(text) => setCode(text)}
-          >
-            <InputOTPSlot index={0} className="shad-otp-slot" />
-            <InputOTPSlot index={1} className="shad-otp-slot" />
-            <InputOTPSlot index={2} className="shad-otp-slot" />
-            <InputOTPSlot index={3} className="shad-otp-slot" />
-            <InputOTPSlot index={4} className="shad-otp-slot" />
-            <InputOTPSlot index={5} className="shad-otp-slot" />
-          </InputOTP>
-          <SubmitButton className="mt-5 w-full" isLoading={isPending}>
-            Continue
-          </SubmitButton>
-        </form>
-      </div>
-    );
-  }
 
   return (
     <div className="mx-auto md:px-20 px-5 grid gap-6">
@@ -245,11 +147,12 @@ const Signup = () => {
             <CustomFormField
               control={form.control}
               name="office"
-              placeholder="Enter Office"
+              placeholder="Select Office"
               disabled={isPending}
+              options={OFFICES}
               isRequired
               label="Office"
-              fieldType={FormFieldType.INPUT}
+              fieldType={FormFieldType.SELECT}
             />
           </div>
           <div className="grid gap-2">
@@ -263,6 +166,17 @@ const Signup = () => {
               fieldType={FormFieldType.INPUT}
             />
           </div>
+          <div className="grid gap-2">
+            <CustomFormField
+              control={form.control}
+              name="dateHired"
+              placeholder="Enter Date Hired"
+              disabled={isPending}
+              isRequired
+              label="Date Hired"
+              fieldType={FormFieldType.DATE_PICKER}
+            />
+          </div>
           <CustomFormField
             control={form.control}
             name="terms"
@@ -271,9 +185,7 @@ const Signup = () => {
             fieldType={FormFieldType.CHECKBOX}
             label="By signing in or creating account, you agree with our Terms & Conditions and Privacy Policy"
           />
-          <SubmitButton isLoading={isPending}>
-            Register
-          </SubmitButton>
+          <SubmitButton isLoading={isPending}>Register</SubmitButton>
         </form>
       </Form>
       <p className="text-center text-muted-foreground">

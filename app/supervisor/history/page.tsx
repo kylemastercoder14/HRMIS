@@ -3,8 +3,7 @@ import db from "@/lib/db";
 import Heading from "@/components/heading";
 import { EvaluationColumn } from "./_components/column";
 import EvaluationClient from "./_components/client";
-import { auth } from "@clerk/nextjs/server";
-import { formatDate } from "@/lib/utils";
+import { getSupervisorFromCookies } from "@/lib/hooks/use-supervisor";
 
 // Function to generate a recommendation message based on QCE rating
 const getRecommendationMessage = (qceRating: number) => {
@@ -44,7 +43,7 @@ const formatDatePeriod = (dateString: string | number | Date | undefined) => {
 };
 
 const History = async () => {
-  const { userId } = auth();
+  const { userId } = await getSupervisorFromCookies();
 
   // Fetch all evaluations and answers
   const evaluations = await db.evaluation.findMany({

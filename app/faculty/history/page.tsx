@@ -6,6 +6,7 @@ import EvaluationClient from "./_components/client";
 import { auth } from "@clerk/nextjs/server";
 import { formatDate } from "@/lib/utils";
 import { record } from "zod";
+import { getFacultyFromCookies } from "@/lib/hooks/use-faculty";
 
 // Function to generate a recommendation message based on QCE rating
 const getRecommendationMessage = (qceRating: number) => {
@@ -45,10 +46,10 @@ const formatDatePeriod = (dateString: string | number | Date | undefined) => {
 };
 
 const History = async () => {
-  const { userId } = auth();
+  const { userId } = await getFacultyFromCookies();
   const user = await db.faculty.findUnique({
     where: {
-      clerkId: userId as string,
+      id: userId as string,
     },
   });
 

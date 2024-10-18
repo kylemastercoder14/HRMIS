@@ -1,16 +1,16 @@
 import { Card, CardContent } from "@/components/ui/card";
 import db from "@/lib/db";
-import { auth, currentUser } from "@clerk/nextjs/server";
 import React from "react";
 import ProfileUpdate from "../_components/profile-update";
 import UpdateProfileForm from "../_components/update-profile-form";
 import ChangePasswordForm from "../_components/change-password-form";
+import { getFacultyFromCookies } from "@/lib/hooks/use-faculty";
 
 const Profile = async () => {
-  const {userId} = auth();
+  const {userId} = await getFacultyFromCookies();
   const faculty = await db.faculty.findUnique({
     where: {
-      clerkId: userId as string,
+      id: userId as string,
     },
   });
   if (!userId || !faculty) return null;

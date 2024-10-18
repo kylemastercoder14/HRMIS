@@ -90,6 +90,17 @@ export const DEPARTMENTS = [
   "College of BSES and BSAF Program",
 ];
 
+export const OFFICES = [
+  "UMIS",
+  "Registrar",
+  "Admission",
+  "Library",
+  "Accounting",
+  "OSAS",
+  "Custodian",
+  "HR Office",
+];
+
 export const DATE_YEAR_MIN = 1970;
 export const DATE_DEFAULT_FORMAT = "yyyy-MM-dd"; // 2022-08-11
 export const DATETIME_DEFAULT_FORMAT = "yyyy-MM-dd h:mm a"; // 2022-08-11 1:00 PM

@@ -15,7 +15,7 @@ const Assign = async () => {
 
   const formattedAssign: AssignColumn[] = faculty.map((item) => ({
     id: item.id,
-    name: item.fname + " " + item.mname + " " + item.lname + " " + item.suffix,
+    name: item.fname + " " + item.lname,
     email: item.email,
     imageUrl: item.profile ?? "",
     department: item.department ?? "",

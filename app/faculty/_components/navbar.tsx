@@ -16,7 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { usePathname } from "next/navigation";
-import { useClerk } from "@clerk/nextjs";
+import { logout } from "@/actions/faculty";
 
 const FacultyNavbar = ({
   image,
@@ -29,7 +29,10 @@ const FacultyNavbar = ({
   fallback: string;
   email: string;
 }) => {
-  const { signOut } = useClerk();
+  const handleLogout = async () => {
+    await logout();
+    window.location.assign("/");
+  };
   const pathname = usePathname();
   return (
     <header className="sticky top-0 flex h-16 z-[999] items-center gap-4 border-b bg-background px-4 md:px-6">
@@ -43,25 +46,41 @@ const FacultyNavbar = ({
         </Link>
         <Link
           href="/faculty"
-          className={pathname === "/faculty" ? "text-black" : "text-muted-foreground hover:text-black"}
+          className={
+            pathname === "/faculty"
+              ? "text-black"
+              : "text-muted-foreground hover:text-black"
+          }
         >
           <span>Evaluation Form</span>
         </Link>
         <Link
           href="/faculty/history"
-          className={pathname === "/faculty/history" ? "text-black" : "text-muted-foreground hover:text-black"}
+          className={
+            pathname === "/faculty/history"
+              ? "text-black"
+              : "text-muted-foreground hover:text-black"
+          }
         >
           <span>Evaluation Summary</span>
         </Link>
         <Link
           href="/faculty/list-of-evaluation"
-          className={pathname === "/faculty/list-of-evaluation" ? "text-black" : "text-muted-foreground hover:text-black"}
+          className={
+            pathname === "/faculty/list-of-evaluation"
+              ? "text-black"
+              : "text-muted-foreground hover:text-black"
+          }
         >
           <span>List of Evaluation</span>
         </Link>
         <Link
           href="/faculty/invitation"
-          className={pathname === "/faculty/invitation" ? "text-black" : "text-muted-foreground hover:text-black"}
+          className={
+            pathname === "/faculty/invitation"
+              ? "text-black"
+              : "text-muted-foreground hover:text-black"
+          }
         >
           <span>Training Invitation</span>
         </Link>
@@ -89,7 +108,7 @@ const FacultyNavbar = ({
                 <Link href="/faculty/profile">Profile</Link>
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => signOut({ redirectUrl: "/" })}
+                onClick={handleLogout}
                 className="cursor-pointer"
                 asChild
               >

@@ -2,16 +2,31 @@
 
 import React from "react";
 import { DataTable } from "@/components/ui/data-table";
-import { EmployeeProfileColumn, columns } from "./column";
+import {
+  EmployeeProfileColumn,
+  NonTeachingProfileColumn,
+  columns,
+  columns2,
+} from "./column";
 
 interface EmployeeProfileClientProps {
-  data: EmployeeProfileColumn[];
+  data?: EmployeeProfileColumn[];
+  data2?: NonTeachingProfileColumn[];
+  isNonTeaching?: boolean;
 }
 
-const EmployeeProfileClient: React.FC<EmployeeProfileClientProps> = ({ data }) => {
+const EmployeeProfileClient: React.FC<EmployeeProfileClientProps> = ({
+  data,
+  isNonTeaching,
+  data2,
+}) => {
   return (
     <>
-      <DataTable searchKey="name" columns={columns} data={data} />
+      {isNonTeaching ? (
+        <DataTable searchKey="name" columns={columns2} data={data2 || []} />
+      ) : (
+        <DataTable searchKey="name" columns={columns} data={data || []} />
+      )}
     </>
   );
 };

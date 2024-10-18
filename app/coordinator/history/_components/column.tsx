@@ -23,10 +23,6 @@ export const columns: ColumnDef<EvaluationColumn>[] = [
     header: "Rating Period",
   },
   {
-    accessorKey: "ratingPeriod",
-    header: "Rating Period",
-  },
-  {
     accessorKey: "semester",
     header: "Semester",
   },

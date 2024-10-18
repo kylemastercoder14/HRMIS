@@ -7,11 +7,11 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import db from "@/lib/db";
-import { auth } from "@clerk/nextjs/server";
 import StudentEvaluationForm from "./_components/student-evaluation-form";
+import { getStudentFromCookies } from "@/lib/hooks/use-student";
 
 const Home = async () => {
-  const { userId } = auth();
+  const { userId } = await getStudentFromCookies();
   const evaluationForm = await db.evaluation.findFirst({
     include: {
       Categories: { include: { questions: true } },
@@ -20,7 +20,7 @@ const Home = async () => {
 
   const student = await db.student.findUnique({
     where: {
-      clerkId: userId as string,
+      id: userId as string,
     },
   });
 
@@ -34,7 +34,7 @@ const Home = async () => {
         },
         {
           yearLevel: {
-            has: student?.yearLevel,
+            has: student?.yearLevel?.toString(),
           },
         },
         {
