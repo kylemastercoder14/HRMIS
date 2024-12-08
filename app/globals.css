@@ -369,7 +369,7 @@
   }
 
   .shad-input {
-    @apply flex w-full pl-2 justify-start border-0 font-normal rounded-tl-none rounded-bl-none  placeholder:text-dark-600 bg-gray-100 dark:bg-zinc-800 border-dark-500 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:cursor-not-allowed !important;
+    @apply flex w-full pl-2 justify-start border-0 font-normal rounded-tl-none rounded-bl-none  placeholder:text-black bg-gray-100 dark:bg-zinc-800 border-dark-500 focus-visible:ring-0 focus-visible:ring-offset-0 disabled:cursor-not-allowed !important;
   }
 
   .shad-input-outer {

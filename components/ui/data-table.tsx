@@ -22,7 +22,14 @@ import {
 } from "@/components/ui/table";
 import { Button } from "./button";
 import { Input } from "@/components/ui/input";
-import { COURSES, DEPARTMENTS, OFFICES } from "@/lib/constants";
+import {
+  COURSES,
+  DEPARTMENTS,
+  OFFICES,
+  POSITION,
+  POSITION2,
+  YEAR_LEVEL_FILTER,
+} from "@/lib/constants";
 import {
   Select,
   SelectContent,
@@ -49,6 +56,9 @@ export function DataTable<TData, TValue>({
   const [selectedStatus, setSelectedStatus] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState("");
   const [selectedOffice, setSelectedOffice] = useState("");
+  const [selectedYearLevel, setSelectedYearLevel] = useState("");
+  const [selectedPosition, setSelectedPosition] = useState("");
+  const [selectedPosition2, setSelectedPosition2] = useState("");
   const [semester, setSemester] = useState("");
 
   const table = useReactTable({
@@ -91,6 +101,21 @@ export function DataTable<TData, TValue>({
     table.getColumn("semester")?.setFilterValue(semester);
   };
 
+  const handleYearLevelChange = (yearLevel: string) => {
+    setSelectedYearLevel(yearLevel);
+    table.getColumn("yearLevelFilter")?.setFilterValue(yearLevel);
+  };
+
+  const handlePositionChange = (position: string) => {
+    setSelectedPosition(position);
+    table.getColumn("position")?.setFilterValue(position);
+  };
+
+  const handlePositionChange2 = (position: string) => {
+    setSelectedPosition2(position);
+    table.getColumn("position2")?.setFilterValue(position);
+  };
+
   return (
     <div>
       <div className="flex justify-between items-center py-4">
@@ -104,44 +129,101 @@ export function DataTable<TData, TValue>({
           className="max-w-sm border-primary"
         />
 
-        {table.getColumn("course") && (
-          <Select
-            defaultValue={selectedCourse}
-            onValueChange={handleCourseChange}
-          >
-            <SelectTrigger className="w-[300px] border border-input!important">
-              <SelectValue placeholder="All Courses" />
-            </SelectTrigger>
-            <SelectContent>
-              {COURSES.map((course) => (
-                <SelectItem key={course} value={course}>
-                  {course}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        )}
-
-        {table.getColumn("office") && (
-          <Select
-            defaultValue={selectedOffice}
-            onValueChange={handleOfficeChange}
-          >
-            <SelectTrigger className="w-[300px] border border-input!important">
-              <SelectValue placeholder="All Office" />
-            </SelectTrigger>
-            <SelectContent>
-              {OFFICES.map((course) => (
-                <SelectItem key={course} value={course}>
-                  {course}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        )}
-
-        {(table.getColumn("status") || table.getColumn("department")) && (
+        {(table.getColumn("course") || table.getColumn("yearLevelFilter")) && (
           <div className="flex items-center gap-5">
+            {table.getColumn("yearLevelFilter") && (
+              <Select
+                defaultValue={selectedYearLevel}
+                onValueChange={handleYearLevelChange}
+              >
+                <SelectTrigger className="w-[300px] border border-input!important">
+                  <SelectValue placeholder="All Year Level" />
+                </SelectTrigger>
+                <SelectContent>
+                  {YEAR_LEVEL_FILTER.map((yearLevel) => (
+                    <SelectItem key={yearLevel} value={yearLevel.toString()}>
+                      {yearLevel}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+            {table.getColumn("course") && (
+              <Select
+                defaultValue={selectedCourse}
+                onValueChange={handleCourseChange}
+              >
+                <SelectTrigger className="w-[300px] border border-input!important">
+                  <SelectValue placeholder="All Courses" />
+                </SelectTrigger>
+                <SelectContent>
+                  {COURSES.map((course) => (
+                    <SelectItem key={course} value={course}>
+                      {course}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+          </div>
+        )}
+
+        {(table.getColumn("status") ||
+          table.getColumn("department") ||
+          table.getColumn("office") ||
+          table.getColumn("position")) && (
+          <div className="flex items-center gap-5">
+            {table.getColumn("office") && (
+              <Select
+                defaultValue={selectedOffice}
+                onValueChange={handleOfficeChange}
+              >
+                <SelectTrigger className="w-[300px] border border-input!important">
+                  <SelectValue placeholder="All Office" />
+                </SelectTrigger>
+                <SelectContent>
+                  {OFFICES.map((course) => (
+                    <SelectItem key={course} value={course}>
+                      {course}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+            {table.getColumn("position2") && (
+              <Select
+                defaultValue={selectedPosition2}
+                onValueChange={handlePositionChange2}
+              >
+                <SelectTrigger className="w-[300px] border border-input!important">
+                  <SelectValue placeholder="All Designation" />
+                </SelectTrigger>
+                <SelectContent>
+                  {POSITION2.map((position) => (
+                    <SelectItem key={position} value={position}>
+                      {position}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
+            {table.getColumn("position") && (
+              <Select
+                defaultValue={selectedPosition}
+                onValueChange={handlePositionChange}
+              >
+                <SelectTrigger className="w-[300px] border border-input!important">
+                  <SelectValue placeholder="All Designation" />
+                </SelectTrigger>
+                <SelectContent>
+                  {POSITION.map((position) => (
+                    <SelectItem key={position} value={position.toString()}>
+                      {position}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            )}
             {table.getColumn("status") && (
               <Select
                 defaultValue={selectedStatus}

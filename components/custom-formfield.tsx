@@ -39,6 +39,7 @@ import { Button } from "./ui/button";
 import { Calendar } from "./ui/custom-calendar";
 import { format } from "date-fns";
 import { DynamicArraySelect } from "./dynamic-select";
+import { DatetimePicker } from "./ui/datetime-picker";
 
 export interface InputProps
   extends React.InputHTMLAttributes<HTMLInputElement> {}
@@ -180,7 +181,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
                   disabled={disabled}
                   className={cn(
                     "shad-select-trigger",
-                    !field.value && "text-muted-foreground"
+                    !field.value && "text-black"
                   )}
                 >
                   <SelectValue placeholder={placeholder} />
@@ -235,7 +236,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
                     <FormLabel
                       className={cn(
                         "!my-auto font-normal",
-                        !field.value && "text-muted-foreground"
+                        !field.value && "text-black"
                       )}
                     >
                       {option}
@@ -283,7 +284,7 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
                     variant={"outline"}
                     className={cn(
                       "flex w-full pl-2 justify-start font-normal focus-visible:ring-0 focus-visible:ring-offset-0 disabled:cursor-not-allowed",
-                      !field.value && "text-muted-foreground"
+                      !field.value && "text-black"
                     )}
                     disabled={disabled}
                   >
@@ -309,6 +310,27 @@ const RenderField = ({ field, props }: { field: any; props: CustomProps }) => {
                 />
               </PopoverContent>
             </Popover>
+          </HoverEffectWrapper>
+          {description && <FormDescription>{description}</FormDescription>}
+        </>
+      );
+    case FormFieldType.DATETIME_PICKER:
+      return (
+        <>
+          <HoverEffectWrapper disabled={disabled}>
+            <FormControl>
+              <div className="shad-input-outer">
+                <DatetimePicker
+                  className="shad-input"
+                  placeholders={["Select Date", "Select Time"]}
+                  {...field}
+                  format={[
+                    ["months", "days", "years"],
+                    ["hours", "minutes", "am/pm"],
+                  ]}
+                />
+              </div>
+            </FormControl>
           </HoverEffectWrapper>
           {description && <FormDescription>{description}</FormDescription>}
         </>

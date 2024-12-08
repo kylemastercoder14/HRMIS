@@ -48,8 +48,8 @@ const FacultyNavbar = ({
           href="/faculty"
           className={
             pathname === "/faculty"
-              ? "text-black"
-              : "text-muted-foreground hover:text-black"
+              ? "text-black font-bold"
+              : "text-muted-foreground font-semibold hover:text-black"
           }
         >
           <span>Evaluation Form</span>
@@ -58,8 +58,8 @@ const FacultyNavbar = ({
           href="/faculty/history"
           className={
             pathname === "/faculty/history"
-              ? "text-black"
-              : "text-muted-foreground hover:text-black"
+              ? "text-black font-bold"
+              : "text-muted-foreground font-semibold hover:text-black"
           }
         >
           <span>Evaluation Summary</span>
@@ -68,8 +68,8 @@ const FacultyNavbar = ({
           href="/faculty/list-of-evaluation"
           className={
             pathname === "/faculty/list-of-evaluation"
-              ? "text-black"
-              : "text-muted-foreground hover:text-black"
+              ? "text-black font-bold"
+              : "text-muted-foreground font-semibold hover:text-black"
           }
         >
           <span>List of Evaluation</span>
@@ -78,8 +78,8 @@ const FacultyNavbar = ({
           href="/faculty/invitation"
           className={
             pathname === "/faculty/invitation"
-              ? "text-black"
-              : "text-muted-foreground hover:text-black"
+              ? "text-black font-bold"
+              : "text-muted-foreground font-semibold hover:text-black"
           }
         >
           <span>Training Invitation</span>

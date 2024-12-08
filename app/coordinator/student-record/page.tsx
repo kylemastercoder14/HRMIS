@@ -18,7 +18,7 @@ const StudentRecord = async () => {
     email: item.email,
     imageUrl: item.profile ?? "",
     course: item.course,
-    yearLevel: item.yearLevel.toString(),
+    yearLevelFilter: item.yearLevel.toString(),
     section: item.section,
     createdAt: format(item.createdAt, "MMMM dd, yyyy"),
   }));

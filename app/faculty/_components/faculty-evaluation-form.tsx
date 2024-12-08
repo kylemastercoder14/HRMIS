@@ -33,7 +33,7 @@ const FacultyEvaluationForm = ({
   evaluationData,
   answers,
   userId,
-  evaluatorDepartment
+  evaluatorDepartment,
 }: {
   facultyData: Faculty[];
   evaluationData: EvaluationFeatures | null;
@@ -57,16 +57,15 @@ const FacultyEvaluationForm = ({
       faculty.department === evaluatorDepartment &&
       !answers.some(
         (answer) =>
-          answer.evaluatee ===
-          `${faculty.lname}, ${faculty.fname} ${faculty.mname || ""}`.trim()
+          answer.evaluatee === `${faculty.lname}, ${faculty.fname}`.trim()
       )
   );
-  
 
   // Define default values, including an empty array for questions
   const form = useForm<z.infer<typeof EvaluationFormSchema>>({
     resolver: zodResolver(EvaluationFormSchema),
     defaultValues: {
+      schoolYear: evaluationData?.schoolYear || "",
       semester: evaluationData?.semester || "",
       ratingPeriod: ratingPeriod ?? "",
       evaluatee: "",
@@ -84,8 +83,7 @@ const FacultyEvaluationForm = ({
   useEffect(() => {
     if (selectedFaculty) {
       const faculty = facultyData.find(
-        (f) =>
-          `${f.lname}, ${f.fname} ${f.mname || ""}`.trim() === selectedFaculty
+        (f) => `${f.lname}, ${f.fname}`.trim() === selectedFaculty
       );
       if (faculty) {
         form.setValue("academicRank", faculty.academicRank);
@@ -121,6 +119,16 @@ const FacultyEvaluationForm = ({
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex mt-5 flex-1 space-y-3 flex-col items-center"
       >
+        <CustomFormField
+          control={form.control}
+          name="schoolYear"
+          isRequired
+          fieldType={FormFieldType.INPUT}
+          label="School Year"
+          placeholder="Select School Year"
+          disabled
+          className="w-full"
+        />
         <div className="field-group-col2 w-full">
           <CustomFormField
             control={form.control}
@@ -150,7 +158,7 @@ const FacultyEvaluationForm = ({
             isRequired
             fieldType={FormFieldType.SELECT}
             options={availableFaculty.map((faculty) =>
-              `${faculty.lname}, ${faculty.fname} ${faculty.mname || ""}`.trim()
+              `${faculty.lname}, ${faculty.fname}`.trim()
             )}
             label="Name of Faculty to be Evaluated"
             placeholder="Select Faculty"

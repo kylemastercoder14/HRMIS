@@ -63,6 +63,7 @@ const StudentEvaluationForm = ({
   const form = useForm<z.infer<typeof EvaluationFormSchema>>({
     resolver: zodResolver(EvaluationFormSchema),
     defaultValues: {
+      schoolYear: evaluationData?.schoolYear ?? "",
       ratingPeriod: ratingPeriod ?? "",
       semester: evaluationData?.semester ?? "",
       evaluatee: "",
@@ -113,6 +114,16 @@ const StudentEvaluationForm = ({
         onSubmit={form.handleSubmit(onSubmit)}
         className="flex mt-5 flex-1 space-y-3 flex-col items-center"
       >
+        <CustomFormField
+          control={form.control}
+          name="schoolYear"
+          isRequired
+          fieldType={FormFieldType.INPUT}
+          label="School Year"
+          placeholder="Select School Year"
+          disabled
+          className="w-full"
+        />
         <div className="field-group-col2 w-full">
           <CustomFormField
             control={form.control}

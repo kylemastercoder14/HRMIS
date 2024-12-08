@@ -44,16 +44,13 @@ const InvitationForm = ({ initialData }: { initialData?: any | null }) => {
     fetchFacultiesData();
   }, []);
 
-  const params = useParams();
-  const router = useRouter();
-
   const form = useForm<z.infer<typeof InvitationFormSchema>>({
     resolver: zodResolver(InvitationFormSchema),
     defaultValues: {
       name: initialData?.name ?? "",
       platform: "",
       file: "",
-      dateStarted: "",
+      dateStarted: new Date(),
       status: "",
       selectedFaculties: [],
     },
@@ -81,7 +78,7 @@ const InvitationForm = ({ initialData }: { initialData?: any | null }) => {
         <DialogTrigger asChild>
           <Button>Add Invitation</Button>
         </DialogTrigger>
-        <DialogContent>
+        <DialogContent className="overflow-y-auto h-[80vh]">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
               <CustomFormField
@@ -102,10 +99,9 @@ const InvitationForm = ({ initialData }: { initialData?: any | null }) => {
               />
               <CustomFormField
                 control={form.control}
-                fieldType={FormFieldType.DATE_PICKER}
-                placeholder="Select Date"
+                fieldType={FormFieldType.DATETIME_PICKER}
                 name="dateStarted"
-                label="Start Date"
+                label="Start Date and Time"
                 isRequired
               />
               <CustomFormField

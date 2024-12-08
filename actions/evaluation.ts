@@ -130,12 +130,14 @@ export const createEvaluationForm = async (formData: any) => {
     startDateTime,
     endDateTime,
     categories,
+    schoolYear,
   } = formData;
 
   try {
     await db.evaluation.create({
       data: {
         title,
+        schoolYear,
         description,
         semester,
         startDateTime: new Date(startDateTime),

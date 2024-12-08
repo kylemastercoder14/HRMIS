@@ -6,8 +6,10 @@ import {
   BarChart,
   CartesianGrid,
   LabelList,
+  Legend,
   XAxis,
   YAxis,
+  Cell,
 } from "recharts";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,6 +21,11 @@ import {
 } from "@/components/ui/chart";
 import { Student } from "@prisma/client";
 
+const generateRandomColor = () =>
+  `#${Math.floor(Math.random() * 16777215)
+    .toString(16)
+    .padStart(6, "0")}`;
+
 const YearlevelBar = ({ studentData }: { studentData: Student[] }) => {
   // Count students by year level
   const yearLevelCounts = studentData.reduce((acc, student) => {
@@ -27,11 +34,12 @@ const YearlevelBar = ({ studentData }: { studentData: Student[] }) => {
     return acc;
   }, {} as { [key: string]: number });
 
-  // Prepare data for the bar chart
+  // Prepare data for the bar chart with unique colors
   const chartData = Object.entries(yearLevelCounts).map(
     ([yearLevel, count]) => ({
       yearLevel,
       count,
+      color: generateRandomColor(),
     })
   );
 
@@ -74,7 +82,10 @@ const YearlevelBar = ({ studentData }: { studentData: Student[] }) => {
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
             />
-            <Bar dataKey="count" fill={chartConfig.desktop?.color} radius={8}>
+            <Bar dataKey="count" radius={8}>
+              {chartData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
               <LabelList
                 position="top"
                 offset={12}
@@ -82,6 +93,17 @@ const YearlevelBar = ({ studentData }: { studentData: Student[] }) => {
                 fontSize={12}
               />
             </Bar>
+            <Legend
+              layout="horizontal"
+              align="center"
+              verticalAlign="bottom"
+              formatter={(value, entry) => {
+                const color = chartData.find(
+                  (data) => data.yearLevel === value
+                )?.color;
+                return <span style={{ color: color }}>{value}</span>;
+              }}
+            />
           </BarChart>
         </ChartContainer>
       </CardContent>

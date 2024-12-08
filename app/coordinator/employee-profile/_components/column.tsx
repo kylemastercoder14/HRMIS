@@ -1,7 +1,6 @@
-
 "use client";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
 import { CellAction } from "./cell-action";
@@ -26,7 +25,7 @@ export type NonTeachingProfileColumn = {
   office: string;
   imageUrl: string;
   email: string;
-  position: string;
+  position2: string;
   dateHired: string;
 };
 
@@ -37,24 +36,15 @@ export const columns: ColumnDef<EmployeeProfileColumn>[] = [
   },
   {
     accessorKey: "name",
-    header: "Faculty",
+    header: "Name",
     cell: ({ row }) => (
       <div className="flex items-center gap-x-2">
-        {row.original.imageUrl ? (
-          <Image
-            src={row.original.imageUrl}
-            alt="Image"
-            width={40}
-            height={40}
-            className="object-cover rounded-md"
-          />
-        ) : (
-          <Avatar className="w-10 h-10 object-cover rounded-md">
-            <AvatarFallback className="rounded-md">
-              {row.original.name.charAt(0)}
-            </AvatarFallback>
-          </Avatar>
-        )}
+        <Avatar>
+          <AvatarImage src={row.original.imageUrl} alt="Image" />
+          <AvatarFallback className="rounded-md">
+            {row.original.name.charAt(0)}
+          </AvatarFallback>
+        </Avatar>
         <div className="flex flex-col">
           <p className="font-semibold">{row.original.name}</p>
           <p className="text-muted-foreground text-sm">{row.original.email}</p>
@@ -64,11 +54,7 @@ export const columns: ColumnDef<EmployeeProfileColumn>[] = [
   },
   {
     accessorKey: "department",
-    header: "Department",
-  },
-  {
-    accessorKey: "status",
-    header: "Status",
+    header: "College",
   },
   {
     accessorKey: "academicRank",
@@ -76,11 +62,15 @@ export const columns: ColumnDef<EmployeeProfileColumn>[] = [
   },
   {
     accessorKey: "position",
-    header: "Position",
+    header: "Designation",
   },
   {
     accessorKey: "dateHired",
     header: "Date Hired",
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
   },
   {
     id: "actions",
@@ -96,7 +86,7 @@ export const columns2: ColumnDef<NonTeachingProfileColumn>[] = [
   },
   {
     accessorKey: "name",
-    header: "Non-Teaching",
+    header: "Name",
     cell: ({ row }) => (
       <div className="flex items-center gap-x-2">
         {row.original.imageUrl ? (
@@ -123,11 +113,11 @@ export const columns2: ColumnDef<NonTeachingProfileColumn>[] = [
   },
   {
     accessorKey: "office",
-    header: "Office",
+    header: "Unit/Office",
   },
   {
-    accessorKey: "position",
-    header: "Position",
+    accessorKey: "position2",
+    header: "Designation",
   },
   {
     accessorKey: "dateHired",

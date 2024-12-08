@@ -26,7 +26,7 @@ const Invitation = async () => {
 
   const formattedInvitation: InvitationColumn[] = invitations.map((item) => {
     const facultyName = faculty
-      ? `${faculty.fname} ${faculty.mname} ${faculty.lname}`
+      ? `${faculty.fname} ${faculty.lname}`
       : "No Faculty"; // Handle case where faculty is null
 
     return {

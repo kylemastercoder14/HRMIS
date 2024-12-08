@@ -286,6 +286,9 @@ export const ResetPasswordSchema = z.object({
 });
 
 export const EvaluationFormSchema = z.object({
+  schoolYear: z.string().min(1, {
+    message: "School year is required.",
+  }),
   ratingPeriod: z.string().min(1, {
     message: "Rating period is required.",
   }),
@@ -528,8 +531,8 @@ export const InvitationFormSchema = z.object({
   file: z.string().min(1, {
     message: "File attachment is required.",
   }),
-  dateStarted: z.string().min(1, {
-    message: "Date started is required.",
+  dateStarted: z.date({
+    message: "Date started must be a valid date.",
   }),
   selectedFaculties: z.array(z.string()).min(1, {
     message: "At least one faculty is required.",

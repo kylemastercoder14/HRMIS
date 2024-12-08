@@ -51,7 +51,7 @@ const EmployeeProfile = async () => {
       name: item.fname + " " + item.lname,
       email: item.email,
       imageUrl: item.profile ?? "",
-      position: item.position ?? "",
+      position2: item.position ?? "",
       employeeId: item.employeeId,
       dateHired: format(item.dateHired, "MMMM dd, yyyy"),
       office: item.office ?? "N/A",

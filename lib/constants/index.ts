@@ -10,6 +10,7 @@ export enum FormFieldType {
   SWITCH = "switch",
   SLIDER = "slider",
   DATE_PICKER = "datePicker",
+  DATETIME_PICKER = "dateTimePicker",
   DROP_ZONE = "dropZone",
   SKELETON = "skeleton",
   HIDDEN = "hidden",
@@ -88,6 +89,49 @@ export const DEPARTMENTS = [
   "College of Industrial Technology",
   "College of Information Technology",
   "College of BSES and BSAF Program",
+];
+
+export const YEAR_LEVEL_FILTER = [4, 3, 2, 1];
+
+export const POSITION = [
+  "Dean",
+  "Teaching",
+  "Chairperson"
+];
+
+export const POSITION2 = [
+  "Programmer",
+  "Supervisor",
+  "Library Technician",
+  "Information Specialist",
+  "Circulation Manager",
+  "Cataloging Specialist",
+  "Library Assistant",
+  "Librarian I",
+  "Accounts Receivable Officer",
+  "Financial Analyst",
+  "Payroll Coordinator",
+  "Budget Analyst",
+  "Accountant I",
+  "Accountant II",
+  "Administrative Officer",
+  "Event Coordinator",
+  "Outreach Coordinator",
+  "Career Services Manager",
+  "Counseling Coordinator",
+  "Student Affairs Officer",
+  "Registration Officer",
+  "Administrative Assistant",
+  "Registrar III",
+  "Enrollment Officer",
+  "Records Officer",
+  "Registrar Assistant",
+  "Help Desk Technician",
+  "IT Project Manager",
+  "Database Administrator",
+  "Network Administrator",
+  "Systems Analyst",
+  "IT Support Specialist",
 ];
 
 export const OFFICES = [

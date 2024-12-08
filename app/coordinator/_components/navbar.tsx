@@ -46,51 +46,57 @@ const CoordinatorNavbar = ({
         </Link>
         <Link
           href="/coordinator/dashboard"
-          className={pathname === "/coordinator/dashboard" ? "text-black" : "text-muted-foreground hover:text-black"}
+          className={pathname === "/coordinator/dashboard" ? "text-black font-bold" : "text-muted-foreground hover:text-black font-semibold"}
         >
           <span>Dashboard</span>
         </Link>
         <Link
           href="/coordinator/evaluation-form"
-          className={pathname === "/coordinator/evaluation-form" ? "text-black" : "text-muted-foreground hover:text-black"}
+          className={pathname === "/coordinator/evaluation-form" ? "text-black font-bold" : "text-muted-foreground hover:text-black font-semibold"}
         >
           <span>Evaluation Form</span>
         </Link>
         <Link
           href="/coordinator/list-evaluation"
-          className={pathname === "/coordinator/list-evaluation" ? "text-black" : "text-muted-foreground hover:text-black"}
+          className={pathname === "/coordinator/list-evaluation" ? "text-black font-bold" : "text-muted-foreground hover:text-black font-semibold"}
         >
           <span>Evaluation Record</span>
         </Link>
         <Link
           href="/coordinator/invitation"
-          className={pathname === "/coordinator/invitation" ? "text-black" : "text-muted-foreground hover:text-black"}
+          className={pathname === "/coordinator/invitation" ? "text-black font-bold" : "text-muted-foreground hover:text-black font-semibold"}
         >
           <span>Training Invitation</span>
         </Link>
         <Link
           href="/coordinator/history"
-          className={pathname === "/coordinator/history" ? "text-black" : "text-muted-foreground hover:text-black"}
+          className={pathname === "/coordinator/history" ? "text-black font-bold" : "text-muted-foreground hover:text-black font-semibold"}
         >
           <span>Evaluation History</span>
         </Link>
         <Link
           href="/coordinator/student-record"
-          className={pathname === "/coordinator/student-record" ? "text-black" : "text-muted-foreground hover:text-black"}
+          className={pathname === "/coordinator/student-record" ? "text-black font-bold" : "text-muted-foreground hover:text-black font-semibold"}
         >
           <span>Student Record</span>
         </Link>
         <Link
           href="/coordinator/employee-profile"
-          className={pathname === "/coordinator/employee-profile" ? "text-black" : "text-muted-foreground hover:text-black"}
+          className={pathname === "/coordinator/employee-profile" ? "text-black font-bold" : "text-muted-foreground hover:text-black font-semibold"}
         >
           <span>Employee Profile</span>
         </Link>
         <Link
           href="/coordinator/assign"
-          className={pathname === "/coordinator/assign" ? "text-black" : "text-muted-foreground hover:text-black"}
+          className={pathname === "/coordinator/assign" ? "text-black font-bold" : "text-muted-foreground hover:text-black font-semibold"}
         >
           <span>Assign Rater to Ratee</span>
+        </Link>
+        <Link
+          href="/coordinator/qce-result"
+          className={pathname === "/coordinator/qce-result" ? "text-black font-bold" : "text-muted-foreground hover:text-black font-semibold"}
+        >
+          <span>QCE Result</span>
         </Link>
       </nav>
       <div className="ml-auto flex-1 sm:flex-initial">

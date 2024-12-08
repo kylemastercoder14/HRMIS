@@ -34,6 +34,7 @@ interface EvaluationForm {
   startDateTime: string;
   endDateTime: string;
   semester: string;
+  schoolYear: string;
   categories: Category[];
 }
 
@@ -46,6 +47,7 @@ const AddEvaluationForm = () => {
     startDateTime: "",
     endDateTime: "",
     semester: "",
+    schoolYear: "",
     categories: [],
   });
 
@@ -136,6 +138,18 @@ const AddEvaluationForm = () => {
               onChange={handleChange}
               required
               placeholder="Enter Title"
+              disabled={isLoading}
+              className="border border-input!important"
+            />
+          </div>
+          <div className="mb-4 space-y-1">
+            <Label>School Year</Label>
+            <Input
+              name="schoolYear"
+              value={form.schoolYear}
+              onChange={handleChange}
+              required
+              placeholder="Enter School Year (e.g., 2023-2024)"
               disabled={isLoading}
               className="border border-input!important"
             />

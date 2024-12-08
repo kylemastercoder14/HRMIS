@@ -22,7 +22,7 @@ export const getFacultyFromCookies = async () => {
     const userId = decodedToken.sub;
 
     // Fetch user from database
-    const user = await db.faculty.findFirst({
+    const user = await db.faculty.findUnique({
       where: {
         id: userId,
       },

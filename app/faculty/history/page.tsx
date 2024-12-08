@@ -62,7 +62,7 @@ const History = async () => {
     },
   });
 
-  const evaluatee = `${user?.lname}, ${user?.fname} ${user?.mname}`.trim();
+  const evaluatee = `${user?.lname}, ${user?.fname}`.trim();
 
   const ratings = await db.answer.findMany({
     where: {

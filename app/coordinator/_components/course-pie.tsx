@@ -1,6 +1,6 @@
 "use client";
 
-import { Pie, PieChart } from "recharts";
+import { Pie, PieChart, Legend, Cell } from "recharts";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartContainer,
@@ -11,11 +11,15 @@ import { Student } from "@prisma/client";
 
 // Define your chart configuration
 const chartConfig = {
-  // Define your configuration here as needed
   value: {
     label: "Number of Students",
   },
 };
+
+const generateRandomColor = () =>
+  `#${Math.floor(Math.random() * 16777215)
+    .toString(16)
+    .padStart(6, "0")}`;
 
 const CoursePie = ({ studentData }: { studentData: Student[] }) => {
   // Count students by course
@@ -25,16 +29,17 @@ const CoursePie = ({ studentData }: { studentData: Student[] }) => {
     return acc;
   }, {} as { [key: string]: number });
 
-  // Prepare data for the pie chart
+  // Prepare data for the pie chart with random colors
   const chartData = Object.entries(courseCounts).map(([course, count]) => ({
     name: course,
     value: count,
+    color: generateRandomColor(),
   }));
 
   return (
     <Card className="flex flex-col">
       <CardHeader className="pb-0">
-        <CardTitle>Course Summary</CardTitle>
+        <CardTitle>Department Summary</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -50,7 +55,19 @@ const CoursePie = ({ studentData }: { studentData: Student[] }) => {
               data={chartData}
               dataKey="value"
               nameKey="name"
-              fill="#8884d8"
+              outerRadius="80%"
+            >
+              {chartData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.color} />
+              ))}
+            </Pie>
+            <Legend
+              layout="vertical"
+              align="right"
+              verticalAlign="middle"
+              formatter={(value: string, entry: any) => (
+                <span style={{ color: entry.payload.color }}>{value}</span>
+              )}
             />
           </PieChart>
         </ChartContainer>

@@ -13,7 +13,7 @@ const FacultyLayout = async ({ children }: { children: React.ReactNode }) => {
     },
   });
   if (!user || !faculty) redirect("/");
-  const fullName = `${faculty.fname} ${faculty.mname} ${faculty.lname} ${faculty.suffix}`;
+  const fullName = `${faculty.fname} ${faculty.lname}`;
   return (
     <div className="flex min-h-screen w-full flex-col">
       <FacultyNavbar

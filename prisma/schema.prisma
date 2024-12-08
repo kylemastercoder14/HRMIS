@@ -110,6 +110,7 @@ model Evaluation {
   startDateTime DateTime
   endDateTime   DateTime
   semester      String
+  schoolYear    String?
   status        String   @default("Starting")
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
