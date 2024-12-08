@@ -5,7 +5,7 @@ import { InvitationFormSchema } from "@/lib/validators";
 import { z } from "zod";
 
 export const addInvitation = async (
-  values: z.infer<typeof InvitationFormSchema>,
+  values: z.infer<typeof InvitationFormSchema>
 ) => {
   const validatedField = InvitationFormSchema.safeParse(values);
 
@@ -14,17 +14,20 @@ export const addInvitation = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { file, name, platform, dateStarted, selectedFaculties, status } = validatedField.data;
+  const { file, name, platform, dateStarted, selectedFaculties, status } =
+    validatedField.data;
 
   try {
     await db.invitation.create({
       data: {
         name,
         platform,
-        startDate: dateStarted,
+        startDate: dateStarted.toISOString(),
         status,
         faculties: {
-          connect: selectedFaculties.map((facultyId: string) => ({ id: facultyId })),
+          connect: selectedFaculties.map((facultyId: string) => ({
+            id: facultyId,
+          })),
         },
         file: file,
       },
@@ -50,7 +53,8 @@ export const updateInvitation = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const { file, name, platform, dateStarted, selectedFaculties, status } = validatedField.data;
+  const { file, name, platform, dateStarted, selectedFaculties, status } =
+    validatedField.data;
 
   try {
     await db.invitation.update({
@@ -58,15 +62,17 @@ export const updateInvitation = async (
         name,
         platform,
         status,
-        startDate: dateStarted,
+        startDate: dateStarted.toISOString(),
         faculties: {
-          connect: selectedFaculties.map((facultyId: string) => ({ id: facultyId })),
+          connect: selectedFaculties.map((facultyId: string) => ({
+            id: facultyId,
+          })),
         },
         file: file,
       },
       where: {
         id: invitationId,
-      }
+      },
     });
     return { success: "Invitation updated successfully" };
   } catch (error: any) {
@@ -82,6 +88,6 @@ export const deleteInvitation = async (invitationId: string) => {
   return await db.invitation.delete({
     where: {
       id: invitationId,
-    }
+    },
   });
 };
