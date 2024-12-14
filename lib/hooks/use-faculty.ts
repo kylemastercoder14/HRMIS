@@ -19,6 +19,8 @@ export const getFacultyFromCookies = async () => {
       exp: number;
     };
 
+    console.log(decodedToken);
+
     const userId = decodedToken.sub;
 
     // Fetch user from database
@@ -29,7 +31,7 @@ export const getFacultyFromCookies = async () => {
     });
 
     if (!user) {
-      return { error: "User not found" };
+      return { error: "User not found." };
     }
 
     return { user, userId, authToken };

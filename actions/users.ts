@@ -79,6 +79,10 @@ export const loginUser = async (values: z.infer<typeof UserLoginSchema>) => {
       return { error: "User not found" };
     }
 
+    if (password !== user.password) {
+      return { error: "Invalid password" };
+    }
+
     // Create JWT token
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
     const alg = "HS256";
@@ -284,14 +288,12 @@ export const changePassword = async (
       return { error: "New password and confirm password do not match" };
     }
 
-    const hashedPassword = await bcryptjs.hash(newPassword, 10);
-
     await db.student.update({
       where: {
         id: id,
       },
       data: {
-        password: hashedPassword,
+        password: newPassword,
       },
     });
 

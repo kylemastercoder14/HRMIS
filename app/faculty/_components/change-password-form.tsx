@@ -34,7 +34,7 @@ const ChangePasswordForm = ({ faculty }: { faculty: Faculty }) => {
       } else {
         toast.success(response.success);
         router.refresh();
-        window.location.assign("/");
+        window.location.assign("/auth/faculty/login");
       }
     } catch (error) {
       console.error(error);

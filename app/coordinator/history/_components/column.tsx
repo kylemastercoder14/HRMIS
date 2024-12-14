@@ -44,4 +44,9 @@ export const columns: ColumnDef<EvaluationColumn>[] = [
     accessorKey: "qce",
     header: "QCE",
   },
+  // {
+  //   accessorKey: "action",
+  //   header: "Action",
+  //   cell: ({ row }) => <CellAction data={row.original} />,
+  // },
 ];

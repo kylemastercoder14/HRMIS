@@ -34,7 +34,7 @@ const ChangePasswordForm = ({ student }: { student: Student }) => {
       } else {
         toast.success(response.success);
         router.refresh();
-        window.location.assign("/");
+        window.location.assign("/auth/student/login");
       }
     } catch (error) {
       console.error(error);

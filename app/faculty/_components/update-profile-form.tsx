@@ -90,6 +90,7 @@ const UpdateProfileForm = ({ faculty }: { faculty: Faculty }) => {
     "Instructor I",
     "Instructor II",
     "Instructor III",
+    "Professor",
     "Professor I",
     "Professor II",
     "Professor III",

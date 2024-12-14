@@ -8,6 +8,8 @@ import {
 } from "./_components/column";
 import EmployeeProfileClient from "./_components/client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const EmployeeProfile = async () => {
   const faculty = await db.faculty.findMany({
@@ -63,6 +65,11 @@ const EmployeeProfile = async () => {
     <div className="flex-1 space-y-4 p-8 pt-6">
       <div className="flex items-center justify-between space-y-2">
         <Heading title={`Employee Profile`} description="" />
+        <Button asChild>
+          <Link href={`/coordinator/employee-profile/new/employee`}>
+            + Add Employee
+          </Link>
+        </Button>
       </div>
       <Tabs defaultValue="teaching">
         <TabsList>

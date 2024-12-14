@@ -1,6 +1,6 @@
 "use client";
 
-import { createEvaluation } from "@/actions/evaluation";
+import { createEvaluation } from "@/actions/supervisor";
 import CustomFormField from "@/components/custom-formfield";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";

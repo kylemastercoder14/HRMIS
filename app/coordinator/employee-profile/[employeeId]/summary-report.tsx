@@ -59,17 +59,81 @@ const getRandomRatings4 = (): number[] => {
   });
 };
 
-const getRecommendationMessage = (qceRating: any) => {
-  if (qceRating >= 96) {
-    return "The teacher demonstrates a strong commitment to student success and academic excellence.";
-  } else if (qceRating >= 91) {
-    return "The teacher is performing well, but there's still room for small improvements.";
-  } else if (qceRating >= 86) {
-    return "The teacher meets the minimum expectations but can enhance their effectiveness.";
-  } else if (qceRating >= 81) {
-    return "The teacher needs improvement to meet job requirements.";
+const getRecommendationMessage = (comment: string) => {
+  if (comment.includes("Magaling magturo, madaling intindihin ang lesson.")) {
+    return "Continue current teaching methods; consider mentoring other instructors.";
+  } else if (comment.includes("Pwede pong bagalan ng kaunti ang discussion.")) {
+    return "Slow down pace for complex topics; provide additional time for questions.";
+  } else if (comment.includes("Minsan hindi malinaw ang paliwanag.")) {
+    return "Focus on improving clarity through examples and visuals.";
+  } else if (comment.includes("Hindi open for consultations after class.")) {
+    return "Set clear office hours and be more approachable for student inquiries.";
+  } else if (
+    comment.includes("Inspirational siya, nagiging motivated ako mag-aral.")
+  ) {
+    return "Recognize for exceptional performance and student impact.";
+  } else if (
+    comment.includes("Sana po mas updated ang materials na ginagamit.")
+  ) {
+    return "Incorporate more up-to-date teaching resources and materials.";
+  } else if (comment.includes("Medyo strict at intimidating minsan.")) {
+    return "Improve teacher-student rapport; consider a feedback session to address concerns.";
+  } else if (comment.includes("Napakabait at approachable.")) {
+    return "Maintain positive demeanor; encourage sharing of best practices with peers.";
+  } else if (
+    comment.includes("Pwede po sana dagdagan ang practical examples.")
+  ) {
+    return "Add more real-world examples to improve engagement and understanding.";
+  } else if (comment.includes("Medyo monotone minsan, nakakaantok.")) {
+    return "Work on voice modulation and include interactive activities in lessons.";
+  } else if (
+    comment.includes("Laging may energy at engaging ang discussions.")
+  ) {
+    return "Continue fostering student engagement; introduce peer-learning activities.";
+  } else if (comment.includes("Medyo laging late sa klase.")) {
+    return "Prioritize punctuality; consider adjusting class schedules if necessary.";
+  } else if (comment.includes("Mabilis masyado magturo, di nasasabayan.")) {
+    return "Adjust teaching pace for better comprehension; conduct quick reviews after discussions.";
+  } else if (
+    comment.includes("Ang ganda ng materials na ginagamit, very visual.")
+  ) {
+    return "Share resources with other instructors; keep exploring creative tools.";
+  } else if (comment.includes("Parang bias minsan sa ibang students.")) {
+    return "Evaluate and improve fairness in grading and interactions.";
+  } else if (comment.includes("Very accommodating sa questions namin.")) {
+    return "Maintain approachable attitude; consider organizing Q&A sessions after lectures.";
+  } else if (comment.includes("Mas maganda sana kung interactive ang klase.")) {
+    return "Introduce activities like group work, case studies, or role-playing exercises.";
+  } else if (comment.includes("Madalas mawala sa lesson plan.")) {
+    return "Stay aligned with lesson plans; use a checklist or planner to ensure coverage.";
+  } else if (
+    comment.includes("Laging nagbibigay ng practical examples, ang helpful.")
+  ) {
+    return "Continue with practical examples; consider collaborating with industry professionals for case studies.";
+  } else if (comment.includes("Thank you, Sir/Ma'am, for the guidance.")) {
+    return "Continue to be supportive; consider providing additional resources for students.";
+  } else if (comment.includes("The best instructor! Very inspiring.")) {
+    return "Recognize for exemplary teaching performance; consider mentoring other instructors.";
+  } else if (comment.includes("Nice approach, very effective.")) {
+    return "Maintain current teaching style; explore ways to share strategies with peers.";
+  } else if (
+    comment.includes("Thank you for making the lessons fun and clear.")
+  ) {
+    return "Continue engaging teaching methods; consider adding more creative activities.";
+  } else if (comment.includes("The best prof! Dami kong natutunan.")) {
+    return "Highlight as a role model in teaching; encourage involvement in faculty development programs.";
+  } else if (comment.includes("Nice and approachable.")) {
+    return "Keep fostering a positive and approachable demeanor; conduct informal consultations to strengthen student connections.";
+  } else if (
+    comment.includes("Thank you for always explaining until we understand.")
+  ) {
+    return "Keep being thorough in explanations; consider adding summaries after discussions.";
+  } else if (comment.includes("Nice lectures, very detailed.")) {
+    return "Continue detailed lectures; explore creating handouts for better retention.";
+  } else if (comment.includes("Thank you for being approachable and kind.")) {
+    return "Continue being approachable; organize informal study groups to support students.";
   } else {
-    return "The teacher is failing to meet job requirements and requires immediate intervention.";
+    return "Seek more detailed feedback to identify strengths and areas for improvement.";
   }
 };
 
@@ -88,7 +152,13 @@ const getRandomRatingsSummary = (): number[] => {
   });
 };
 
-const SummaryReport = ({ faculty }: { faculty: Faculty | null }) => {
+const SummaryReport = ({
+  faculty,
+  comment,
+}: {
+  faculty: Faculty | null;
+  comment: string | null;
+}) => {
   const [
     commitmentRating1,
     knowledgeRating1,
@@ -408,7 +478,7 @@ const SummaryReport = ({ faculty }: { faculty: Faculty | null }) => {
               </tbody>
             </table>
             <p className="font-bold mb-2 mt-10">Comments/Suggestions:</p>
-            <p>{getRecommendationMessage(totalSummary)}</p>
+            <p>{getRecommendationMessage(comment || "")}</p>
           </div>
           <div className="mt-10 grid grid-cols-2 gap-20">
             <div className="flex flex-col gap-10">

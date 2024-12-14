@@ -31,6 +31,12 @@ const ViewSummary = async ({ params }: { params: { employeeId: string } }) => {
     },
   });
 
+  const answers = await db.answer.findMany({
+    where: {
+      evaluatee: evaluatee,
+    },
+  })
+
   const ratingsSummary = evaluations?.Categories.reduce((acc, category) => {
     // Initialize category summary
     acc[category.id] = {
@@ -54,8 +60,9 @@ const ViewSummary = async ({ params }: { params: { employeeId: string } }) => {
 
     // Calculate average for the category
     if (acc[category.id].totalRatings > 0) {
-      acc[category.id].averageRating =
-        parseFloat((acc[category.id].totalScore / acc[category.id].totalRatings).toFixed(2));
+      acc[category.id].averageRating = parseFloat(
+        (acc[category.id].totalScore / acc[category.id].totalRatings).toFixed(2)
+      );
     }
 
     return acc;
@@ -63,7 +70,7 @@ const ViewSummary = async ({ params }: { params: { employeeId: string } }) => {
 
   console.log(ratingsSummary);
 
-  return <SummaryReport faculty={faculty} />;
+  return <SummaryReport faculty={faculty} comment={answers[0]?.comments} />;
 };
 
 export default ViewSummary;

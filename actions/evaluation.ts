@@ -37,12 +37,14 @@ export const createEvaluation = async (
     questions,
     comments,
     semester,
+    schoolYear,
   } = validatedField.data;
 
   try {
     const answers = questions.map((question) => ({
       evaluatorId: userId, // Use the userId from authentication
       evaluatee,
+      yearLevel: schoolYear,
       academicRank,
       evaluator,
       semester,

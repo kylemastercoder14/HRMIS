@@ -147,6 +147,7 @@ model Answer {
   evaluator    String
   academicRank String
   semester     String
+  yearLevel    String?
   question     Question @relation(fields: [questionId], references: [id])
   questionId   String
   rating       Int // e.g., the rating given by the evaluator (1-5)

@@ -9,6 +9,7 @@ export type EvaluationColumn = {
   title: string;
   ratingPeriod: string;
   semester: string;
+  schoolYear: string;
   statuses: string;
 };
 
@@ -20,6 +21,10 @@ export const columns: ColumnDef<EvaluationColumn>[] = [
   {
     accessorKey: "ratingPeriod",
     header: "Rating Period",
+  },
+  {
+    accessorKey: "schoolYear",
+    header: "School Year",
   },
   {
     accessorKey: "semester",

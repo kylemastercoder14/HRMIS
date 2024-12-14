@@ -13,7 +13,7 @@ const SupervisorLayout = async ({ children }: { children: React.ReactNode }) => 
     },
   });
   if (!user || !supervisor) throw new Error("User not found");
-  const fullName = `${supervisor.fname} ${supervisor.mname} ${supervisor.lname} ${supervisor.suffix}`;
+  const fullName = `${supervisor.fname} ${supervisor.lname}`;
   return (
     <div className="flex min-h-screen w-full flex-col">
       <SupervisorNavbar

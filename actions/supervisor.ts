@@ -3,6 +3,7 @@
 import db from "@/lib/db";
 import {
   ChangePasswordSchema,
+  EvaluationFormSchema,
   ProfileUpdateSupervisorSchema,
   SupervisorRegistrationSchema,
   UserLoginSchema,
@@ -85,6 +86,10 @@ export const loginUser = async (values: z.infer<typeof UserLoginSchema>) => {
 
     if (!user) {
       return { error: "User not found" };
+    }
+
+    if(password !== user.password) {
+      return { error: "Invalid password" };
     }
 
     // Create JWT token
@@ -260,14 +265,12 @@ export const changePassword = async (
       return { error: "New password and confirm password do not match" };
     }
 
-    const hashedPassword = await bcryptjs.hash(newPassword, 10);
-
     await db.supervisor.update({
       where: {
         id: id,
       },
       data: {
-        password: hashedPassword,
+        password: newPassword,
       },
     });
 
@@ -296,6 +299,56 @@ export const resetPassword = async (newPassword: string, userId: string) => {
   } catch (error: any) {
     return {
       error: `Failed to change password. Please try again. ${
+        error.message || ""
+      }`,
+    };
+  }
+};
+
+export const createEvaluation = async (
+  values: z.infer<typeof EvaluationFormSchema>
+) => {
+  const { userId } = await getSupervisorFromCookies();
+  if (!userId) return { error: "User not found" };
+  const validatedField = EvaluationFormSchema.safeParse(values);
+
+  if (!validatedField.success) {
+    const errors = validatedField.error.errors.map((err) => err.message);
+    return { error: `Validation Error: ${errors.join(", ")}` };
+  }
+
+  const {
+    ratingPeriod,
+    evaluatee,
+    evaluator,
+    academicRank,
+    questions,
+    comments,
+    semester,
+    schoolYear
+  } = validatedField.data;
+
+  try {
+    const answers = questions.map((question) => ({
+      evaluatorId: userId,
+      yearLevel: schoolYear,
+      evaluatee,
+      academicRank,
+      evaluator,
+      semester,
+      questionId: question.questionId,
+      rating: parseInt(question.answer),
+      comments,
+    }));
+
+    await db.answer.createMany({
+      data: answers,
+    });
+
+    return { success: true, message: "Evaluation submitted successfully" };
+  } catch (error: any) {
+    return {
+      error: `Failed to submit evaluation. Please try again. ${
         error.message || ""
       }`,
     };

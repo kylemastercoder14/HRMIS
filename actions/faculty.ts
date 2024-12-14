@@ -4,6 +4,7 @@ import db from "@/lib/db";
 import {
   AssignFormSchema,
   ChangePasswordSchema,
+  EvaluationFormSchema,
   FacultyRegistrationSchema,
   ProfileUpdateFacultySchema,
   UserLoginSchema,
@@ -88,6 +89,10 @@ export const loginUser = async (values: z.infer<typeof UserLoginSchema>) => {
 
     if (!user) {
       return { error: "User not found" };
+    }
+
+    if (password !== user.password) {
+      return { error: "Incorrect password" };
     }
 
     // Create JWT token
@@ -279,7 +284,7 @@ export const updateProfileInfo = async (
     academicRank,
     status,
     position,
-    dateHired
+    dateHired,
   } = validatedField.data;
 
   const { user } = await getFacultyFromCookies();
@@ -300,7 +305,7 @@ export const updateProfileInfo = async (
         department,
         status,
         position,
-        dateHired
+        dateHired,
       },
     });
     return { success: "User updated successfully" };
@@ -385,14 +390,12 @@ export const changePassword = async (
       return { error: "New password and confirm password do not match" };
     }
 
-    const hashedPassword = await bcryptjs.hash(newPassword, 10);
-
     await db.faculty.update({
       where: {
         id: id,
       },
       data: {
-        password: hashedPassword,
+        password: newPassword,
       },
     });
 
@@ -426,3 +429,169 @@ export const resetPassword = async (newPassword: string, userId: string) => {
     };
   }
 };
+
+export const createEvaluation = async (
+  values: z.infer<typeof EvaluationFormSchema>
+) => {
+  const { userId } = await getFacultyFromCookies();
+  if (!userId) return { error: "User not found" };
+  const validatedField = EvaluationFormSchema.safeParse(values);
+
+  if (!validatedField.success) {
+    const errors = validatedField.error.errors.map((err) => err.message);
+    return { error: `Validation Error: ${errors.join(", ")}` };
+  }
+
+  const {
+    ratingPeriod,
+    evaluatee,
+    evaluator,
+    academicRank,
+    questions,
+    comments,
+    semester,
+    schoolYear,
+  } = validatedField.data;
+
+  try {
+    const answers = questions.map((question) => ({
+      evaluatorId: userId, // Use the userId from authentication
+      evaluatee,
+      yearLevel: schoolYear,
+      academicRank,
+      evaluator,
+      semester,
+      questionId: question.questionId,
+      rating: parseInt(question.answer),
+      comments,
+    }));
+
+    await db.answer.createMany({
+      data: answers,
+    });
+
+    return { success: true, message: "Evaluation submitted successfully" };
+  } catch (error: any) {
+    return {
+      error: `Failed to submit evaluation. Please try again. ${
+        error.message || ""
+      }`,
+    };
+  }
+};
+
+export const createEmployee = async (data: {
+  employeeId: string;
+  fname: string;
+  mname?: string;
+  lname: string;
+  department: string;
+  academicRank: string;
+  position: string;
+  status: string;
+  email: string;
+  password: string;
+  dateHired: string;
+}) => {
+  try {
+    // Ensure no duplicate employeeId or email
+    const existingEmployee = await db.faculty.findFirst({
+      where: {
+        OR: [{ employeeId: data.employeeId }, { email: data.email }],
+      },
+    });
+
+    if (existingEmployee) {
+      return { error: "Employee with the same ID or email already exists." };
+    }
+
+    // Create the new employee
+    const employee = await db.faculty.create({
+      data: {
+        employeeId: data.employeeId,
+        fname: data.fname,
+        mname: data.mname || null,
+        lname: data.lname,
+        department: data.department,
+        academicRank: data.academicRank,
+        position: data.position,
+        status: data.status,
+        email: data.email,
+        password: data.password,
+        dateHired: data.dateHired,
+      },
+    });
+
+    return { success: "Employee created successfully!", employee };
+  } catch (error: any) {
+    console.error("Error creating employee:", error);
+    return { error: "Failed to create employee. Please try again later." };
+  }
+};
+
+export const updateEmployee = async (
+  id: string,
+  data: {
+    employeeId: string;
+    fname: string;
+    mname?: string;
+    lname: string;
+    department: string;
+    academicRank: string;
+    position: string;
+    status: string;
+    email: string;
+    password: string;
+    dateHired: string;
+  }
+) => {
+  try {
+    // Ensure no duplicate email
+    const existingEmployee = await db.faculty.findFirst({
+      where: {
+        id: { not: id },
+        email: data.email,
+      },
+    });
+
+    if (existingEmployee) {
+      return { error: "Employee with the same email already exists." };
+    }
+
+    // Update the employee
+    const employee = await db.faculty.update({
+      where: { id },
+      data: {
+        employeeId: data.employeeId,
+        fname: data.fname,
+        mname: data.mname || null,
+        lname: data.lname,
+        department: data.department,
+        academicRank: data.academicRank,
+        position: data.position,
+        status: data.status,
+        email: data.email,
+        password: data.password,
+        dateHired: data.dateHired,
+      },
+    });
+
+    return { success: "Employee updated successfully!", employee };
+  } catch (error: any) {
+    console.error("Error updating employee:", error);
+    return { error: "Failed to update employee. Please try again later." };
+  }
+};
+
+export const deleteEmployee = async (id: string) => {
+  try {
+    await db.faculty.delete({
+      where: { id },
+    });
+
+    return { success: "Employee deleted successfully!" };
+  } catch (error: any) {
+    console.error("Error deleting employee:", error);
+    return { error: "Failed to delete employee. Please try again later." };
+  }
+}

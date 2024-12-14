@@ -27,6 +27,7 @@ const ListEvaluation = async () => {
       title: item.title,
       semester: item.semester,
       statuses: item.status,
+      schoolYear: item.schoolYear || "N/A",
       ratingPeriod: ratingPeriod,
     };
   });

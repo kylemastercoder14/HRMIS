@@ -17,6 +17,15 @@ import {
 import { usePathname } from "next/navigation";
 import { useClerk } from "@clerk/nextjs";
 import { logout } from "@/actions/coordinator";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 
 const CoordinatorNavbar = ({
   image,
@@ -35,66 +44,212 @@ const CoordinatorNavbar = ({
   };
   const pathname = usePathname();
   return (
-    <header className="sticky top-0 flex h-16 z-50 items-center gap-4 border-b bg-background px-4 md:px-6">
+    <header className="sticky top-0 flex h-16 z-50 items-center gap-4 border-b bg-[#4d7f17] px-4 md:px-6">
+      <div className="block md:hidden">
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button>
+              <Menu className="h-6 w-6" />
+            </Button>
+          </SheetTrigger>
+          <SheetContent>
+            <nav className="flex-col gap-6 text-lg font-medium flex lg:gap-6">
+              <Link
+                href="/coordinator/dashboard"
+                className="flex items-center text-black gap-2 text-lg font-semibold md:text-base"
+              >
+                <School className="h-6 w-6" />
+                <span>HRMIS - CBSUA</span>
+              </Link>
+              <Link
+                href="/coordinator/dashboard"
+                className={
+                  pathname === "/coordinator/dashboard"
+                    ? "text-black font-bold"
+                    : "text-muted-foreground hover:text-black font-semibold"
+                }
+              >
+                <span>Dashboard</span>
+              </Link>
+              <Link
+                href="/coordinator/evaluation-form"
+                className={
+                  pathname === "/coordinator/evaluation-form"
+                    ? "text-black font-bold"
+                    : "text-muted-foreground hover:text-black font-semibold"
+                }
+              >
+                <span>Evaluation Form</span>
+              </Link>
+              <Link
+                href="/coordinator/list-evaluation"
+                className={
+                  pathname === "/coordinator/list-evaluation"
+                    ? "text-black font-bold"
+                    : "text-muted-foreground hover:text-black font-semibold"
+                }
+              >
+                <span>Evaluation Record</span>
+              </Link>
+              <Link
+                href="/coordinator/invitation"
+                className={
+                  pathname === "/coordinator/invitation"
+                    ? "text-black font-bold"
+                    : "text-muted-foreground hover:text-black font-semibold"
+                }
+              >
+                <span>Training Invitation</span>
+              </Link>
+              <Link
+                href="/coordinator/history"
+                className={
+                  pathname === "/coordinator/history"
+                    ? "text-black font-bold"
+                    : "text-muted-foreground hover:text-black font-semibold"
+                }
+              >
+                <span>Evaluation History</span>
+              </Link>
+              <Link
+                href="/coordinator/student-record"
+                className={
+                  pathname === "/coordinator/student-record"
+                    ? "text-black font-bold"
+                    : "text-muted-foreground hover:text-black font-semibold"
+                }
+              >
+                <span>Student Profile</span>
+              </Link>
+              <Link
+                href="/coordinator/employee-profile"
+                className={
+                  pathname === "/coordinator/employee-profile"
+                    ? "text-black font-bold"
+                    : "text-muted-foreground hover:text-black font-semibold"
+                }
+              >
+                <span>Employee Profile</span>
+              </Link>
+              <Link
+                href="/coordinator/assign"
+                className={
+                  pathname === "/coordinator/assign"
+                    ? "text-black font-bold"
+                    : "text-muted-foreground hover:text-black font-semibold"
+                }
+              >
+                <span>Assign Rater to Ratee</span>
+              </Link>
+              <Link
+                href="/coordinator/qce-result"
+                className={
+                  pathname === "/coordinator/qce-result"
+                    ? "text-black font-bold"
+                    : "text-muted-foreground hover:text-black font-semibold"
+                }
+              >
+                <span>QCE Result</span>
+              </Link>
+            </nav>
+          </SheetContent>
+        </Sheet>
+      </div>
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
         <Link
           href="/coordinator/dashboard"
-          className="flex items-center gap-2 text-lg font-semibold md:text-base"
+          className="flex items-center text-white gap-2 text-lg font-semibold md:text-base"
         >
           <School className="h-6 w-6" />
           <span>HRMIS - CBSUA</span>
         </Link>
         <Link
           href="/coordinator/dashboard"
-          className={pathname === "/coordinator/dashboard" ? "text-black font-bold" : "text-muted-foreground hover:text-black font-semibold"}
+          className={
+            pathname === "/coordinator/dashboard"
+              ? "text-white font-bold"
+              : "text-zinc-200 hover:text-white font-semibold"
+          }
         >
           <span>Dashboard</span>
         </Link>
         <Link
           href="/coordinator/evaluation-form"
-          className={pathname === "/coordinator/evaluation-form" ? "text-black font-bold" : "text-muted-foreground hover:text-black font-semibold"}
+          className={
+            pathname === "/coordinator/evaluation-form"
+              ? "text-white font-bold"
+              : "text-zinc-200 hover:text-white font-semibold"
+          }
         >
           <span>Evaluation Form</span>
         </Link>
         <Link
           href="/coordinator/list-evaluation"
-          className={pathname === "/coordinator/list-evaluation" ? "text-black font-bold" : "text-muted-foreground hover:text-black font-semibold"}
+          className={
+            pathname === "/coordinator/list-evaluation"
+              ? "text-white font-bold"
+              : "text-zinc-200 hover:text-white font-semibold"
+          }
         >
           <span>Evaluation Record</span>
         </Link>
         <Link
           href="/coordinator/invitation"
-          className={pathname === "/coordinator/invitation" ? "text-black font-bold" : "text-muted-foreground hover:text-black font-semibold"}
+          className={
+            pathname === "/coordinator/invitation"
+              ? "text-white font-bold"
+              : "text-zinc-200 hover:text-white font-semibold"
+          }
         >
           <span>Training Invitation</span>
         </Link>
         <Link
           href="/coordinator/history"
-          className={pathname === "/coordinator/history" ? "text-black font-bold" : "text-muted-foreground hover:text-black font-semibold"}
+          className={
+            pathname === "/coordinator/history"
+              ? "text-white font-bold"
+              : "text-zinc-200 hover:text-white font-semibold"
+          }
         >
           <span>Evaluation History</span>
         </Link>
         <Link
           href="/coordinator/student-record"
-          className={pathname === "/coordinator/student-record" ? "text-black font-bold" : "text-muted-foreground hover:text-black font-semibold"}
+          className={
+            pathname === "/coordinator/student-record"
+              ? "text-white font-bold"
+              : "text-zinc-200 hover:text-white font-semibold"
+          }
         >
-          <span>Student Record</span>
+          <span>Student Profile</span>
         </Link>
         <Link
           href="/coordinator/employee-profile"
-          className={pathname === "/coordinator/employee-profile" ? "text-black font-bold" : "text-muted-foreground hover:text-black font-semibold"}
+          className={
+            pathname === "/coordinator/employee-profile"
+              ? "text-white font-bold"
+              : "text-zinc-200 hover:text-white font-semibold"
+          }
         >
           <span>Employee Profile</span>
         </Link>
         <Link
           href="/coordinator/assign"
-          className={pathname === "/coordinator/assign" ? "text-black font-bold" : "text-muted-foreground hover:text-black font-semibold"}
+          className={
+            pathname === "/coordinator/assign"
+              ? "text-white font-bold"
+              : "text-zinc-200 hover:text-white font-semibold"
+          }
         >
           <span>Assign Rater to Ratee</span>
         </Link>
         <Link
           href="/coordinator/qce-result"
-          className={pathname === "/coordinator/qce-result" ? "text-black font-bold" : "text-muted-foreground hover:text-black font-semibold"}
+          className={
+            pathname === "/coordinator/qce-result"
+              ? "text-white font-bold"
+              : "text-zinc-200 hover:text-white font-semibold"
+          }
         >
           <span>QCE Result</span>
         </Link>
