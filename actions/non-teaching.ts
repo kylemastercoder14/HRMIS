@@ -34,6 +34,16 @@ export const createUser = async (
   const employeeId = `${year}-${randomNumber}`;
 
   try {
+    const existingUser = await db.nonTeaching.findFirst({
+      where: {
+        email,
+      },
+    });
+
+    if (existingUser) {
+      return { error: "User already exists" };
+    }
+    
     await db.nonTeaching.create({
       data: {
         fname: firstName,

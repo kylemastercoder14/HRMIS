@@ -14,7 +14,7 @@ import { cookies } from "next/headers";
 import { getCoordinatorFromCookies } from "@/lib/hooks/use-coordinator";
 
 export const createUser = async (
-  values: z.infer<typeof CoordinatorRegistrationSchema>,
+  values: z.infer<typeof CoordinatorRegistrationSchema>
 ) => {
   const validatedField = CoordinatorRegistrationSchema.safeParse(values);
 
@@ -29,6 +29,16 @@ export const createUser = async (
   const hashedPassword = await bcryptjs.hash(password, 10);
 
   try {
+    const existingUser = await db.coordinator.findFirst({
+      where: {
+        email,
+      },
+    });
+
+    if (existingUser) {
+      return { error: "Coordinator already exists" };
+    }
+    
     await db.coordinator.create({
       data: {
         fname: firstName,
@@ -101,7 +111,7 @@ export const logout = async () => {
 
 export const createProfile = async (profile: string) => {
   if (!profile) return { error: "Profile image is required" };
-  const {userId} = await getCoordinatorFromCookies();
+  const { userId } = await getCoordinatorFromCookies();
 
   if (!userId) return { error: "User not found" };
 
@@ -140,7 +150,7 @@ export const createProfile = async (profile: string) => {
 };
 
 export const removeProfile = async () => {
-  const {user} = await getCoordinatorFromCookies();
+  const { user } = await getCoordinatorFromCookies();
 
   if (!user) return { error: "User not found" };
 
@@ -176,7 +186,7 @@ export const updateProfileInfo = async (
   const { firstName, middleInitial, lastName, email, suffix } =
     validatedField.data;
 
-  const {user} = await getCoordinatorFromCookies();
+  const { user } = await getCoordinatorFromCookies();
   if (!user) return { error: "User not found" };
 
   try {
@@ -201,7 +211,7 @@ export const updateProfileInfo = async (
 };
 
 export const deleteProfile = async () => {
-  const {user} = await getCoordinatorFromCookies();
+  const { user } = await getCoordinatorFromCookies();
 
   if (!user) return { error: "User not found" };
 
@@ -232,7 +242,7 @@ export const changePassword = async (
     return { error: `Validation Error: ${errors.join(", ")}` };
   }
 
-  const {newPassword, confirmPassword } = validatedField.data;
+  const { newPassword, confirmPassword } = validatedField.data;
 
   try {
     if (newPassword !== confirmPassword) {

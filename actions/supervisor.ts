@@ -44,6 +44,16 @@ export const createUser = async (
   const employeeId = `${year}-${randomNumber}`;
 
   try {
+    const existingUser = await db.supervisor.findFirst({
+      where: {
+        email,
+      },
+    });
+
+    if (existingUser) {
+      return { error: "Supervisor already exists" };
+    }
+
     await db.supervisor.create({
       data: {
         fname: firstName,

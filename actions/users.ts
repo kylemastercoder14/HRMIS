@@ -37,6 +37,16 @@ export const createUser = async (
   } = validatedField.data;
 
   try {
+    const existingUser = await db.student.findFirst({
+      where: {
+        email,
+      },
+    });
+
+    if (existingUser) {
+      return { error: "Student already exists" };
+    }
+
     await db.student.create({
       data: {
         fname: firstName,

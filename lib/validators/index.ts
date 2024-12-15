@@ -9,17 +9,17 @@ export const UserRegistrationSchema = z.object({
     message: "Last name is required.",
   }),
   suffix: z.string().optional(),
-  email: z.string().min(1, {
-    message: "Email address is required.",
-  }),
-  // email: z
-  //   .string()
-  //   .min(1, {
-  //     message: "Email address is required.",
-  //   })
-  //   .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
-  //     message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
-  //   }),
+  // email: z.string().min(1, {
+  //   message: "Email address is required.",
+  // }),
+  email: z
+    .string()
+    .min(1, {
+      message: "Email address is required.",
+    })
+    .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
+      message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
+    }),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters long." })
@@ -55,17 +55,17 @@ export const NonTeachingRegistrationSchema = z.object({
     message: "Last name is required.",
   }),
   suffix: z.string().optional(),
-  email: z.string().min(1, {
-    message: "Email address is required.",
-  }),
-  // email: z
-  //   .string()
-  //   .min(1, {
-  //     message: "Email address is required.",
-  //   })
-  //   .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
-  //     message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
-  //   }),
+  // email: z.string().min(1, {
+  //   message: "Email address is required.",
+  // }),
+  email: z
+    .string()
+    .min(1, {
+      message: "Email address is required.",
+    })
+    .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
+      message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
+    }),
   password: z
     .string()
     .min(8, { message: "Password must be at least 8 characters long." })
@@ -100,17 +100,17 @@ export const FacultyRegistrationSchema = z.object({
   lastName: z.string().min(1, {
     message: "Last name is required.",
   }),
-  email: z.string().min(1, {
-    message: "Email address is required.",
-  }),
-  // email: z
-  //   .string()
-  //   .min(1, {
-  //     message: "Email address is required.",
-  //   })
-  //   .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
-  //     message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
-  //   }),
+  // email: z.string().min(1, {
+  //   message: "Email address is required.",
+  // }),
+  email: z
+    .string()
+    .min(1, {
+      message: "Email address is required.",
+    })
+    .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
+      message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
+    }),
   suffix: z.string().optional(),
   department: z.string().min(1, {
     message: "Department is required.",
@@ -152,17 +152,17 @@ export const SupervisorRegistrationSchema = z.object({
   lastName: z.string().min(1, {
     message: "Last name is required.",
   }),
-  email: z.string().min(1, {
-    message: "Email address is required.",
-  }),
-  // email: z
-  //   .string()
-  //   .min(1, {
-  //     message: "Email address is required.",
-  //   })
-  //   .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
-  //     message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
-  //   }),
+  // email: z.string().min(1, {
+  //   message: "Email address is required.",
+  // }),
+  email: z
+    .string()
+    .min(1, {
+      message: "Email address is required.",
+    })
+    .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
+      message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
+    }),
   suffix: z.string().optional(),
   department: z.string().min(1, {
     message: "Department is required.",
@@ -201,17 +201,17 @@ export const CoordinatorRegistrationSchema = z.object({
   lastName: z.string().min(1, {
     message: "Last name is required.",
   }),
-  email: z.string().min(1, {
-    message: "Email address is required.",
-  }),
-  // email: z
-  //   .string()
-  //   .min(1, {
-  //     message: "Email address is required.",
-  //   })
-  //   .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
-  //     message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
-  //   }),
+  // email: z.string().min(1, {
+  //   message: "Email address is required.",
+  // }),
+  email: z
+    .string()
+    .min(1, {
+      message: "Email address is required.",
+    })
+    .regex(/^[a-zA-Z]+\.[a-zA-Z]+@cbsua\.edu\.ph$/, {
+      message: "Email must be in the format firstname.lastname@cbsua.edu.ph.",
+    }),
   suffix: z.string().optional(),
   password: z
     .string()
