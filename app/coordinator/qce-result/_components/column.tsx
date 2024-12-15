@@ -2,6 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import RecommendationModal from "./recommendation-modal";
+import Link from "next/link";
 
 export type EvaluationColumn = {
   faculty: string;
@@ -13,6 +14,11 @@ export type EvaluationColumn = {
   selfRateResult: string;
   supervisorRateResult: string;
   recommendation: string;
+};
+
+export type DepartmentColumn = {
+  department: string;
+  faculty: number;
 };
 
 export const columns: ColumnDef<EvaluationColumn>[] = [
@@ -48,5 +54,24 @@ export const columns: ColumnDef<EvaluationColumn>[] = [
     accessorKey: "action",
     header: "Action",
     cell: ({ row }) => <RecommendationModal data={row.original} />,
+  },
+];
+
+export const columns1: ColumnDef<DepartmentColumn>[] = [
+  {
+    accessorKey: "department",
+    header: "Department",
+    cell: ({ row }) => (
+      <Link
+        className="hover:underline"
+        href={`/coordinator/qce-result/${row.original.department}`}
+      >
+        {row.original.department}
+      </Link>
+    ),
+  },
+  {
+    accessorKey: "faculty",
+    header: "Number of Faculty",
   },
 ];

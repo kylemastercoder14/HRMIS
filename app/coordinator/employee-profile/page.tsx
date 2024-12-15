@@ -63,7 +63,7 @@ const EmployeeProfile = async () => {
 
   return (
     <div className="flex-1 space-y-4 p-8 pt-6">
-      <div className="flex items-center justify-between space-y-2">
+      <div className="flex md:flex-row flex-col md:items-center items-start justify-between">
         <Heading title={`Employee Profile`} description="" />
         <Button asChild>
           <Link href={`/coordinator/employee-profile/new/employee`}>

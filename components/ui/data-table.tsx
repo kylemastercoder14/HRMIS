@@ -60,6 +60,7 @@ export function DataTable<TData, TValue>({
   const [selectedPosition, setSelectedPosition] = useState("");
   const [selectedPosition2, setSelectedPosition2] = useState("");
   const [semester, setSemester] = useState("");
+  const [schoolYear, setSchoolYear] = useState("");
 
   const table = useReactTable({
     data,
@@ -101,6 +102,11 @@ export function DataTable<TData, TValue>({
     table.getColumn("semester")?.setFilterValue(semester);
   };
 
+  const handleSchoolYearChange = (schoolYear: string) => {
+    setSchoolYear(schoolYear);
+    table.getColumn("schoolYear")?.setFilterValue(schoolYear);
+  };
+
   const handleYearLevelChange = (yearLevel: string) => {
     setSelectedYearLevel(yearLevel);
     table.getColumn("yearLevelFilter")?.setFilterValue(yearLevel);
@@ -118,7 +124,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="flex justify-between items-center py-4">
+      <div className="flex md:flex-row flex-col justify-between md:items-center items-start py-4 gap-3">
         {/* Search Input */}
         <Input
           placeholder="Search..."
@@ -126,17 +132,17 @@ export function DataTable<TData, TValue>({
           onChange={(event) =>
             table.getColumn(searchKey)?.setFilterValue(event.target.value)
           }
-          className="max-w-sm border-primary"
+          className="md:max-w-sm w-full border-primary"
         />
 
         {(table.getColumn("course") || table.getColumn("yearLevelFilter")) && (
-          <div className="flex items-center gap-5">
+          <div className="flex md:flex-row w-full flex-col md:items-center items-start gap-5">
             {table.getColumn("yearLevelFilter") && (
               <Select
                 defaultValue={selectedYearLevel}
                 onValueChange={handleYearLevelChange}
               >
-                <SelectTrigger className="w-[300px] border border-input!important">
+                <SelectTrigger className="md:w-[300px] w-full border border-input!important">
                   <SelectValue placeholder="All Year Level" />
                 </SelectTrigger>
                 <SelectContent>
@@ -153,7 +159,7 @@ export function DataTable<TData, TValue>({
                 defaultValue={selectedCourse}
                 onValueChange={handleCourseChange}
               >
-                <SelectTrigger className="w-[300px] border border-input!important">
+                <SelectTrigger className="md:w-[300px] w-full border border-input!important">
                   <SelectValue placeholder="All Courses" />
                 </SelectTrigger>
                 <SelectContent>
@@ -168,17 +174,52 @@ export function DataTable<TData, TValue>({
           </div>
         )}
 
+        {(table.getColumn("semester") || table.getColumn("schoolYear")) && (
+          <div className="flex md:flex-row w-full flex-col md:items-center justify-end items-start gap-5">
+            {table.getColumn("semester") && (
+              <Select
+                defaultValue={semester}
+                onValueChange={handleSemesterChange}
+              >
+                <SelectTrigger className="md:w-[300px] w-full border border-input!important">
+                  <SelectValue placeholder="All Semester" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1st Semester">1st Semester</SelectItem>
+                  <SelectItem value="2nd Semester">2nd Semester</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+            {table.getColumn("schoolYear") && (
+              <Select
+                defaultValue={schoolYear}
+                onValueChange={handleSchoolYearChange}
+              >
+                <SelectTrigger className="md:w-[300px] w-full border border-input!important">
+                  <SelectValue placeholder="All School Year" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="2021-2022">2021-2022</SelectItem>
+                  <SelectItem value="2022-2023">2022-2023</SelectItem>
+                  <SelectItem value="2023-2024">2023-2024</SelectItem>
+                  <SelectItem value="2024-2025">2024-2025</SelectItem>
+                </SelectContent>
+              </Select>
+            )}
+          </div>
+        )}
+
         {(table.getColumn("status") ||
           table.getColumn("department") ||
           table.getColumn("office") ||
           table.getColumn("position")) && (
-          <div className="flex items-center gap-5">
+          <div className="flex w-full md:flex-row flex-col md:items-center items-start gap-5">
             {table.getColumn("office") && (
               <Select
                 defaultValue={selectedOffice}
                 onValueChange={handleOfficeChange}
               >
-                <SelectTrigger className="w-[300px] border border-input!important">
+                <SelectTrigger className="md:w-[300px] w-full border border-input!important">
                   <SelectValue placeholder="All Office" />
                 </SelectTrigger>
                 <SelectContent>
@@ -195,7 +236,7 @@ export function DataTable<TData, TValue>({
                 defaultValue={selectedPosition2}
                 onValueChange={handlePositionChange2}
               >
-                <SelectTrigger className="w-[300px] border border-input!important">
+                <SelectTrigger className="md:w-[300px] w-full border border-input!important">
                   <SelectValue placeholder="All Designation" />
                 </SelectTrigger>
                 <SelectContent>
@@ -212,7 +253,7 @@ export function DataTable<TData, TValue>({
                 defaultValue={selectedPosition}
                 onValueChange={handlePositionChange}
               >
-                <SelectTrigger className="w-[300px] border border-input!important">
+                <SelectTrigger className="md:w-[300px] w-full border border-input!important">
                   <SelectValue placeholder="All Designation" />
                 </SelectTrigger>
                 <SelectContent>
@@ -229,7 +270,7 @@ export function DataTable<TData, TValue>({
                 defaultValue={selectedStatus}
                 onValueChange={handleStatusChange}
               >
-                <SelectTrigger className="w-[300px] border border-input!important">
+                <SelectTrigger className="md:w-[300px] w-full border border-input!important">
                   <SelectValue placeholder="All Status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -243,7 +284,7 @@ export function DataTable<TData, TValue>({
                 defaultValue={selectedDepartment}
                 onValueChange={handleDepartmentChange}
               >
-                <SelectTrigger className="w-[300px] border border-input!important">
+                <SelectTrigger className="md:w-[300px] w-full border border-input!important">
                   <SelectValue placeholder="All Department" />
                 </SelectTrigger>
                 <SelectContent>
@@ -260,7 +301,7 @@ export function DataTable<TData, TValue>({
                 defaultValue={semester}
                 onValueChange={handleSemesterChange}
               >
-                <SelectTrigger className="w-[300px] border border-input!important">
+                <SelectTrigger className="md:w-[300px] w-full border border-input!important">
                   <SelectValue placeholder="All Semester" />
                 </SelectTrigger>
                 <SelectContent>

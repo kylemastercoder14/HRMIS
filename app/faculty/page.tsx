@@ -78,7 +78,7 @@ const Home = async () => {
           </div>
         </div>
       </div>
-      <Card className="shadow-xl -mt-20 w-[93%] mx-auto relative z-50">
+      <Card className="shadow-xl -mt-20 w-[93%] mx-auto relative z-3">
         <CardHeader>
           <CardTitle>{evaluationForm?.title}</CardTitle>
           {paragraphs?.map((paragraph, index) => (

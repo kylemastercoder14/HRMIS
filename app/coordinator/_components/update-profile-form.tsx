@@ -80,8 +80,8 @@ const UpdateProfileForm = ({ coordinator }: { coordinator: Coordinator }) => {
       />
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="grid grid-cols-7 mb-2 gap-3">
-            <div className="col-span-2">
+          <div className="grid md:grid-cols-7 grid-cols-1 mb-2 gap-3">
+            <div className="md:col-span-2">
               <CustomFormField
                 control={form.control}
                 name="firstName"
@@ -92,7 +92,7 @@ const UpdateProfileForm = ({ coordinator }: { coordinator: Coordinator }) => {
                 fieldType={FormFieldType.INPUT}
               />
             </div>
-            <div className="col-span-2">
+            <div className="md:col-span-2">
               <CustomFormField
                 control={form.control}
                 name="middleInitial"
@@ -103,7 +103,7 @@ const UpdateProfileForm = ({ coordinator }: { coordinator: Coordinator }) => {
                 fieldType={FormFieldType.INPUT}
               />
             </div>
-            <div className="col-span-2">
+            <div className="md:col-span-2">
               <CustomFormField
                 control={form.control}
                 name="lastName"
@@ -114,7 +114,7 @@ const UpdateProfileForm = ({ coordinator }: { coordinator: Coordinator }) => {
                 fieldType={FormFieldType.INPUT}
               />
             </div>
-            <div className="col-span-1">
+            <div className="md:col-span-1">
               <CustomFormField
                 control={form.control}
                 name="suffix"

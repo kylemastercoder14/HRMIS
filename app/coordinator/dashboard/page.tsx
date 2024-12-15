@@ -58,11 +58,11 @@ const Dashboard = async () => {
           </CardContent>
         </Card>
       </div>
-      <div className="mt-5 grid grid-cols-5 gap-5">
-        <div className="col-span-2">
+      <div className="mt-5 grid md:grid-cols-5 grid-cols-1 gap-5">
+        <div className="md:col-span-2">
           <CoursePie studentData={students} />
         </div>
-        <div className="col-span-3">
+        <div className="md:col-span-3">
           <YearlevelBar studentData={students} />
         </div>
       </div>

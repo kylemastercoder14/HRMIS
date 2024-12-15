@@ -6,7 +6,7 @@ import { getStudentFromCookies } from "@/lib/hooks/use-student";
 
 const StudentLayout = async ({ children }: { children: React.ReactNode }) => {
   const { user } = await getStudentFromCookies();
-  const fullName = `${user?.fname} ${user?.mname} ${user?.lname} ${user?.suffix}`;
+  const fullName = `${user?.fname} ${user?.lname}`;
   return (
     <div className="flex min-h-screen w-full flex-col">
       <StudentNavbar

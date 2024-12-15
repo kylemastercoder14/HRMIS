@@ -13,7 +13,7 @@ const CoordinatorLayout = async ({ children }: { children: React.ReactNode }) =>
     },
   });
   if (!user || !coordinator) redirect("/");
-  const fullName = `${coordinator.fname} ${coordinator.mname} ${coordinator.lname} ${coordinator.suffix}`;
+  const fullName = `${coordinator.fname} ${coordinator.lname}`;
   return (
     <div className="flex min-h-screen w-full flex-col">
       <CoordinatorNavbar

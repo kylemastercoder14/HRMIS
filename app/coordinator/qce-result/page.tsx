@@ -1,7 +1,7 @@
 import React from "react";
 import db from "@/lib/db";
 import Heading from "@/components/heading";
-import { EvaluationColumn } from "./_components/column";
+import { DepartmentColumn, EvaluationColumn } from "./_components/column";
 import EvaluationClient from "./_components/client";
 import { formatDate } from "@/lib/utils";
 
@@ -14,6 +14,22 @@ const QceResult = async () => {
 
   const ratings = await db.answer.findMany();
   const faculties = await db.faculty.findMany();
+  const groupedFacultiesByDepartment = await db.faculty.groupBy({
+    by: ["department"],
+    orderBy: { department: "asc" },
+  });
+
+  // Format for the client:
+  const departments = groupedFacultiesByDepartment
+    .map((dept) => dept.department)
+    .filter((department): department is string => department !== null);
+
+  const formattedDepartment: DepartmentColumn[] = departments.map((department) => {
+    return {
+      department: department,
+      faculty: department.length
+    };
+  });
 
   // Group ratings by evaluatee (faculty)
   const ratingsByEvaluatee: {
@@ -104,7 +120,10 @@ const QceResult = async () => {
           description="A detailed record of all evaluations completed, including total ratings and QCE rates per faculty."
         />
       </div>
-      <EvaluationClient data={evaluationsData} />{" "}
+      <EvaluationClient
+        department={formattedDepartment}
+        data={evaluationsData}
+      />
     </div>
   );
 };
