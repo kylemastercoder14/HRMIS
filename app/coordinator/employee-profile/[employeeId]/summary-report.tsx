@@ -192,7 +192,7 @@ const SummaryReport = ({
   const totalSummary = student + peer + self + supervisor;
 
   return (
-    <div className="px-10 py-20 flex items-center justify-center flex-col">
+    <div className="flex items-center justify-center flex-col">
       <div className="border pb-20 border-black w-[1000px] h-full">
         <div className="relative w-full h-[150px]">
           <Image

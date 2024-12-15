@@ -17,6 +17,7 @@ import {
   MoreHorizontal,
   Printer,
   Trash,
+  View,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -25,6 +26,7 @@ import AlertModal from "@/components/ui/alert-modal";
 import React from "react";
 import { EmployeeProfileColumn } from "./column";
 import { deleteEmployee } from "@/actions/faculty";
+import RecordTableModal from "./record-table-modal";
 
 interface CellActionProps {
   data: EmployeeProfileColumn;
@@ -33,6 +35,8 @@ interface CellActionProps {
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
   const [open, setOpen] = React.useState(false);
+  const [openRecord, setOpenRecord] = React.useState(false);
+  const [selectedName, setSelectedName] = React.useState("");
   const [loading, setLoading] = React.useState(false);
 
   const onDelete = async () => {
@@ -56,6 +60,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         onClose={() => setOpen(false)}
         loading={loading}
       />
+      <RecordTableModal
+        isOpen={openRecord}
+        evaluatee={selectedName}
+        onClose={() => setOpenRecord(false)}
+      />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="h-8 w-8 p-0">
@@ -65,6 +74,15 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <DropdownMenuItem
+            onClick={() => {
+              setSelectedName(data.name);
+              setOpenRecord(true);
+            }}
+          >
+            <View className="w-4 h-4 mr-2" />
+            View Record
+          </DropdownMenuItem>
           <DropdownMenuItem
             onClick={() =>
               router.push(`/coordinator/employee-profile/${data.id}/employee`)

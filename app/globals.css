@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+@media print {
+  .no-print {
+    display: none;
+    visibility: hidden;
+    opacity: 0;
+  }
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

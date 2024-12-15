@@ -316,12 +316,12 @@ export function DataTable<TData, TValue>({
 
       {/* Table */}
       <div className="rounded-md border">
-        <Table>
-          <TableHeader>
+        <Table className="border border-[#2E845F]">
+          <TableHeader className="bg-[#2E845F]">
             {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
-                  <TableHead key={header.id}>
+                  <TableHead className="text-white" key={header.id}>
                     {header.isPlaceholder
                       ? null
                       : flexRender(
@@ -337,6 +337,7 @@ export function DataTable<TData, TValue>({
             {table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
+                className="border border-[#2E845F]"
                   key={row.id}
                   data-state={row.getIsSelected() && "selected"}
                 >

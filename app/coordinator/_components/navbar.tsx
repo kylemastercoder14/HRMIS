@@ -44,7 +44,7 @@ const CoordinatorNavbar = ({
   };
   const pathname = usePathname();
   return (
-    <header className="sticky top-0 flex h-16 z-50 items-center gap-4 border-b bg-[#2E845F] px-4 md:px-6">
+    <header className="sticky no-print top-0 flex h-16 z-50 items-center gap-4 border-b bg-[#2E845F] px-4 md:px-6">
       <div className="block md:hidden">
         <Sheet>
           <SheetTrigger asChild>

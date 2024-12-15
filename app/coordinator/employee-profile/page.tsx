@@ -35,7 +35,7 @@ const EmployeeProfile = async () => {
   const formattedTeaching: EmployeeProfileColumn[] = teachingStaff.map(
     (item) => ({
       id: item.id,
-      name: item.fname + " " + item.lname,
+      name: item.lname + ", " + item.fname,
       email: item.email,
       imageUrl: item.profile ?? "",
       department: item.department ?? "",
@@ -50,7 +50,7 @@ const EmployeeProfile = async () => {
   const formattedNonTeaching: NonTeachingProfileColumn[] = nonTeaching.map(
     (item) => ({
       id: item.id,
-      name: item.fname + " " + item.lname,
+      name: item.lname + ", " + item.fname,
       email: item.email,
       imageUrl: item.profile ?? "",
       position2: item.position ?? "",

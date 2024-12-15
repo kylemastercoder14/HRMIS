@@ -13,7 +13,7 @@ const Dashboard = async () => {
   return (
     <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
       <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-        <Card x-chunk="dashboard-01-chunk-0">
+        <Card className="bg-yellow-300" x-chunk="dashboard-01-chunk-0">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Total Students
@@ -24,7 +24,7 @@ const Dashboard = async () => {
             <div className="text-4xl font-bold">{students.length}</div>
           </CardContent>
         </Card>
-        <Card x-chunk="dashboard-01-chunk-0">
+        <Card className="bg-blue-300" x-chunk="dashboard-01-chunk-0">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Total Faculties
@@ -35,7 +35,7 @@ const Dashboard = async () => {
             <div className="text-4xl font-bold">{faculties.length}</div>
           </CardContent>
         </Card>
-        <Card x-chunk="dashboard-01-chunk-0">
+        <Card className="bg-red-300" x-chunk="dashboard-01-chunk-0">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Total Evaluations
@@ -46,7 +46,7 @@ const Dashboard = async () => {
             <div className="text-4xl font-bold">{evaluations.length}</div>
           </CardContent>
         </Card>
-        <Card x-chunk="dashboard-01-chunk-0">
+        <Card className="bg-pink-300" x-chunk="dashboard-01-chunk-0">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               Total Training Invitations

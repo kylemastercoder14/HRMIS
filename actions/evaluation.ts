@@ -198,6 +198,42 @@ export const deleteEvaluation = async (evaluationId: string) => {
   return await db.evaluation.delete({
     where: {
       id: evaluationId,
-    }
+    },
   });
+};
+
+export const getAllEvaluationsSummaryByEvaluatee = async (
+  evaluatee: string
+) => {
+  return await db.answer.findMany({
+    where: { evaluatee },
+    select: {
+      id: true,
+      evaluatorId: true,
+      evaluatee: true,
+      evaluator: true,
+      academicRank: true,
+      semester: true,
+      yearLevel: true,
+      questionId: true,
+      rating: true,
+      comments: true,
+    },
+  });
+};
+
+export const getAllEvaluators = async () => {
+  const faculties = await db.faculty
+    .findMany()
+    .then((items) => items.map((item) => ({ ...item, type: "Faculty" })));
+
+  const students = await db.student
+    .findMany()
+    .then((items) => items.map((item) => ({ ...item, type: "Student" })));
+
+  const supervisors = await db.supervisor
+    .findMany()
+    .then((items) => items.map((item) => ({ ...item, type: "Supervisor" })));
+
+  return [...faculties, ...students, ...supervisors];
 };
