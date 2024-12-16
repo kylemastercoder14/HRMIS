@@ -110,7 +110,7 @@ const RecordTableModal = ({
 
   return (
     <Modal
-      className="max-w-3xl"
+      className="max-w-3xl max-h-[80vh] overflow-y-auto"
       isOpen={isOpen}
       onClose={onClose}
       title="Employee Evaluation Summary"

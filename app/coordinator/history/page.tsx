@@ -65,6 +65,7 @@ const History = async () => {
       semester: evaluations[0]?.semester,
       academicRank: academicRank, // Example rank, adjust based on your data
       qce: qce + "%",
+      schoolYear: evaluations[0]?.schoolYear ?? "N/A",
       status: status,
       department: department,
     };

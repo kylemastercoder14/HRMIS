@@ -22,7 +22,7 @@ const EvaluationClient: React.FC<EvaluationClientProps> = ({
           <TabsTrigger value="department">Department</TabsTrigger>
         </TabsList>
         <TabsContent value="individual">
-          <DataTable searchKey="name" columns={columns} data={data} />
+          <DataTable searchKey="faculty" columns={columns} data={data} />
         </TabsContent>
         <TabsContent value="department">
           <DataTable searchKey="department" columns={columns1} data={department} />
