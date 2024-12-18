@@ -72,16 +72,6 @@ const CoordinatorNavbar = ({
                 <span>Dashboard</span>
               </Link>
               <Link
-                href="/coordinator/evaluation-form"
-                className={
-                  pathname === "/coordinator/evaluation-form"
-                    ? "text-black font-bold"
-                    : "text-muted-foreground hover:text-black font-semibold"
-                }
-              >
-                <span>Evaluation Form</span>
-              </Link>
-              <Link
                 href="/coordinator/list-evaluation"
                 className={
                   pathname === "/coordinator/list-evaluation"
@@ -172,16 +162,6 @@ const CoordinatorNavbar = ({
           }
         >
           <span>Dashboard</span>
-        </Link>
-        <Link
-          href="/coordinator/evaluation-form"
-          className={
-            pathname === "/coordinator/evaluation-form"
-              ? "text-white font-bold"
-              : "text-zinc-200 hover:text-white font-semibold"
-          }
-        >
-          <span>Evaluation Form</span>
         </Link>
         <Link
           href="/coordinator/list-evaluation"

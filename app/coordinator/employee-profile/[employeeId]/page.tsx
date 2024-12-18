@@ -1,7 +1,6 @@
 import db from "@/lib/db";
 import React from "react";
 import SummaryReport from "./summary-report";
-import { Answer, Category } from "@prisma/client";
 
 const ViewSummary = async ({ params }: { params: { employeeId: string } }) => {
   const faculty = await db.faculty.findUnique({

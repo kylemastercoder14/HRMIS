@@ -3,7 +3,6 @@ import db from "@/lib/db";
 import Heading from "@/components/heading";
 import { DepartmentColumn, EvaluationColumn } from "./_components/column";
 import EvaluationClient from "./_components/client";
-import { formatDate } from "@/lib/utils";
 
 const QceResult = async () => {
   // Fetch all evaluations and answers

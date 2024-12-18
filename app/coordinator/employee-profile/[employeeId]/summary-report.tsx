@@ -194,7 +194,7 @@ const SummaryReport = ({
   return (
     <div className="flex items-center justify-center flex-col">
       <div className="border pb-20 border-black w-[1000px] h-full">
-        <div className="relative w-full h-[150px]">
+        <div className="relative border-b-2 border-black w-full h-[150px]">
           <Image
             src="/images/summary-header.png"
             alt="Header"
@@ -419,7 +419,7 @@ const SummaryReport = ({
         </div>
       </div>
       <div className="border pb-20 mt-10 border-black w-[1000px] h-full">
-        <div className="relative w-full h-[150px]">
+        <div className="relative w-full border-b-2 border-black h-[150px]">
           <Image
             src="/images/summary-header.png"
             alt="Header"

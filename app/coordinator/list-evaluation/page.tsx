@@ -4,6 +4,8 @@ import Heading from "@/components/heading";
 import { EvaluationColumn } from "./_components/column";
 import { formatDate } from "@/lib/utils";
 import EvaluationListClient from "./_components/client";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const ListEvaluation = async () => {
   // Fetching evaluations with supervisors
@@ -39,6 +41,9 @@ const ListEvaluation = async () => {
           title={`Evaluation Record`}
           description="Welcome to the Invitation Record page, where you can manage and track invitations sent to faculty members for training programs."
         />
+        <Button asChild>
+          <Link href={"/coordinator/evaluation-form"}>+ Add Evaluation</Link>
+        </Button>
       </div>
       <EvaluationListClient data={formattedEvaluation} />
     </div>
