@@ -17,10 +17,52 @@ const getRandomRatingsSummary = (): number[] => {
   });
 };
 
-const DepartmentSummary = ({ faculty }: { faculty: Faculty[] }) => {
+const DepartmentSummary = ({
+  regularFaculties,
+  cosFaculties,
+}: {
+  regularFaculties: Faculty[];
+  cosFaculties: Faculty[];
+}) => {
   const [student, peer, self, supervisor] = getRandomRatingsSummary();
 
   const totalSummary = student + peer + self + supervisor;
+
+  const renderTable = (faculties: Faculty[], title: string) => (
+    <div className="mt-10">
+      <p className="text-center font-bold text-lg">{title}</p>
+      <table className="border w-full text-center border-black mt-5">
+        <thead>
+          <tr>
+            <th className="border border-black px-2">No</th>
+            <th className="border border-black px-2">Name of Employee</th>
+            <th className="border border-black px-2">Total Student Ratings</th>
+            <th className="border border-black px-2">Total Peer Ratings</th>
+            <th className="border border-black px-2">Total Self Ratings</th>
+            <th className="border border-black px-2">
+              Total Supervisor Ratings
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {faculties.map((faculty, index) => (
+            <tr key={faculty.id}>
+              <td className="border border-black px-2">{index + 1}</td>
+              <td className="border border-black px-2">
+                {`${faculty.lname}, ${faculty.fname}`}
+              </td>
+              <td className="border border-black px-2">{student.toFixed(2)}</td>
+              <td className="border border-black px-2">{peer.toFixed(2)}</td>
+              <td className="border border-black px-2">{self.toFixed(2)}</td>
+              <td className="border border-black px-2">
+                {supervisor.toFixed(2)}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
   return (
     <div className="px-10 py-20 flex items-center justify-center flex-col">
       <div className="border pb-20 mt-10 border-black w-[1000px] h-full">
@@ -39,74 +81,15 @@ const DepartmentSummary = ({ faculty }: { faculty: Faculty[] }) => {
           <div className="flex flex-col justify-center items-center mt-5">
             <p className="text-center font-bold text-lg">EVALUATION SUMMARY</p>
             <p className="text-center font-bold text-lg">
-              {faculty[0].department}
+              {regularFaculties[0]?.department ||
+                cosFaculties[0]?.department}
             </p>
             <p className="text-center font-bold text-lg">
               2nd Semester 2023-2024
             </p>
           </div>
-          <div className="mt-10">
-            <table className="border w-full text-center border-black">
-              <thead>
-                <tr>
-                  <th className="border border-black px-2">No</th>
-                  <th className="border border-black px-2">Name of Employee</th>
-                  <th className="border border-black px-2">
-                    Total Student Ratings
-                  </th>
-                  <th className="border border-black px-2">
-                    Total Peer Ratings
-                  </th>
-                  <th className="border border-black px-2">
-                    Total Self Ratings
-                  </th>
-                  <th className="border border-black px-2">
-                    Total Supervisor Ratings
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {faculty.map((faculty, index) => (
-                  <tr key={faculty.id}>
-                    <td className="border border-black px-2">{index + 1}</td>
-                    <td className="border border-black px-2">
-                      {`${faculty.lname}, ${faculty.fname}`}
-                    </td>
-                    <td className="border border-black px-2">
-                      {student.toFixed(2)}
-                    </td>
-                    <td className="border border-black px-2">
-                      {peer.toFixed(2)}
-                    </td>
-                    <td className="border border-black px-2">
-                      {self.toFixed(2)}
-                    </td>
-                    <td className="border border-black px-2">
-                      {supervisor.toFixed(2)}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-          <div className="mt-10 grid grid-cols-2 gap-20">
-            <div className="flex flex-col gap-10">
-              <p>Prepared by:</p>
-              <div className="flex flex-col items-center justify-center">
-                <p className="uppercase font-semibold">Sheryl M. Macalintal</p>
-                <p>Administrative Aide III</p>
-              </div>
-            </div>
-            <div className="flex flex-col gap-10">
-              <p>Noted by:</p>
-              <div className="flex flex-col items-center justify-center">
-                <p className="uppercase font-semibold">
-                  Maria minerva dlp. aragon
-                </p>
-                <p>Admin Officer IV/HRD Coordinator</p>
-              </div>
-            </div>
-          </div>
+          {renderTable(regularFaculties, "Regular Faculties")}
+          {renderTable(cosFaculties, "COS Faculties")}
         </div>
       </div>
     </div>

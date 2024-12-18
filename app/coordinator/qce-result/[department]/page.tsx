@@ -14,6 +14,9 @@ const ViewDepartment = async ({
     },
   });
 
+  const cosFaculty = faculties.find((faculty) => faculty.status === "COS");
+  const regularFaculty = faculties.filter((faculty) => faculty.status === "Regular");
+
   const evaluatee = faculties.map((faculty) => {
     return `${faculty.lname}, ${faculty.fname}`.trim();
   });
@@ -73,7 +76,7 @@ const ViewDepartment = async ({
   }, {} as Record<string, { title: string; totalScore: number; totalRatings: number; averageRating: number; questionCount: number }>);
 
   return (
-    <DepartmentSummary faculty={faculties} />
+    <DepartmentSummary regularFaculties={regularFaculty} cosFaculties={cosFaculty ? [cosFaculty] : []} />
   );
 };
 
